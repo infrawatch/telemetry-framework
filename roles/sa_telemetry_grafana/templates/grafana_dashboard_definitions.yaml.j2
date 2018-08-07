@@ -1,0 +1,8 @@
+#jinja2:variable_start_string:'[%', variable_end_string:'%]', trim_blocks: False
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-definitions-0
+data:{% for dashboard in sa_telemetry_grafana_dashboards %}
+  [% dashboard.name %]: |+
+[% dashboard.content | indent( width=4, indentfirst=True) %]{% endfor %}

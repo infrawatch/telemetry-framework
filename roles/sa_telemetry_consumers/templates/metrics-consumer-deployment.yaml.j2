@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: metrics-consumer-{{ item.name }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        sa-telemetry-app: metrics-consumer-{{ item.name }}
+    spec:
+      securityContext:
+        nonroot: true
+      containers:
+      - name: metrics-consumer
+        image: docker.io/nfvpe/metrics_consumer:latest
+        volumeMounts:
+        - name: metrics-config
+          mountPath: /config
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 200Mi
+            cpu: 200m
+        args: ["-config=/config/sa.metrics.config.json"]
+        ports:
+        - name: metrics
+          containerPort: 8081
+      volumes:
+      - name: metrics-config
+        configMap:
+          name: metrics-config-{{ item.name }}
+      nodeSelector:
+        node: {{ item.name }}

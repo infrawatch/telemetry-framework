@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metrics-config-{{ item.name }}
+data:
+  sa.metrics.config.json: |+
+    {
+            "Exporterhost": "0.0.0.0",
+            "Exporterport": 8081,
+            "AMQP1MetricURL": "messaging-internal-{{ item.name }}.sa-telemetry.svc:5672/collectd/telemetry",
+            "CPUStats": false,
+            "DataCount": -1,
+            "Debug":false,
+            "UseSample": false
+    }

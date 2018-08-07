@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: sa
+spec:
+  securityContext:
+    nonroot: true
+  nodeSelector:
+    node: blue
+  podAntiAffinity: hard
+  replicas: 3
+  version: v0.14.0
+  podMetadata:
+    labels:
+      sa-app: alertmanager

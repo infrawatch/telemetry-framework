@@ -1,0 +1,7 @@
+---
+- include_tasks: build_consumers.yml
+  loop:
+    - metrics
+    - events
+  loop_control:
+    loop_var: consumer_type

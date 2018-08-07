@@ -1,0 +1,44 @@
+---
+- name: Install ElasticSearch
+  hosts: kube-master
+  tasks:
+    - name: Clone ElasticSearch repo
+      git:
+        repo: https://github.com/pires/kubernetes-elasticsearch-cluster.git
+        dest: "{{ ansible_env.HOME}}/elasticsearch"
+
+    - name: (elasticsearch) create service
+      command: >
+        kubectl apply -n {{ promops_deploy.namespace }} -f es-discovery-svc.yaml -f es-svc.yaml -f es-master.yaml
+      args:
+        chdir: "{{ ansible_env.HOME }}/elasticsearch"
+
+    - name: (elasticsearch) wait for master rollout to complete
+      command: >
+        kubectl -n {{ promops_deploy.namespace }} rollout status -f es-master.yaml
+      args:
+        chdir: "{{ ansible_env.HOME }}/elasticsearch"
+
+    - name: (elasticsearch) create client
+      command: >
+        kubectl -n {{ promops_deploy.namespace }} apply -f es-client.yaml
+      args:
+        chdir: "{{ ansible_env.HOME }}/elasticsearch"
+
+    - name: (elasticsearch) wait for client rollout to complete
+      command: >
+        kubectl -n {{ promops_deploy.namespace }} rollout status -f es-client.yaml
+      args:
+        chdir: "{{ ansible_env.HOME }}/elasticsearch"
+
+    - name: (elasticsearch) setup data
+      command: >
+        kubectl -n {{ promops_deploy.namespace }} apply -f es-data.yaml
+      args:
+        chdir: "{{ ansible_env.HOME }}/elasticsearch"
+
+    - name: (elasticsearch) wait for rollout of data
+      command: >
+        kubectl -n {{ promops_deploy.namespace }} rollout status -f es-data.yaml
+      args:
+        chdir: "{{ ansible_env.HOME }}/elasticsearch"

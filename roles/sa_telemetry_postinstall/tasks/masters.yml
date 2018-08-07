@@ -1,0 +1,51 @@
+---
+- name: Add login information to masters htpasswd
+  template:
+    src: origin_master_htpasswd.j2
+    dest: /etc/origin/master/htpasswd
+
+- name: Create users in OpenShift
+  oc_user:
+    state: present
+    username: "{{ item.name }}"
+  with_items: "{{ sa_telemetry_users }}"
+  run_once: true
+
+- name: Apply roles to users in OpenShift
+  oc_adm_policy_user:
+    state: present
+    user: "{{ item.name }}"
+    namespace: "{{ sa_telemetry_postinstall_namespace }}"
+    resource_kind: role
+    resource_name: admin
+  with_items: "{{ sa_telemetry_users }}"
+  run_once: true
+
+- name: Get broker-config configmap
+  oc_configmap:
+    state: list
+    namespace: openshift-ansible-service-broker
+    name: broker-config
+  register: broker_config_configmap
+  run_once: true
+
+- name: Modify broker-config configmap
+  block:
+  - name: Drop extra spaces after url field
+    set_fact:
+      broker_config: "{{ broker_config_configmap.results.results.0.data | regex_replace('url:  ', 'url:') }}"
+
+  - name: Change sandbox_role from edit to admin
+    set_fact:
+      broker_config: "{{ broker_config | regex_replace('sandbox_role: edit', 'sandbox_role: admin') }}"
+  run_once: true
+
+- name: Write new broker-config
+  oc_configmap:
+    state: present
+    namespace: openshift-ansible-service-broker
+    name: broker-config
+    from_literal: "{{ broker_config }}"
+  notify: rollout_rc_asb
+  run_once: true
+

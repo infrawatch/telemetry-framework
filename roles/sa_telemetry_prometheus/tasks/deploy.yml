@@ -1,0 +1,35 @@
+---
+- name: Deploy Prometheus via Operator
+  oc_obj:
+    force: yes
+    name: "{{ node }}"
+    namespace: "{{ sa_telemetry_prometheus_namespace }}"
+    kind: Prometheus
+    content:
+      path: /tmp/pout
+      data: "{{ lookup('template', 'prometheus-sa-telemetry-deployment.yaml.j2') | from_yaml }}"
+
+- name: Create direct services for prometheus (used by consumers)
+  oc_service:
+    name: "{{ sa_telemetry_prometheus_service_name }}-{{ node }}"
+    namespace: "{{ sa_telemetry_prometheus_namespace }}"
+    labels:
+      sa-app: prometheus-{{ node }}
+    ports:
+    - name: prometheus
+      port: "{{ sa_telemetry_prometheus_service_port }}"
+      targetPort: "{{ sa_telemetry_prometheus_service_targetport }}"
+      protocol: TCP
+    selector:
+      sa-app: prometheus-{{ node }}
+
+- name: Create prometheus route
+  oc_route:
+    state: present
+    name: "{{ item.name }}"
+    host: "{{ item.host }}"
+    namespace: "{{ sa_telemetry_prometheus_namespace }}"
+    service_name: "{{ item.name }}"
+  with_items:
+    - name: prometheus
+      host: "{{ sa_telemetry_prometheus_hostname }}"

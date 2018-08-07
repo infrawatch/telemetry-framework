@@ -1,0 +1,51 @@
+---
+- name: SA Telemetry Install Checkpoint Start
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Set Telemetry install 'In Progress'
+    run_once: true
+    set_stats:
+      data:
+        installer_phase_sa_telemetry:
+          status: "In Progress"
+          start: "{{ lookup('pipe', 'date +%Y%m%d%H%M%SZ') }}"
+
+- name: SA Telemetry
+  hosts: oo_first_master
+  tasks:
+    - include_vars:
+        file: dashboards.yml
+
+    - import_role:
+        name: sa_telemetry
+
+- name: SA Telemetry Post Install for Masters
+  hosts: oo_masters
+  tasks:
+    - import_role:
+        name: sa_telemetry_postinstall
+        tasks_from: masters.yml
+      vars:
+        sa_telemetry_postinstall_namespace: "{{ sa_telemetry_namespace }}"
+
+- name: SA Telemetry Post Install for Nodes
+  hosts: oo_nodes_to_config
+  tasks:
+    - import_role:
+        name: sa_telemetry_postinstall
+        tasks_from: nodes.yml
+      vars:
+        sa_telemetry_postinstall_namespace: "{{ sa_telemetry_namespace }}"
+
+- name: SA Telemetry Install Checkpoint End
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Set SA Telemetry install 'Complete'
+    run_once: true
+    set_stats:
+      data:
+        installer_phase_sa_telemetry:
+          status: "Complete"
+          end: "{{ lookup('pipe', 'date +%Y%m%d%H%M%SZ') }}"

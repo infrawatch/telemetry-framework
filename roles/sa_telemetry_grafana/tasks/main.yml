@@ -1,0 +1,86 @@
+---
+- name: Create secret for grafana login
+  oc_secret:
+    state: present
+    name: grafana-credentials
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+    contents:
+      - path: user
+        data: "{{ sa_telemetry_grafana_secret_user }}"
+      - path: password
+        data: "{{ sa_telemetry_grafana_secret_password }}"
+
+- name: Create grafana serviceaccount
+  oc_serviceaccount:
+    state: present
+    name: "{{ sa_telemetry_grafana_serviceaccount_name }}"
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+  changed_when: false
+
+- name: Create grafana route
+  oc_route:
+    state: present
+    name: "{{ item.name }}"
+    host: "{{ item.host }}"
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+    service_name: "{{ item.name }}"
+  with_items:
+    - name: grafana
+      host: "{{ sa_telemetry_grafana_hostname }}"
+
+- name: create services for grafana
+  oc_service:
+    name: "{{ sa_telemetry_grafana_service_name }}"
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+    labels:
+      app: grafana
+    ports:
+    - name: grafana
+      port: "{{ sa_telemetry_grafana_service_port }}"
+      targetPort: "{{ sa_telemetry_grafana_service_targetport }}"
+      protocol: TCP
+    selector:
+      app: grafana
+
+- name: Create configmap for datasources
+  oc_obj:
+    name: "grafana-datasource"
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+    state: present
+    kind: ConfigMap
+    content:
+      path: /tmp/cmout
+      data: "{{ lookup('template', 'grafana_datasource.yaml.j2') | from_yaml }}"
+  ignore_errors: true
+
+- name: Load dashboards
+  oc_obj:
+    name: "grafana-dashboards"
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+    state: present
+    kind: ConfigMap
+    content:
+      path: /tmp/cmout
+      data: "{{ lookup('template', 'grafana_dashboards.yaml.j2') | from_yaml }}"
+  ignore_errors: true
+
+- name: Load dashboard definitions
+  oc_obj:
+    name: "grafana-dashboard-definitions-0"
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+    state: present
+    kind: ConfigMap
+    content:
+      path: /tmp/cmout
+      data: "{{ lookup('template', 'grafana_dashboard_definitions.yaml.j2') | from_yaml }}"
+  ignore_errors: true
+
+- name: Deploy Grafana
+  oc_obj:
+    name: "grafana"
+    namespace: "{{ sa_telemetry_grafana_namespace }}"
+    state: present
+    kind: Deployment
+    content:
+      path: /tmp/dout
+      data: "{{ lookup('template', 'grafana_deployment.yaml.j2') | from_yaml }}"

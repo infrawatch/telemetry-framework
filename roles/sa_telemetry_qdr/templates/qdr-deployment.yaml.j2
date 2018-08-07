@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: qdr-{{ item.name }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: qdr
+        version: v1
+        type: router
+        node: {{ item.name }}
+    spec:
+      containers:
+      - name: qdr-{{ item.name }}
+        image: nfvpe/qpid-dispatch-router:1.2.0-2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: internal
+          containerPort: 5672
+          protocol: TCP
+        - name: external
+          containerPort: 20001
+          protocol: TCP
+        volumeMounts:
+        - name: qdrouterd-config
+          mountPath: /etc/qpid-dispatch
+      volumes:
+      - name: qdrouterd-config
+        configMap:
+          name: qdrouterd-config-{{ item.name }}
+      nodeSelector:
+        node: {{ item.name }}

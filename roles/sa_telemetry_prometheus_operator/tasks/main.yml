@@ -1,0 +1,79 @@
+---
+- name: Create prometheus-operator service account
+  oc_serviceaccount:
+    state: present
+    name: prometheus-operator
+    namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
+
+- name: Add prometheus-operator SA to SCC
+  oc_adm_policy_user:
+    namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
+    resource_kind: scc
+    resource_name: privileged
+    state: present
+    user: "system:serviceaccount:{{ sa_telemetry_prometheus_operator_namespace }}:prometheus-operator"
+
+- name: Create prometheus-operator cluster role
+  oc_clusterrole:
+    state: present
+    name: prometheus-operator
+    rules:
+      - apiGroups: ["extensions"]
+        resources: ["thirdpartyresources"]
+        verbs: ["*"]
+      - apiGroups: ["apiextensions.k8s.io"]
+        resources: ["customresourcedefinitions"]
+        verbs: ["*"]
+      - apiGroups: ["monitoring.coreos.com"]
+        resources: ["alertmanagers", "prometheuses",  "prometheuses/finalizers", "alertmanagers/finalizers", "servicemonitors"]
+        verbs: ["*"]
+      - apiGroups: ["apps"]
+        resources: ["statefulsets"]
+        verbs: ["*"]
+      - apiGroups: [""]
+        resources: ["configmaps", "secrets"]
+        verbs: ["*"]
+      - apiGroups: [""]
+        resources: ["pods"]
+        verbs: ["list", "delete"]
+      - apiGroups: [""]
+        resources: ["services", "endpoints"]
+        verbs: ["get", "create", "update"]
+      - apiGroups: [""]
+        resources: ["nodes"]
+        verbs: ["list", "watch"]
+      - apiGroups: [""]
+        resources: ["namespaces"]
+        verbs: ["list"]
+
+- name: Bind prometheus-operator to prometheus-operator service account
+  oc_adm_policy_user:
+    state: present
+    resource_kind: cluster-role
+    resource_name: prometheus-operator
+    user: "system:serviceaccount:{{ sa_telemetry_prometheus_operator_namespace }}:prometheus-operator"
+
+- name: Deploy the operator
+  oc_obj:
+    namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
+    state: present
+    kind: Deployment
+    name: prometheus-operator
+    content:
+      path: /tmp/dout
+      data: "{{ lookup('template', 'prometheus_operator_deployment.yaml.j2') | from_yaml }}"
+
+- name: Set the service for Prometheus Operator
+  oc_service:
+    state: present
+    name: prometheus-operator
+    namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
+    labels:
+      app: prometheus-operator
+    ports:
+      - name: http
+        port: 8080
+        targetPort: http
+        protocol: TCP
+    selector:
+      app: prometheus-operator

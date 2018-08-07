@@ -1,0 +1,54 @@
+---
+- name: ConfigMap for {{ consumer_type }} consumer
+  oc_obj:
+    state: present
+    name: "{{ consumer_type }}-config-{{ item.name }}"
+    namespace: "{{ sa_telemetry_consumers_namespace }}"
+    kind: ConfigMap
+    content:
+      path: /tmp/cmout
+      data: "{{ lookup('template', '{{ consumer_type }}-consumer-configmap.yaml.j2') | from_yaml }}"
+  ignore_errors: true
+  with_items: "{{ sa_telemetry_node_labels }}"
+
+- name: Deployment for {{ consumer_type }} consumer
+  oc_obj:
+    force: yes
+    name: sa-telemetry-{{ consumer_type }}-consumer-{{ item.name }}
+    namespace: "{{ sa_telemetry_consumers_namespace }}"
+    kind: deployment
+    content:
+      path: /tmp/dout
+      data: "{{ lookup('template', '{{ consumer_type }}-consumer-deployment.yaml.j2') | from_yaml }}"
+  ignore_errors: true
+  with_items: "{{ sa_telemetry_node_labels }}"
+
+- name: Service for {{ consumer_type }} consumer
+  oc_service:
+    name: "{{ consumer_type }}-consumer-{{ item.name }}"
+    namespace: "{{ sa_telemetry_consumers_namespace }}"
+    labels:
+      sa-telemetry-app: "{{ consumer_type }}-consumer-{{ item.name }}"
+      app: "{{ consumer_type }}-consumer"
+      node: "{{ item.name }}"
+    ports:
+    - name: "{{ consumer_type }}"
+      port: 8081
+      targetPort: 8081
+      protocol: TCP
+    selector:
+      sa-telemetry-app: "{{ consumer_type }}-consumer-{{ item.name }}"
+  with_items: "{{ sa_telemetry_node_labels }}"
+
+- name: ServiceMonitor for {{ consumer_type }} consumer
+  oc_obj:
+    state: present
+    name: sa-telemetry-{{ consumer_type }}-consumer-{{ item.name }}
+    namespace: "{{ sa_telemetry_consumers_namespace }}"
+    kind: ServiceMonitor
+    content:
+      path: /tmp/smout
+      data: "{{ lookup('template', '{{ consumer_type }}-consumer-service-monitor.yaml.j2') | from_yaml }}"
+  ignore_errors: true
+  with_items: "{{ sa_telemetry_node_labels }}"
+  when: consumer_type == "metrics"

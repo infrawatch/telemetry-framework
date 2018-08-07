@@ -1,0 +1,7 @@
+- name: Update sysctl values for ElasticSearch
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
+    sysctl_set: yes
+    reload: yes

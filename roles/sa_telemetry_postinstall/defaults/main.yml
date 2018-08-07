@@ -1,0 +1,5 @@
+---
+sa_telemetry_users:
+  - name: admin
+    pass: $apr1$DzSA6Q2T$BfrvcDKO.TLKk41zw8dpJ.
+    role: admin

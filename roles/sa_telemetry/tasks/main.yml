@@ -1,0 +1,30 @@
+---
+- name: Create temp directory for doing work in
+  command: mktemp -d /tmp/sa-telemetry-ansible-XXXXXX
+  register: mktemp
+  changed_when: False
+  check_mode: no
+  tags: telemetry_init
+
+- debug: msg="Created temp dir {{mktemp.stdout}}"
+
+- name: Create local temp directory for doing work in
+  local_action: command mktemp -d /tmp/sa-telemetry-ansible-XXXXXX
+  register: local_tmp
+  changed_when: False
+  check_mode: no
+  become: false
+
+- include_tasks: install_sa_telemetry.yaml
+  when:
+    - sa_telemetry_install | default(false) | bool
+
+- include_tasks: delete_sa_telemetry.yaml
+  when:
+    - not sa_telemetry_install | default(false) | bool
+
+- name: Cleaning up local temp dir
+  local_action: file path="{{local_tmp.stdout}}" state=absent
+  tags: sa_telemetry_cleanup
+  changed_when: False
+  become: false

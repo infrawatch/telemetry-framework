@@ -1,0 +1,9 @@
+---
+sa_telemetry_namespace: sa-telemetry
+sa_telemetry_install: False
+sa_telemetry_nodeselector: null
+sa_telemetry_node_labels:
+  - name: blue
+    host: openshift-infra-node-1
+  - name: green
+    host: openshift-infra-node-2
