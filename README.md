@@ -14,6 +14,12 @@ validate this for you.
 Run `bootstrap.sh` which will clone the OpenShift Ansible repository and setup
 the _telemetry framework_ components inside the repository.
 
+The script is intended to be run from the root of the repository.
+
+```
+./scripts/bootstrap.sh
+```
+
 ## Installation
 
 Installation of the telemetry framework is currently being developed. The
