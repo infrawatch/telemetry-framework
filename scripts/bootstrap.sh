@@ -13,12 +13,12 @@ pushd openshift-ansible
 
     echo "  -- link playbooks"
     pushd playbooks
-    ln -s ../../playbooks/* ./
+    cp -r ../../playbooks/* ./
     popd
 
     echo "  -- link roles"
     pushd roles
-    ln -s ../../roles/* ./
+    cp -r ../../roles/* ./
     popd
 
     # ignore symlinks we're adding
