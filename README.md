@@ -22,5 +22,4 @@ The script is intended to be run from the root of the repository.
 
 ## Installation
 
-Installation of the telemetry framework is currently being developed. The
-current set of installation documentation is available at https://gist.github.com/leifmadsen/977adfba2ec11004f4bfdcc2e1f2ed4c
+Installation of the telemetry framework is currently being developed. Documentation is available in the [documentation](docs/README.md) folder.
