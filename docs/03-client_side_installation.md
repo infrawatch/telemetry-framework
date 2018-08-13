@@ -30,4 +30,5 @@ nodes you're deploying to.
 
 # Deployment
 
-Deployment of the clients can be found in the [README](https://github.com/redhat-nfvpe/telemetry-ansible/blob/master/README.md)
+Deployment of the clients can be found in the
+[README](https://github.com/redhat-nfvpe/telemetry-framework-client/blob/master/README.md)
