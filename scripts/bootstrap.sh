@@ -9,7 +9,7 @@ git clone --depth 1 --branch ${OPENSHIFT_BRANCH} ${OPENSHIFT_GIT_REPO} > /dev/nu
 echo "-- Overlay telemetry-framework on openshift-ansible"
 pushd openshift-ansible
     echo "  -- apply components.yml patch"
-    patch -p1 < ../components.yml.patch > /dev/null 2>&1
+    patch -p1 < ../patches/components.yml.patch > /dev/null 2>&1
 
     echo "  -- link playbooks"
     pushd playbooks
