@@ -16,7 +16,7 @@ machines (VM) on those virtual hosts (virthost).
 
 # Telemetry Platform Layout
 
-![Telemetry Platform Layout](https://gist.githubusercontent.com/leifmadsen/e91a143655fbb3baabacfac539f307b2/raw/5ce42319ebde0aff00a2bb434e7ccdca48c68751/telemetry_layout.png)
+![Telemetry Platform Layout](imgs/telemetry_layout.png)
 
 # DNSMasq Configuration
 
