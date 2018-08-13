@@ -12,6 +12,7 @@ machines (VM) on those virtual hosts (virthost).
 * DNSmasq setup to provide hostnames to virtual machines and wildcard domain
 * Root SSH access via SSH keys to the physical hosts from control node (e.g. laptop)
 * [CentOS Atomic resized to 30GB disk space](https://gist.github.com/leifmadsen/c0624f3f3ee0a43bff8a32b00ba4592c#file-atomic-resize-root-md) or RHEL 7.5 (as RPMs should be available for RHEL/CentOS now)
+  * Preferred is CentOS or RHEL 7.5 (do not use Atomic going forward)
 * Ansible 2.5
 
 # Telemetry Platform Layout
