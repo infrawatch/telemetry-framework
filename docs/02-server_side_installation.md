@@ -6,10 +6,12 @@ machines (VM) on those virtual hosts (virthost).
 
 # Prerequisites
 
-* 2 physical machines with at least 32GB of memory
+* (optional) 2 physical machines with at least 32GB of memory (64GB+ recommended)
+  * it's also possible to run this on a single machine if high available it not necessary
 * IP space to allocate 1 address on your LAN per virtual machine (total 9)
 * Network setup to allow for bridged networking of the virtual machines on the physical nodes
-* DNSmasq setup to provide hostnames to virtual machines and wildcard domain
+* (optional) DNSmasq setup to provide hostnames to virtual machines and wildcard domain
+  * can also be handled externally via your router or other DNS setup
 * Root SSH access via SSH keys to the physical hosts from control node (e.g. laptop)
 * [CentOS Atomic resized to 30GB disk space](https://gist.github.com/leifmadsen/c0624f3f3ee0a43bff8a32b00ba4592c#file-atomic-resize-root-md) or RHEL 7.5 (as RPMs should be available for RHEL/CentOS now)
   * Preferred is CentOS or RHEL 7.5 (do not use Atomic going forward)
@@ -61,6 +63,12 @@ So let's clone the repository and get our inventory and variable files setup.
     ansible-galaxy install -r requirements.yml
     
 ## Configure `blue` node inventory and variable file
+
+> **Pro Tip**
+>
+> If you want to converge the servers onto a single physical node, you can use the `blue.inventory` file for
+> both the `blue` and `green` deployments. You'll still need to create both the `blue.vars` and `green.vars`
+> files.
 
 **inventory**
 
@@ -311,6 +319,16 @@ We can spin up our virtual machines on our two physical hosts. We'll do this by 
     cd ~/src/github/redhat-nfvpe/base-infra-bootstrap/
     ansible-playbook -i inventory/green.inventory -e "@./inventory/green.vars" playbooks/virt-host-setup.yml
 
+### (optional) Deploy all nodes in one command
+
+    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap/
+    for n in blue green; do ansible-playbook -i inventory/$n.inventory -e "@./inventory/$n.vars" playbooks/virt-host-setup.yml
+    
+Alternatively, install everything onto the same physical machine with a single inventory file.
+
+    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap/
+    for n in blue green; do ansible-playbook -i inventory/blue.inventory -e "@./inventory/$n.vars" playbooks/virt-host-setup.yml
+
 ## Teardown of virtual machines (optional)
 
 If you've run through this once and wanto do a teardown of the virtual machines, you can do that with the `vm-teardown.yml`
@@ -323,7 +341,7 @@ playbook in `base-infra-bootstrap`.
 
 The last step is to deploy OpenShift and run the `sa-telemetry/config.yml` playbook to setup the telemetry platform
 on your virtual machines. We'll do this with [`openshift-ansible`](https://github.com/openshift/openshift-ansible),
-which has been cloned and patched via the `telemetry-framework/scripts/bootstrap.sh` script.
+which will be cloned and patched via the `telemetry-framework/scripts/bootstrap.sh` script.
 
 ## Clone `redhat-nfvpe.telemetry-framework`
 
