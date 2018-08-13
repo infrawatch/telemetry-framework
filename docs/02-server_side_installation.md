@@ -76,11 +76,11 @@ So let's clone the repository and get our inventory and variable files setup.
 **variables**
 
     cat > inventory/blue.vars <<EOF
-    centos_genericcloud_url: http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2
+    centos_genericcloud_url: https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
     image_destination_name: CentOS-7-x86_64-GenericCloud.qcow2
-    host_type: "atomic"
-    images_directory: /home/images/openshiftlab
-    spare_disk_location: /home/images/openshiftlab
+    host_type: "centos"
+    images_directory: /home/images/telemetry
+    spare_disk_location: /home/images/telemetry
     ssh_proxy_user: root
     ssh_proxy_host: 10.19.110.9
     vm_ssh_key_path: /home/lmadsen/.ssh/blue
@@ -143,11 +143,11 @@ So let's clone the repository and get our inventory and variable files setup.
 
     cat > inventory/green.vars <<EOF
     ---
-    centos_genericcloud_url: http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2
+    centos_genericcloud_url: https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
     image_destination_name: CentOS-7-x86_64-GenericCloud.qcow2
-    host_type: "atomic"
-    images_directory: /home/images/openshiftlab
-    spare_disk_location: /home/images/openshiftlab
+    host_type: "centos"
+    images_directory: /home/images/telemetry
+    spare_disk_location: /home/images/telemetry
     ssh_proxy_user: root
     ssh_proxy_host: 10.19.110.11
     vm_ssh_key_path: /home/lmadsen/.ssh/green
@@ -321,21 +321,20 @@ playbook in `base-infra-bootstrap`.
 # Deployment of OpenShift
 
 The last step is to deploy OpenShift and run the `sa-telemetry/config.yml` playbook to setup the telemetry platform
-on your virtual machines. We'll do this with [`openshift-ansible`](https://github.com/openshift/openshift-ansible), but
-the `redhat-nfvpe` fork of it.
+on your virtual machines. We'll do this with [`openshift-ansible`](https://github.com/openshift/openshift-ansible),
+which has been cloned and patched via the `telemetry-framework/scripts/bootstrap.sh` script.
 
-## Clone `redhat-nfvpe.openshift-ansible`
+## Clone `redhat-nfvpe.telemetry-framework`
 
     cd ~/src/github/redhat-nfvpe/
-    git clone https://github.com/redhat-nfvpe/openshift-ansible/
-    cd openshift-ansible
-    git fetch --all
-    git checkout telemetry/release-3.9
+    git clone https://github.com/redhat-nfvpe/telemetry-framework
+    cd telemetry-framework
+    ./scripts/bootstrap.sh
     
 ## Load virtual machine keys into ssh-agent
 
-Your deployment for OpenShift will fail due to an inability to connect to the virtual hosts if you don't the SSH keys that
-were generated during the `base-infra-bootstrap` deployment. You can do this with `ssh-add`.
+Your deployment for OpenShift will fail due to an inability to connect to the virtual hosts if you don't add
+the SSH keys that were generated during the `base-infra-bootstrap` deployment. You can do this with `ssh-add`.
 
 ```
 ssh-add ~/.ssh/blue
@@ -348,12 +347,17 @@ Now we'll deploy OpenShift with our `telemetry.inventory` file that we created i
 earlier in this documentation. Be sure you've reviewed the file, made any modifications necessary, and have your DNS
 setup. Without DNS setup properly, things will fail.
 
-    cd ~/src/github/redhat-nfvpe/openshift-ansible/
-    ansible-playbook -i ../base-infra-bootstrap/inventory/telemetry.inventory \
+    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap
+    export _BASEINFRABOOTSTRAP=`pwd`
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/openshift-ansible
+    ansible-playbook -i $_BASEINFRABOOTSTRAP/inventory/telemetry.inventory \
         playbooks/prerequisites.yml \
         playbooks/deploy_cluster.yml
 
 # Post-Deploy Configuration
+
+> **TODO**: there is likely nothing that you need to do post-deployment other than the ElasticSearch
+> setup as documented below.
 
 There are a couple of post-deployment items that should be done. Previously more actions needed to be done, but those
 have now been automated in the `sa-telemetry-postinstall` role.
