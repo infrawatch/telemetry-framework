@@ -104,4 +104,20 @@ environment.
 
 The virtual machines are created via the
 [base-infra-bootstrap](https://github.com/redhat-nfvpe/base-infra-bootstrap)
-playbooks. 
+playbooks.
+
+**TODO:** _below is work in progress and needs fleshing out; just raw commandst _
+
+    for n in blue green; do ansible-playbook -i ../inventory/virthost.inventory -e "@../inventory/$n.vars" playbooks/vm-teardown.yml playbooks/virt-host-setup.yml ; done
+
+Then install NetworkManager (required for 3.9, but no provided by OpenShift
+Ansible playbooks).
+
+    ansible -i ../inventory/telemetry.inventory -m raw --become -a "yum install NetworkManager -y; systemctl enable NetworkManager.service ; systemctl start NetworkManager.service"
+
+Back to installing OpenShift. Need to bootstrap first.
+
+    cd ~/src/github/redhat-nfvpe/telemetry-framework
+    ./scripts/bootstrap.sh
+    cd working/openshift-ansible
+    ansible-playbook -i ../../examples/61will.space/inventory/telemetry.inventory playbooks/prerequisites.yml playbooks/deploy_cluster.yml
