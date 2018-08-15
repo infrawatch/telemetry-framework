@@ -2,7 +2,7 @@
 openshift-master-1 ansible_host=openshift-master-1.home.61will.space
 openshift-node-1 ansible_host=openshift-node-1.home.61will.space
 openshift-node-2 ansible_host=openshift-node-2.home.61will.space
-openshift-infra-node-1 ansible_host=192.168.3.71
+openshift-infra-node-1 ansible_host=192.168.3.36
 
 [OSEv3:children]
 masters
