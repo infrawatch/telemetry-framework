@@ -92,6 +92,6 @@
 
 # deploy separate instances via the operator
 - include_tasks: deploy.yml
-  loop: "{{ sa_telemetry_node_labels.name }}"
+  loop: "{{ sa_telemetry_node_labels }}"
   loop_control:
     loop_var: node
