@@ -7,6 +7,14 @@ In this simplified example I build out a development system using a single
 physical machine with 64GB of memory, which is a decent enough system that
 likely matches real work development systems.
 
+There are both large and small inventory setups. The large setup includes a
+"full" single node setup that could easily be split into dual machines, much
+like production. The issue with the full setup is that it requires a machine
+with more than 64GB of memory (128GB recommended). The small setup includes a
+toned down version which is not setup with high availability, and reduced the
+memory requirements. A machine with 64GB of memory is recommended for the small
+setup.
+
 ## Overview
 
 In my lab environment, I have a single whitebox desktop with 64GB of memory, 2
