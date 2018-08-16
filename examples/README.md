@@ -121,8 +121,12 @@ playbooks.
 Then install NetworkManager (required for 3.9, but no provided by OpenShift
 Ansible playbooks).
 
-    export ANSIBLE_HOST_KEY_CHECKING=false      # optional
-    ansible -i ../inventory/telemetry.inventory -m raw --become -a "yum install NetworkManager -y; systemctl enable NetworkManager.service ; systemctl start NetworkManager.service"
+    ansible --ssh-common-args="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
+            --inventory examples/custom/inventory/telemetry.inventory \
+            --module-name raw \
+            --become \
+            --args "yum install NetworkManager -y ; systemctl enable NetworkManager.service ; systemctl start NetworkManager.service" \
+            all
 
 Back to installing OpenShift. Need to bootstrap first.
 
