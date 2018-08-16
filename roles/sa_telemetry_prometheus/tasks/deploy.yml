@@ -8,6 +8,10 @@
     content:
       path: /tmp/pout
       data: "{{ lookup('template', 'prometheus-sa-telemetry-deployment.yaml.j2') | from_yaml }}"
+  retries: 20
+  delay: 3
+  register: result
+  until: result.rc == 0
 
 - name: Create direct services for prometheus (used by consumers)
   oc_service:
