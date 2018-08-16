@@ -11,7 +11,7 @@
   retries: 20
   delay: 3
   register: result
-  until: result.rc == 0
+  until: not result.failed
 
 - name: Create direct services for prometheus (used by consumers)
   oc_service:
