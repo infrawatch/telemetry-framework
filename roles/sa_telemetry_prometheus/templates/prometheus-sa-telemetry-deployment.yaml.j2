@@ -9,7 +9,7 @@ spec:
     labels:
       sa-app: prometheus-{{ node.name }}
   replicas: {{ sa_telemetry_prometheus_replicas }}
-  version: v2.2.0-rc.1
+  version: v{{ sa_telemetry_prometheus_image_version }}
   serviceAccountName: {{ sa_telemetry_prometheus_serviceaccount_name }}
   serviceMonitorSelector:
     matchExpressions:

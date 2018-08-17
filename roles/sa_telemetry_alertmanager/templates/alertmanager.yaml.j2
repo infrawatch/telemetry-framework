@@ -9,7 +9,7 @@ spec:
     node: blue
   podAntiAffinity: hard
   replicas: 3
-  version: v0.14.0
+  version: v{{ sa_telemetry_alertmanager_image_version }}
   podMetadata:
     labels:
       sa-app: alertmanager

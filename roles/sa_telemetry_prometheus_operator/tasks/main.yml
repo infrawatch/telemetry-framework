@@ -25,7 +25,7 @@
         resources: ["customresourcedefinitions"]
         verbs: ["*"]
       - apiGroups: ["monitoring.coreos.com"]
-        resources: ["alertmanagers", "prometheuses",  "prometheuses/finalizers", "alertmanagers/finalizers", "servicemonitors"]
+        resources: ["alertmanagers", "prometheuses",  "prometheuses/finalizers", "alertmanagers/finalizers", "servicemonitors", "prometheusrules"]
         verbs: ["*"]
       - apiGroups: ["apps"]
         resources: ["statefulsets"]
@@ -44,7 +44,7 @@
         verbs: ["list", "watch"]
       - apiGroups: [""]
         resources: ["namespaces"]
-        verbs: ["list"]
+        verbs: ["list", "watch"]
 
 - name: Bind prometheus-operator to prometheus-operator service account
   oc_adm_policy_user:

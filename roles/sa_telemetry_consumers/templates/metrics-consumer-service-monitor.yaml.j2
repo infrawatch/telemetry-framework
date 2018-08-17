@@ -13,4 +13,4 @@ spec:
     - {{ sa_telemetry_consumers_namespace }}
   endpoints:
   - port: metrics
-    interval: 4s
+    interval: {{ sa_telemetry_consumers_default_interval }}

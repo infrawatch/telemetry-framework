@@ -1,4 +1,5 @@
 ---
+sa_telemetry_alertmanager_image_version: 0.15.1
 sa_telemetry_alertmanager_serviceaccount_name: alertmanager
 sa_telemetry_alertmanager_service_name: alertmanager
 sa_telemetry_alertmanager_service_port: 9093
