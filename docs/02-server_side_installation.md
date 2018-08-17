@@ -241,6 +241,7 @@ So let's clone the repository and get our inventory and variable files setup.
     openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
     openshift_deployment_type=origin
     openshift_release=v3.9
+    openshift_pkg_version=-3.9.0-1.el7.git.0.ba7faec
     enable_excluders=false
     openshift_clock_enabled=true
 
