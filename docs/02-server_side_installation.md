@@ -44,11 +44,16 @@ machines (VM) on those virtual hosts (virthost).
 Some things need to be done post-host installation. Note these are not ideal, and need to be fleshed out for a production
 deployment.
 
+## Clone `telemetry-framework`
+
+    mkdir -p ~/src/github/redhat-nfvpe/
+    cd ~/src/github/redhat-nfvpe/
+    git clone https://github.com/redhat-nfvpe/telemetry-framework
     cd ~/src/github/redhat-nfvpe/telemetry-framework/
+   
+## Bootstrap `telemetry-framework`
     ./scripts/bootstrap.sh
-    cd working/
-    git clone https://github.com/redhat-nfvpe/base-infra-bootstrap
-    cd base-infra-bootstrap
+    cd working/base-infra-bootstrap
     
     cat > inventory/virthosts.inventory <<EOF
     blue ansible_host=10.19.110.9
@@ -74,15 +79,8 @@ We can do this with [redhat-nfvpe.base-infra-bootstrap](https://github.com/redha
 playbooks of your choosing. The important thing is to provide the virtual machines on 2 physical hosts on a network that
 you can do bridged networking on.
 
-So let's clone the repository and get our inventory and variable files setup.
-
-## Clone `base-infra-bootstrap`
-
-    mkdir ~/src/github/redhat-nfvpe/
-    cd ~/src/github/redhat-nfvpe/
-    git clone https://github.com/redhat-nfvpe/base-infra-bootstrap
-    cd base-infra-bootstrap/
-    ansible-galaxy install -r requirements.yml
+If you followed the previous instruction-set, then `base-infra-bootstrap` lives in the `working/` directory of your
+`telemetry-framework` git repository clone.
     
 ## Configure `blue` node inventory and variable file
 
@@ -91,6 +89,8 @@ So let's clone the repository and get our inventory and variable files setup.
 > If you want to converge the servers onto a single physical node, you can use the `blue.inventory` file for
 > both the `blue` and `green` deployments. You'll still need to create both the `blue.vars` and `green.vars`
 > files.
+
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/base-infra-bootstrap
 
 **inventory**
 
@@ -221,6 +221,11 @@ So let's clone the repository and get our inventory and variable files setup.
 
 ## Configure `telemetry.inventory` file for OpenShift deployment
 
+Note that we're going to change directories initially here to the `openshift-ansible` clone within
+the `telemetry-framwork/working/` directory.
+
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/openshift-ansible/
+
     cat > inventory/telemetry.inventory <<EOF
     # vim: set ft=yaml shiftwidth=2 tabstop=2 expandtab :
     openshift-lb ansible_host=openshift-lb.nfvpe.site
@@ -334,22 +339,22 @@ We can spin up our virtual machines on our two physical hosts. We'll do this by 
 
 ### Deploy `blue` nodes
 
-    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap/
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/base-infra-bootstrap/
     ansible-playbook -i inventory/blue.inventory -e "@./inventory/blue.vars" playbooks/virt-host-setup.yml
 
 ### Deploy `green` nodes
 
-    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap/
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/base-infra-bootstrap/
     ansible-playbook -i inventory/green.inventory -e "@./inventory/green.vars" playbooks/virt-host-setup.yml
 
 ### (optional) Deploy all nodes in one command
 
-    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap/
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/base-infra-bootstrap/
     for n in blue green; do ansible-playbook -i inventory/$n.inventory -e "@./inventory/$n.vars" playbooks/virt-host-setup.yml
     
 Alternatively, install everything onto the same physical machine with a single inventory file.
 
-    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap/
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/base-infra-bootstrap/
     for n in blue green; do ansible-playbook -i inventory/blue.inventory -e "@./inventory/$n.vars" playbooks/virt-host-setup.yml
 
 ## Teardown of virtual machines (optional)
@@ -367,6 +372,8 @@ on your virtual machines. We'll do this with [`openshift-ansible`](https://githu
 which will be cloned and patched via the `telemetry-framework/scripts/bootstrap.sh` script.
 
 ## Clone `redhat-nfvpe.telemetry-framework`
+
+Note that you should have already done these previously in the bootstrap section of the documentation.
 
     cd ~/src/github/redhat-nfvpe/
     git clone https://github.com/redhat-nfvpe/telemetry-framework
@@ -389,10 +396,8 @@ Now we'll deploy OpenShift with our `telemetry.inventory` file that we created i
 earlier in this documentation. Be sure you've reviewed the file, made any modifications necessary, and have your DNS
 setup. Without DNS setup properly, things will fail.
 
-    cd ~/src/github/redhat-nfvpe/base-infra-bootstrap
-    export _BASEINFRABOOTSTRAP=`pwd`
     cd ~/src/github/redhat-nfvpe/telemetry-framework/working/openshift-ansible
-    ansible-playbook -i $_BASEINFRABOOTSTRAP/inventory/telemetry.inventory \
+    ansible-playbook -i inventory/telemetry.inventory \
         playbooks/prerequisites.yml \
         playbooks/deploy_cluster.yml
 
