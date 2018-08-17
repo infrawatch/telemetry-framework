@@ -255,8 +255,8 @@ So let's clone the repository and get our inventory and variable files setup.
     openshift_master_default_subdomain=apps.nfvpe.site
 
     # ansible service broker
-    ansible_service_broker_registry_user=<DOCKER_HUB_USERNAME>
-    ansible_service_broker_registry_password=<DOCKER_HUB_PASSWORD>
+    #ansible_service_broker_registry_user=<DOCKER_HUB_USERNAME>        # set this
+    #ansible_service_broker_registry_password=<DOCKER_HUB_PASSWORD>    # set this
     ansible_service_broker_registry_organization=ansibleplaybookbundle
     ansible_service_broker_registry_whitelist=[".*-apb$"]
     ansible_service_broker_local_registry_whitelist=[".*"]
