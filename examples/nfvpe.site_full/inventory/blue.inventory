@@ -1,0 +1,7 @@
+virt_host ansible_host=10.19.110.9 ansible_ssh_user=root
+
+[virthosts]
+virt_host
+
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
