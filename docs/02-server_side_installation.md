@@ -390,6 +390,19 @@ ssh-add ~/.ssh/blue
 ssh-add ~/.ssh/green
 ```
 
+## Prerequisites for OpenShift
+
+We need to install NetworkManager on the nodes, enable it and start it so that OpenShift Ansible will
+complete without issue.
+
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/openshift-ansible
+    ansible --ssh-common-args="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
+        --inventory inventory/telemetry.inventory \
+        --module-name raw \
+        --become \
+        --args "yum install NetworkManager -y ; systemctl enable NetworkManager.service ; systemctl start NetworkManager.service" \
+        all
+
 ## Deploy OpenShift
 
 Now we'll deploy OpenShift with our `telemetry.inventory` file that we created in `base-infra-bootstrap/inventory/`
