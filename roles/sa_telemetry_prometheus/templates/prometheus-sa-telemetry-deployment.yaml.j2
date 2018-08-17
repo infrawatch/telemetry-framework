@@ -31,6 +31,10 @@ spec:
       # purposes.
       memory: 400Mi
   alerting:
+    alert_relabel_configs:
+    - regex: (.+)\d+
+      source_labels: dc
+      target_label: dc
     alertmanagers:
     - namespace: {{ sa_telemetry_prometheus_namespace }}
       name: alertmanager-sa
