@@ -39,6 +39,27 @@ machines (VM) on those virtual hosts (virthost).
 
     systemctl restart dnsmasq.service
 
+# Post-Host Installation Setup
+
+Some things need to be done post-host installation. Note these are not ideal, and need to be fleshed out for a production
+deployment.
+
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/
+    ./scripts/bootstrap.sh
+    cd working/
+    git clone https://github.com/redhat-nfvpe/base-infra-bootstrap
+    cd base-infra-bootstrap
+    
+    cat > inventory/virthosts.inventory <<EOF
+    blue ansible_host=10.19.110.9
+    green ansible_host=10.19.110.11
+
+    [all:vars]
+    ansible_user=root
+    EOF
+    
+    ansible --inventory inventory/virthosts.inventory --module-name raw --become --args "systemctl stop firewalld.service ; systemctl disable firewalld.service" all
+
 # Bootstrap and VM setup
 
 > **NOTE**
