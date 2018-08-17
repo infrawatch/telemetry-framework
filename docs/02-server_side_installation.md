@@ -27,6 +27,7 @@ machines (VM) on those virtual hosts (virthost).
     cat > /etc/dnsmasq.conf <<EOF
     log-facility=/var/log/dnsmasq.log
     interface=br1
+    bind-interfaces
     cache-size=300
     server=10.16.36.29
     server=10.11.5.19
@@ -38,6 +39,8 @@ machines (VM) on those virtual hosts (virthost).
     EOF
 
     systemctl restart dnsmasq.service
+    
+Reference: https://wiki.libvirt.org/page/Libvirtd_and_dnsmasq
 
 # Post-Host Installation Setup
 
