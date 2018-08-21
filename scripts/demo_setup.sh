@@ -23,6 +23,11 @@ pushd working/base-infra-bootstrap
     ansible-playbook -i inventory/virthost.inventory -e "@./inventory/nodes.vars" \
         playbooks/vm-teardown.yml \
         playbooks/virt-host-setup.yml
+
+#*** wait for nodes to come up
+    ansible -i inventory/vms.local.generated -m wait_for \
+        -a "port=22 host='{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}' search_regex=OpenSSH delay=10" \
+        -c local all
 popd
 
 #*** run pre-openshift installation script
