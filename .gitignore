@@ -1,1 +1,7 @@
 working
+examples/*
+!examples/61will.space_dev
+!examples/61will.space_dev
+!examples/61will.space_full
+!examples/nfvpe.site_full
+!examples/README.md

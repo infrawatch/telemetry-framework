@@ -398,15 +398,15 @@ ssh-add ~/.ssh/green
 ## Prerequisites for OpenShift
 
 We need to install NetworkManager on the nodes, enable it and start it so that OpenShift Ansible will
-complete without issue.
+complete without issue. We also vacuum out journald and set it to not consume
+the entire disk drive :)
 
-    cd ~/src/github/redhat-nfvpe/telemetry-framework/working/openshift-ansible
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/
     ansible --ssh-common-args="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" \
-        --inventory inventory/telemetry.inventory \
-        --module-name raw \
+        --inventory working/openshift-ansible/inventory/telemetry.inventory \
+        --module-name script \
         --become \
-        --args "yum install NetworkManager -y ; systemctl enable NetworkManager.service ; systemctl start NetworkManager.service" \
-        all
+        --args "./scripts/post_install.sh" all
 
 ## Deploy OpenShift
 
