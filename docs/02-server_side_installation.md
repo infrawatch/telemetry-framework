@@ -115,6 +115,7 @@ If you followed the previous instruction-set, then `base-infra-bootstrap` lives 
     host_type: "centos"
     images_directory: /home/images/telemetry
     spare_disk_location: /home/images/telemetry
+    spare_disk_size_megs: 20480
     ssh_proxy_user: root
     ssh_proxy_host: 10.19.110.9
     vm_ssh_key_path: /home/lmadsen/.ssh/blue
@@ -182,6 +183,7 @@ If you followed the previous instruction-set, then `base-infra-bootstrap` lives 
     host_type: "centos"
     images_directory: /home/images/telemetry
     spare_disk_location: /home/images/telemetry
+    spare_disk_size_megs: 20480
     ssh_proxy_user: root
     ssh_proxy_host: 10.19.110.11
     vm_ssh_key_path: /home/lmadsen/.ssh/green
