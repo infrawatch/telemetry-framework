@@ -20,9 +20,9 @@ cp ./examples/${inventory}/inventory/openshift-ansible/* ./working/openshift-ans
 
 #*** teardown and rebuild the environment
 pushd working/base-infra-bootstrap
-        ansible-playbook -i inventory/virthost.inventory -e "@./inventory/nodes.vars" \
-            playbooks/vm-teardown.yml \
-            playbooks/virt-host-setup.yml
+    ansible-playbook -i inventory/virthost.inventory -e "@./inventory/nodes.vars" \
+        playbooks/vm-teardown.yml \
+        playbooks/virt-host-setup.yml
 popd
 
 #*** run pre-openshift installation script
@@ -31,3 +31,12 @@ ansible --ssh-common-args="-o UserKnownHostsFile=/dev/null -o StrictHostKeyCheck
     --module-name script \
     --become \
     --args "./scripts/post_install.sh" all
+
+#*** install openshift with openshift-ansible
+pushd working/openshift-ansible
+    ansible-playbook -i inventory/telemetry.inventory \
+        playbooks/prerequisites.yml \
+        playbooks/deploy_cluster.yml
+popd
+
+exit 0
