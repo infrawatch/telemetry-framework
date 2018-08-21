@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: grafana-datasources
 data:
-  prometheus.yaml: |+
+  telemetry.yaml: |+
     apiVersion: 1
 
     datasources:
@@ -15,4 +15,46 @@ data:
       jsonData:
          timeInterval: "4s"
       version: 1
+      editable: true
+    - name: connectivity
+      type: elasticsearch
+      typeLogoUrl: "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg"
+      access: proxy
+      orgId: 1
+      url: http://elasticsearch.sa-telemetry.svc:9200
+      database: "collectd_connectivity"
+      basicAuth: false
+      isDefault: false
+      jsonData:
+        esVersion: 5
+        interval: "1m"
+        timeField: "startsAt"
+      editable: true
+    - name: procevent
+      type: elasticsearch
+      typeLogoUrl: "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg"
+      access: proxy
+      orgId: 1
+      url: http://elasticsearch.sa-telemetry.svc:9200
+      database: "collectd_procevent"
+      basicAuth: false
+      isDefault: false
+      jsonData:
+        esVersion: 5
+        timeField: "startsAt"
+        timeInterval: "1m"
+      editable: true
+    - name: sysevent
+      type: elasticsearch
+      typeLogoUrl: "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg"
+      access: proxy
+      orgId: 1
+      url: http://elasticsearch.sa-telemetry.svc:9200
+      database: "collectd_sysevent"
+      basicAuth: false
+      isDefault: false
+      jsonData:
+        esVersion: 5
+        timeField: "startsAt"
+        timeInterval: "1m"
       editable: true
