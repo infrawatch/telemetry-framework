@@ -15,8 +15,6 @@ while getopts ":t:i:" opt; do
     esac
 done
 
-exit 0
-
 #*** clean
 for d in base-infra-bootstrap openshift-ansible
 do
