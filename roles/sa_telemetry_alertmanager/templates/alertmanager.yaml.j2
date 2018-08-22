@@ -7,6 +7,7 @@ spec:
     nonroot: true
   nodeSelector:
     node: blue
+    application: sa-telemetry
   podAntiAffinity: hard
   replicas: 3
   version: v{{ sa_telemetry_alertmanager_image_version }}

@@ -61,8 +61,8 @@ openshift-master-1
 
 [nodes]
 openshift-master-1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-openshift-node-1 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue'}"
-openshift-node-2 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue'}"
+openshift-node-1 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue', 'application': 'sa-telemetry'}"
+openshift-node-2 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue', 'application': 'sa-telemetry'}"
 openshift-infra-node-1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
 [glusterfs]

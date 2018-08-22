@@ -18,6 +18,7 @@ spec:
     nonroot: true
   nodeSelector:
     node: {{ node.name }}
+    application: sa-telemetry
   podAntiAffinity: hard
   ruleSelector:
     matchLabels:
