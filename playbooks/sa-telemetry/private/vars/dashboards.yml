@@ -5,7 +5,7 @@ sa_telemetry_grafana_dashboards:
     {
       "__inputs": [
         {
-          "name": "DS_prometheus",
+          "name": "prometheus",
           "label": "prometheus",
           "description": "",
           "type": "datasource",
@@ -103,7 +103,7 @@ sa_telemetry_grafana_dashboards:
       "panels": [
         {
           "columns": [],
-          "datasource": "${DS_prometheus}",
+          "datasource": "prometheus",
           "fontSize": "100%",
           "gridPos": {
             "h": 9,
@@ -291,7 +291,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "format": "none",
           "gauge": {
             "maxValue": 100,
@@ -374,7 +374,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${connectivity}",
+          "datasource": "connectivity",
           "decimals": null,
           "format": "short",
           "gauge": {
@@ -507,7 +507,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${sysevent}",
+          "datasource": "sysevent",
           "format": "short",
           "gauge": {
             "maxValue": 100,
@@ -637,7 +637,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#890f02"
           ],
-          "datasource": "${connectivity}",
+          "datasource": "connectivity",
           "format": "none",
           "gauge": {
             "maxValue": 100,
@@ -739,7 +739,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "format": "none",
           "gauge": {
             "maxValue": 100,
@@ -871,7 +871,7 @@ sa_telemetry_grafana_dashboards:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 9,
@@ -956,7 +956,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 9,
@@ -1035,7 +1035,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 9,
@@ -1120,7 +1120,7 @@ sa_telemetry_grafana_dashboards:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_prometheus}",
+          "datasource": "prometheus",
           "fill": 2,
           "gridPos": {
             "h": 9,
@@ -1202,7 +1202,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 6,
@@ -1317,7 +1317,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 9,
@@ -1396,7 +1396,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 6,
@@ -1586,7 +1586,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_prometheus}",
+          "datasource": "prometheus",
           "decimals": null,
           "fill": 1,
           "gridPos": {
@@ -1764,7 +1764,7 @@ sa_telemetry_grafana_dashboards:
             "mode": "spectrum"
           },
           "dataFormat": "timeseries",
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "gridPos": {
             "h": 6,
             "w": 12,
@@ -1899,7 +1899,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 0,
           "gridPos": {
             "h": 6,
@@ -2010,7 +2010,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 6,
@@ -2178,7 +2178,7 @@ sa_telemetry_grafana_dashboards:
           {
             "allValue": null,
             "current": {},
-            "datasource": "${prometheus}",
+            "datasource": "prometheus",
             "hide": 0,
             "includeAll": true,
             "label": null,
@@ -2433,7 +2433,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${connectivity}",
+          "datasource": "connectivity",
           "decimals": null,
           "format": "short",
           "gauge": {
@@ -2566,7 +2566,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${procevent}",
+          "datasource": "procevent",
           "format": "none",
           "gauge": {
             "maxValue": 100,
@@ -2702,7 +2702,7 @@ sa_telemetry_grafana_dashboards:
             "rgba(237, 129, 40, 0.89)",
             "#d44a3a"
           ],
-          "datasource": "${sysevent}",
+          "datasource": "sysevent",
           "format": "short",
           "gauge": {
             "maxValue": 100,
@@ -2828,7 +2828,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 9,
@@ -2908,7 +2908,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 9,
@@ -3002,7 +3002,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 9,
@@ -3110,7 +3110,7 @@ sa_telemetry_grafana_dashboards:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
             "h": 6,
@@ -3225,7 +3225,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${sysevent}",
+          "datasource": "sysevent",
           "fill": 1,
           "gridPos": {
             "h": 6,
@@ -3406,7 +3406,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 0,
           "gridPos": {
             "h": 9,
@@ -3499,7 +3499,7 @@ sa_telemetry_grafana_dashboards:
             "mode": "spectrum"
           },
           "dataFormat": "timeseries",
-          "datasource": "${connectivity}",
+          "datasource": "connectivity",
           "gridPos": {
             "h": 6,
             "w": 12,
@@ -3628,7 +3628,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "decimals": null,
           "fill": 1,
           "gridPos": {
@@ -3798,7 +3798,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${connectivity}",
+          "datasource": "connectivity",
           "fill": 1,
           "gridPos": {
             "h": 6,
@@ -3955,7 +3955,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${prometheus}",
+          "datasource": "prometheus",
           "fill": 0,
           "gridPos": {
             "h": 9,
@@ -4071,7 +4071,7 @@ sa_telemetry_grafana_dashboards:
           {
             "allValue": null,
             "current": {},
-            "datasource": "${prometheus}",
+            "datasource": "prometheus",
             "hide": 0,
             "includeAll": true,
             "label": null,
