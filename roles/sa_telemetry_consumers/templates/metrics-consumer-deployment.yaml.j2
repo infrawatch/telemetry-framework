@@ -19,11 +19,11 @@ spec:
           mountPath: /config
         resources:
           requests:
-            memory: 100Mi
-            cpu: 100m
+            memory: {{ sa_telemetry_metrics_memory_request }}
+            cpu: {{ sa_telemetry_metrics_cpu_request }}
           limits:
-            memory: 200Mi
-            cpu: 200m
+            memory: {{ sa_telemetry_metrics_memory_limit }}
+            cpu: {{ sa_telemetry_metrics_cpu_limit }}
         args: ["-config=/config/sa.metrics.config.json"]
         ports:
         - name: metrics
