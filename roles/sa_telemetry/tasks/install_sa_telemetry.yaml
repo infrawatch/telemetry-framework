@@ -21,6 +21,11 @@
     sa_telemetry_prometheus_namespace: "{{ sa_telemetry_namespace }}"
 
 - include_role:
+    name: sa_telemetry_prometheusrules
+  vars:
+    sa_telemetry_prometheusrules_namespace: "{{ sa_telemetry_namespace }}"
+
+- include_role:
     name: sa_telemetry_consumers
   vars:
     sa_telemetry_consumers_namespace: "{{ sa_telemetry_namespace }}"
