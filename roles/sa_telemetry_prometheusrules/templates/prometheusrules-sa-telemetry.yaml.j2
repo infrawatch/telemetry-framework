@@ -1,3 +1,4 @@
+#jinja2:variable_start_string:'[%', variable_end_string:'%]', trim_blocks: False
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -30,8 +31,8 @@ spec:
       labels:
         severity: page
       annotations:
-        summary: "Instance {{ .instance }} down"
-        description: "{{ .instance }} of job {{ .job }} has been down for more than 5 minutes."
+        summary: "Instance {{ $labels.instance }} down"
+        description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
   - name: NFVI Services_status
     interval: 30s
     rules:
@@ -50,8 +51,8 @@ spec:
       labels:
         severity: critical
       annotations:
-        summary: "{{  }} zombie process(es) found"
-        description: "{{  }} zombie process(es) for more than 30 secs."
+        summary: "{{ $value }} zombie process(es) found"
+        description: "{{ $value }} zombie process(es) for more than 30 secs."
 
     - alert: System Rebooted
       expr: collectd_uptime{job="collectd"}< 60
@@ -59,5 +60,5 @@ spec:
       labels:
         severity: critical
       annotations:
-        summary: "{% raw %}{{ .instance }}{% endraw %} rebooted"
-        description: "{% raw %}{{ .instance }}{% endraw %} rebooted."
+        summary: "{% raw %}{{ $labels.instance }}{% endraw %} rebooted"
+        description: "{% raw %}{{ $labels.instance }}{% endraw %} rebooted."
