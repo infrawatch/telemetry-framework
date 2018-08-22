@@ -4,6 +4,18 @@
 #          code before running this!
 
 inventory=61will.space_dev
+time_server=2.fedora.pool.ntp.org
+
+while getopts ":t:i:" opt; do
+    case $opt in
+        t) time_server="$OPTARG" ; echo "-- set timeserver to ${time_server}"
+        ;;
+        i) inventory="$OPTARG" ; echo "-- set inventory to ${inventory}"
+        ;;
+    esac
+done
+
+exit 0
 
 #*** clean
 for d in base-infra-bootstrap openshift-ansible
@@ -35,7 +47,7 @@ ansible --ssh-common-args="-o UserKnownHostsFile=/dev/null -o StrictHostKeyCheck
     --inventory working/openshift-ansible/inventory/telemetry.inventory \
     --module-name script \
     --become \
-    --args "./scripts/post_install.sh" all
+    --args "./scripts/post_install.sh -t${time_server}" all
 
 #*** install openshift with openshift-ansible
 pushd working/openshift-ansible
