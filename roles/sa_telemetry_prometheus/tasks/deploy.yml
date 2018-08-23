@@ -8,8 +8,8 @@
     content:
       path: /tmp/pout
       data: "{{ lookup('template', 'prometheus-sa-telemetry-deployment.yaml.j2') | from_yaml }}"
-  retries: 20
-  delay: 3
+  retries: 50
+  delay: 5
   register: result
   until: not result.failed
 
