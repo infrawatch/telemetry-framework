@@ -38,3 +38,8 @@ EOF
 
     systemctl restart chronyd.service
 fi
+
+# logrotate
+yum install logrotate -y
+mv /etc/cron.daily/logrotate /etc/cron.hourly/
+touch /etc/cron.hourly/logrotate
