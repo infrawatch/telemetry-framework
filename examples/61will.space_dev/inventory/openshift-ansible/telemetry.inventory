@@ -1,4 +1,4 @@
-# vim: set ft=yaml shiftwidth=2 tabstop=2 expandtab :
+# vim: set ft=dosini shiftwidth=2 tabstop=2 expandtab :
 openshift-master-1 ansible_host=openshift-master-1.home.61will.space
 openshift-node-1 ansible_host=openshift-node-1.home.61will.space
 openshift-node-2 ansible_host=openshift-node-2.home.61will.space
@@ -27,6 +27,11 @@ openshift_storage_glusterfs_storageclass_default=true
 # service broker
 openshift_enable_service_catalog=true
 openshift_service_catalog_image_version=v3.9
+
+# logging control
+logrotate_scripts=[{"name": "syslog", "path": "/var/log/cron\n/var/log/maillog\n/var/log/messages\n/var/log/secure\n/var/log/spooler\n", "options": ["daily", "rotate 4", "size 50M", "compress", "sharedscripts", "missingok"], "scripts": {"postrotate": "/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true"}}]
+
+journald_vars_to_replace=[{ "var": "Storage", "val": "persistent" },{ "var": "Compress", "val": "yes" },{ "var": "SyncIntervalSec", "val": "1s" },{ "var": "RateLimitInterval", "val": "1s" },{ "var": "RateLimitBurst", "val": "10000" },{ "var": "SystemMaxUse", "val": "500M" },{ "var": "SystemKeepFree", "val": "20%" },{ "var": "SystemMaxFileSize", "val": "10M" },{ "var": "MaxRetentionSec", "val": "1month" },{ "var": "MaxFileSec", "val": "1day" },{ "var": "ForwardToSyslog", "val": "no" },{ "var": "ForwardToWall", "val": "no" }]
 
 # main setup
 openshift_disable_check=disk_availability,memory_availability,docker_image_availability,package_version

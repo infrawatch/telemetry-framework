@@ -15,16 +15,6 @@ yum install NetworkManager -y
 systemctl enable NetworkManager.service
 systemctl start NetworkManager.service
 
-# journald
-cat > /etc/systemd/journald.conf <<EOF
-[Journal]
-SystemMaxUse=500M
-SystemMaxFileSize=10M
-EOF
-
-journalctl --vacuum-size=500M
-systemctl restart systemd-journald.service
-
 # chronyd
 if [ -v time_server  ]; then
     cat > /etc/chrony.conf <<EOF
