@@ -26,7 +26,7 @@ openshift_storage_glusterfs_storageclass_default=true
 
 # service broker
 openshift_enable_service_catalog=true
-openshift_service_catalog_image_version=v3.9
+openshift_service_catalog_image_version=v3.10
 
 # logging control
 logrotate_scripts=[{"name": "syslog", "path": "/var/log/cron\n/var/log/maillog\n/var/log/messages\n/var/log/secure\n/var/log/spooler\n", "options": ["daily", "rotate 4", "size 50M", "compress", "sharedscripts", "missingok"], "scripts": {"postrotate": "/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true"}}]
@@ -35,10 +35,10 @@ journald_vars_to_replace=[{ "var": "Storage", "val": "persistent" },{ "var": "Co
 
 # main setup
 openshift_disable_check=disk_availability,memory_availability,docker_image_availability,package_version
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 openshift_deployment_type=origin
-openshift_release=v3.9
-openshift_pkg_version=-3.9.0-1.el7.git.0.ba7faec
+openshift_release=v3.10
+openshift_pkg_version=-3.10.0-1.el7.git.0.0c4577e
 enable_excluders=false
 openshift_clock_enabled=true
 
@@ -58,6 +58,10 @@ ansible_service_broker_registry_organization=ansibleplaybookbundle
 ansible_service_broker_registry_whitelist=[".*-apb$"]
 ansible_service_broker_local_registry_whitelist=[".*"]
 
+# define node groups
+openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true']}, {'name': 'node-config-infra', 'labels': ['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute', 'labels': ['node-role.kubernetes.io/compute=true','node=blue','application=sa-telemetry']}]
+
+
 [masters]
 openshift-master-1
 
@@ -65,10 +69,10 @@ openshift-master-1
 openshift-master-1
 
 [nodes]
-openshift-master-1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-openshift-node-1 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue', 'application': 'sa-telemetry'}"
-openshift-node-2 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue', 'application': 'sa-telemetry'}"
-openshift-infra-node-1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+openshift-master-1 openshift_node_group_name='node-config-master'
+openshift-node-1 openshift_node_group_name='node-config-compute'
+openshift-node-2 openshift_node_group_name='node-config-compute'
+openshift-infra-node-1 openshift_node_group_name='node-config-infra'
 
 [glusterfs]
 openshift-master-1

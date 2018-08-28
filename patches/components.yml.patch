@@ -1,11 +1,11 @@
 diff --git a/playbooks/common/private/components.yml b/playbooks/common/private/components.yml
-index 089645d07..bc47861ab 100644
+index c5627be..1b56ee8 100644
 --- a/playbooks/common/private/components.yml
 +++ b/playbooks/common/private/components.yml
-@@ -36,3 +36,6 @@
+@@ -51,3 +51,6 @@
  
- - import_playbook: ../../openshift-management/private/config.yml
-   when: openshift_management_install_management | default(false) | bool
+ - import_playbook: ../../openshift-autoheal/private/config.yml
+   when: openshift_autoheal_deploy | default(false) | bool
 +
 +- import_playbook: ../../sa-telemetry/private/config.yml
 +  when: sa_telemetry_install | default(false) | bool

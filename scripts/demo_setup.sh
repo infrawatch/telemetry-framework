@@ -34,6 +34,9 @@ pushd working/base-infra-bootstrap
         playbooks/vm-teardown.yml \
         playbooks/virt-host-setup.yml
 
+#*** load ssh keys into memory from vars
+    ansible -c local -e "@./inventory/nodes.vars" -m raw -a 'ssh-add {{ vm_ssh_key_path }}' localhost
+
 #*** wait for nodes to come up
     ansible -i inventory/vms.local.generated -m wait_for \
         -a "port=22 host='{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}' search_regex=OpenSSH delay=10" \

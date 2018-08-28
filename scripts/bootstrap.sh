@@ -2,7 +2,7 @@
 
 BASE_INFRA_BOOTSTRAP_GIT_REPO="https://github.com/redhat-nfvpe/base-infra-bootstrap"
 OPENSHIFT_GIT_REPO="https://github.com/openshift/openshift-ansible"
-OPENSHIFT_BRANCH="openshift-ansible-3.9.39-1"
+OPENSHIFT_BRANCH="openshift-ansible-3.10.38-1"
 _TOPDIR=`pwd`
 
 echo "-- Create working directory"
