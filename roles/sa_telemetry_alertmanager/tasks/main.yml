@@ -33,7 +33,7 @@
     labels:
       app: sa-telemetry-alertmanager
     ports:
-    - name: alertmanager
+    - name: web
       port: "{{ sa_telemetry_alertmanager_service_port }}"
       targetPort: "{{ sa_telemetry_alertmanager_service_targetport }}"
       protocol: TCP
