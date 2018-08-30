@@ -64,6 +64,7 @@
     content:
       path: /tmp/ksmroleout
       data: "{{ lookup('template', 'ksm-sa-telemetry-role.yaml.j2') | from_yaml }}"
+  ignore_errors: true
 
 - name: Create KSM role binding
   oc_obj:
@@ -74,6 +75,7 @@
     content:
       path: /tmp/ksmrolebindingout
       data: "{{ lookup('template', 'ksm-sa-telemetry-rolebinding.yaml.j2') | from_yaml }}"
+  ignore_errors: true
 
 - name: Create KSM cluster role
   oc_obj:
@@ -83,7 +85,7 @@
     content:
       path: /tmp/ksmclusterroleout
       data: "{{ lookup('template', 'ksm-sa-telemetry-clusterrole.yaml.j2') | from_yaml }}"
-
+  ignore_errors: true
 
 - name: Deploy kube-state-metrics
   oc_obj:
@@ -94,3 +96,15 @@
     content:
       path: /tmp/ksmout
       data: "{{ lookup('template', 'ksm-sa-telemetry-deployment.yaml.j2') | from_yaml }}"
+  ignore_errors: true
+
+- name: Create service monitor for KSM
+  oc_obj:
+    namespace: "{{ sa_telemetry_ksm_namespace }}"
+    state: present
+    kind: ServiceMonitor
+    name: kube-state-metrics
+    content:
+      path: /tmp/ksmsmout
+      data: "{{ lookup('template', 'ksm-sa-telemetry-servicemonitor.yaml.j2') | from_yaml }}"
+  ignore_errors: true
