@@ -16,6 +16,24 @@ data:
          timeInterval: "4s"
       version: 1
       editable: true
+    - name: prometheus-internal-blue
+      type: prometheus
+      access: proxy
+      orgId: 1
+      url: http://prometheus-blue.sa-telemetry.svc:9090
+      jsonData:
+         timeInterval: "4s"
+      version: 1
+      editable: true
+    - name: prometheus-internal-green
+      type: prometheus
+      access: proxy
+      orgId: 1
+      url: http://prometheus-green.sa-telemetry.svc:9090
+      jsonData:
+         timeInterval: "4s"
+      version: 1
+      editable: true
     - name: connectivity
       type: elasticsearch
       typeLogoUrl: "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg"
