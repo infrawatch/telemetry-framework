@@ -6,3 +6,4 @@ sa_telemetry_prometheus_service_name: prometheus
 sa_telemetry_prometheus_service_port: 9090
 sa_telemetry_prometheus_service_targetport: web
 sa_telemetry_prometheus_replicas: 1
+sa_telemetry_prometheus_default_interval: 10s
