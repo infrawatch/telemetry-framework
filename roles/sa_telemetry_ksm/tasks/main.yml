@@ -63,7 +63,7 @@
     name: kube-state-metrics-resizer
     content:
       path: /tmp/ksmroleout
-      data: "{{ lookup('template', 'ksm-sa-telemetry-role.yaml.j2') }}"
+      data: "{{ lookup('template', 'ksm-sa-telemetry-role.yaml.j2') | from_yaml }}"
 
 - name: Create KSM role binding
   oc_obj:
@@ -73,7 +73,7 @@
     name: kube-state-metrics-resizer
     content:
       path: /tmp/ksmrolebindingout
-      data: "{{ lookup('template', 'ksm-sa-telemetry-rolebinding.yaml.j2') }}"
+      data: "{{ lookup('template', 'ksm-sa-telemetry-rolebinding.yaml.j2') | from_yaml }}"
 
 - name: Create KSM cluster role
   oc_obj:
@@ -82,7 +82,7 @@
     name: kube-state-metrics
     content:
       path: /tmp/ksmclusterroleout
-      data: "{{ lookup('template', 'ksm-sa-telemetry-clusterrole.yaml.j2') }}"
+      data: "{{ lookup('template', 'ksm-sa-telemetry-clusterrole.yaml.j2') | from_yaml }}"
 
 
 - name: Deploy kube-state-metrics
