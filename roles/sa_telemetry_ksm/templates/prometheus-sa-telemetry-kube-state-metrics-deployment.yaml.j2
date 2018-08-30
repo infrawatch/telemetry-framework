@@ -93,4 +93,4 @@ spec:
         beta.kubernetes.io/os: linux
       securityContext:
         privileged: true
-      serviceAccountName: kube-state-metrics
+      serviceAccountName: {{ sa_telemetry_prometheus_serviceaccount_name }}

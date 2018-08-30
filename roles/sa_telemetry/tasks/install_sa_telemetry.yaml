@@ -39,3 +39,8 @@
     name: sa_telemetry_alertmanager
   vars:
     sa_telemetry_alertmanager_namespace: "{{ sa_telemetry_namespace }}"
+
+- include_role:
+    name: sa_telemetry_ksm
+  vars:
+    sa_telemetry_ksm_namespace: "{{ sa_telemetry_namespace }}"

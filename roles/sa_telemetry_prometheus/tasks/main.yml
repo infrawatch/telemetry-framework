@@ -6,13 +6,6 @@
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
   changed_when: false
 
-- name: Create kube-state-metrics serviceaccount
-  oc_serviceaccount:
-    state: present
-    name: kube-state-metrics
-    namespace: "{{ sa_telemetry_prometheus_namespace }}"
-  changed_when: false
-
 - name: Create prometheus role for this.namespace
   oc_obj:
     state: present
