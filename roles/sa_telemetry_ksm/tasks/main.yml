@@ -87,6 +87,17 @@
       data: "{{ lookup('template', 'ksm-sa-telemetry-clusterrole.yaml.j2') | from_yaml }}"
   ignore_errors: true
 
+- name: Create KSM cluster role binding
+  oc_obj:
+    namespace: kube-system
+    state: present
+    kind: ClusterRoleBinding
+    name: kube-state-metrics
+    content:
+      path: /tmp/ksmclusterrolebindingout
+      data: "{{ lookup('template', 'ksm-sa-telemetry-clusterrolebinding.yaml.j2') }}"
+  ignore_errors: true
+
 - name: Deploy kube-state-metrics
   oc_obj:
     namespace: kube-system
