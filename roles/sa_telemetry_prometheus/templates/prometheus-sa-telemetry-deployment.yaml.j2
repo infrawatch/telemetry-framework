@@ -49,4 +49,4 @@ spec:
         storageClassName: {{ openshift_storage_glusterfs_namespace }}-{{ openshift_storage_glusterfs_name }}
         resources:
           requests:
-            storage: 1G
+            storage: {{ sa_telemetry_prometheus_storage_size }}
