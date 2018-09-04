@@ -34,7 +34,7 @@ openshift_enable_service_catalog=true
 openshift_service_catalog_image_version=v3.9
 
 # main setup
-openshift_disable_check=disk_availability,memory_availability,docker_image_availability
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability,package_version
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 openshift_deployment_type=origin
 openshift_release=v3.9
