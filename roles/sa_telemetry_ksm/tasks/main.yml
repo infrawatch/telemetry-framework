@@ -95,7 +95,7 @@
     name: kube-state-metrics
     content:
       path: /tmp/ksmclusterrolebindingout
-      data: "{{ lookup('template', 'ksm-sa-telemetry-clusterrolebinding.yaml.j2') }}"
+      data: "{{ lookup('template', 'ksm-sa-telemetry-clusterrolebinding.yaml.j2') | from_yaml }}"
   ignore_errors: true
 
 - name: Deploy kube-state-metrics
