@@ -27,16 +27,13 @@
     selector:
       sa-app: prometheus-{{ node.name }}
 
-- name: Create prometheus route
+- name: Create prometheus route for {{ node.name }}
   oc_route:
     state: present
-    name: "{{ item.name }}"
-    host: "{{ item.host }}"
+    name: "{{ node.name }}-prometheus"
+    host: "{{ node.name }}-prometheus-{{ sa_telemetry_prometheus_namespace }}.{{ openshift_master_default_subdomain }}"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
-    service_name: "{{ item.name }}"
-  with_items:
-    - name: prometheus
-      host: "{{ sa_telemetry_prometheus_hostname }}"
+    service_name: "prometheus-{{ node.name }}"
 
 - name: ServiceMonitor for prometheus {{ node.name }}
   oc_obj:
