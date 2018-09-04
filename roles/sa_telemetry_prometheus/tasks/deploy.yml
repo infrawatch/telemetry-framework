@@ -40,11 +40,7 @@
 
 - name: ServiceMonitor for prometheus {{ node.name }}
   oc_obj:
-    state: present
-    name: sa-telemetry-prometheus-{{ node.name }}
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
-    kind: ServiceMonitor
-    content:
       path: /tmp/psmout
       data: "{{ lookup('template', 'prometheus-sa-telemetry-service-monitor.yaml.j2') | from_yaml }}"
   ignore_errors: true
