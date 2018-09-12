@@ -14,3 +14,16 @@ spec:
   endpoints:
   - port: metrics
     interval: {{ sa_telemetry_consumers_default_interval }}
+    metricRelabelings:  
+    - action: labeldrop
+      regex: pod
+      sourcelabels: []
+    - action: labeldrop
+      regex: namespace
+      sourcelabels: []
+    - action: labeldrop
+      regex: instance
+      sourcelabels: []
+    - action: labeldrop
+      regex: job
+      sourcelabels: []
