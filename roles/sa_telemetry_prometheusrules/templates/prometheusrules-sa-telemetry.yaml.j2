@@ -9,13 +9,32 @@ metadata:
       role: prometheus-rulefiles
 spec:
   groups:
-  - name: Example Alert
+  - interval: 30s
+    name: Metrics-Consumer-Health
+    rules:
+    - alert: consumer-down
+      expr: rate(sa_collectd_total_amqp_processed_message_count[1m]) == 0
+      annotations:
+        description: '{{ $labels.service }} not processing messages for more than 30 secs.'
+        summary:   down
+      for: 30s
+      labels:
+        severity: critical
+    - alert: HostDown
+      expr: max_over_time(sa_collectd_last_metric_for_host_status[1m])==0
+      annotations:
+        description: '{{ $labels.instance }} not pushing metrics for 30s'
+        summary:  '{{ $labels.instance }} collectd down'
+      for: 30s
+      labels:
+        severity: critical
+  - name: General Alerts
     interval: 1m
     rules:
-    - alert: ExampleAlert
+    - alert: TestAlert
       expr: vector(1)
     - alert: HighErrorRate
-      expr: job:request_latency_seconds:mean5m{job="myjob"} > 0.5
+      expr: job:request_latency_seconds:mean5m{job=~"sa-telemetry/metrics-consumer-.*"} > 0.5
       for: 10m
       labels:
         severity: page
@@ -44,7 +63,6 @@ spec:
       annotations:
         summary: NFVi service is down
         description: "NFVi service has been DOWN for more than 30 secs."
-       
     - alert: Zombie process(es)
       expr: avg_over_time(collectd_nfvi_service{job="collectd",service="zombieprocess-process"}[30s])>0
       for: 30s
