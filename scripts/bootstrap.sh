@@ -3,7 +3,7 @@
 BASE_INFRA_BOOTSTRAP_GIT_REPO="https://github.com/redhat-nfvpe/base-infra-bootstrap"
 OPENSHIFT_GIT_REPO="https://github.com/openshift/openshift-ansible"
 OPENSHIFT_BRANCH="openshift-ansible-3.9.39-1"
-_TOPDIR=`pwd`
+_TOPDIR=$(dirname `readlink -f -- $0`)/..
 
 echo "-- Create working directory"
 if [ ! -d working ]; then
