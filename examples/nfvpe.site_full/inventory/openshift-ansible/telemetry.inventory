@@ -1,4 +1,4 @@
-# vim: set ft=yaml shiftwidth=2 tabstop=2 expandtab :
+# vim: set ft=dosini shiftwidth=2 tabstop=2 expandtab :
 openshift-lb ansible_host=openshift-lb.nfvpe.site
 openshift-master-1 ansible_host=openshift-master-1.nfvpe.site
 openshift-master-2 ansible_host=openshift-master-2.nfvpe.site
@@ -59,6 +59,7 @@ openshift_master_default_subdomain=apps.nfvpe.site
 # ansible service broker
 #ansible_service_broker_registry_user=
 #ansible_service_broker_registry_password=
+ansible_service_broker_sandbox_role=admin
 ansible_service_broker_registry_organization=ansibleplaybookbundle
 ansible_service_broker_registry_whitelist=[".*-apb$"]
 ansible_service_broker_local_registry_whitelist=[".*"]
