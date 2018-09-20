@@ -102,7 +102,7 @@
   oc_obj:
     namespace: kube-system
     state: present
-    kind: Deployment
+    kind: DeploymentConfig
     name: kube-state-metrics
     content:
       path: /tmp/ksmout

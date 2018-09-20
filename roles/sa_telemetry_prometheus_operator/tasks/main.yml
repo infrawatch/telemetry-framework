@@ -57,7 +57,7 @@
   oc_obj:
     namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
     state: present
-    kind: Deployment
+    kind: DeploymentConfig
     name: prometheus-operator
     content:
       path: /tmp/dout

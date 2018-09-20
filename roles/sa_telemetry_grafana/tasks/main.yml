@@ -80,7 +80,7 @@
     name: "grafana"
     namespace: "{{ sa_telemetry_grafana_namespace }}"
     state: present
-    kind: Deployment
+    kind: DeploymentConfig
     content:
       path: /tmp/dout
       data: "{{ lookup('template', 'grafana_deployment.yaml.j2') | from_yaml }}"
