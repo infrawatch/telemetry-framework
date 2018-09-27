@@ -4,6 +4,7 @@ BASE_INFRA_BOOTSTRAP_GIT_REPO="https://github.com/redhat-nfvpe/base-infra-bootst
 OPENSHIFT_GIT_REPO="https://github.com/openshift/openshift-ansible"
 OPENSHIFT_BRANCH="openshift-ansible-3.9.39-1"
 _TOPDIR=$(dirname `readlink -f -- $0`)/..
+PATCH_EXISTS=`type patch 2>/dev/null | wc -l`
 
 echo "-- Create working directory"
 if [ ! -d working ]; then
@@ -24,7 +25,11 @@ pushd working
     echo "-- Overlay telemetry-framework on openshift-ansible"
     pushd openshift-ansible
         echo "  -- apply components.yml patch"
-        patch -p1 < $_TOPDIR/patches/components.yml.patch > /dev/null 2>&1
+	if [ $PATCH_EXISTS -eq 1 ]; then
+          patch -p1 < $_TOPDIR/patches/components.yml.patch
+        else
+          git apply $_TOPDIR/patches/components.yml.patch
+        fi
 
         echo "  -- link playbooks"
         pushd playbooks
