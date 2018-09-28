@@ -17,7 +17,7 @@ debug_level=4
 openshift_install_examples=false
 
 # install telemetry
-sa_telemetry_install=true
+sa_telemetry_install=false
 sa_telemetry_namespace=sa-telemetry
 sa_telemetry_node_labels=[{'name': 'blue', 'host': 'openshift-master'}]
 
