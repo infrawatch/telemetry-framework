@@ -2,7 +2,7 @@
 sa_telemetry_grafana_secret_user: YWRtaW4=
 sa_telemetry_grafana_secret_password: YWRtaW4=
 sa_telemetry_grafana_serviceaccount_name: grafana
-sa_telemetry_grafana_hostname: grafana-{{ sa_telemetry_grafana_namespace }}.{{ openshift_master_default_subdomain }}
+sa_telemetry_grafana_hostname: grafana-{{ sa_telemetry_grafana_namespace }}
 sa_telemetry_grafana_service_name: grafana
 sa_telemetry_grafana_service_port: 3000
 sa_telemetry_grafana_service_targetport: web

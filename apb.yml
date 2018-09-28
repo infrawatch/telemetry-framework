@@ -1,0 +1,24 @@
+version: 1.0
+name: telemetry-framework-apb
+description: Telemetry Framework
+bindable: False
+async: optional
+metadata:
+  displayName: Telemetry Framework (APB)
+  imageUrl: https://raw.githubusercontent.com/redhat-nfvpe/telemetry-framework/master/apb/icon/Icon_RH_Diagram_Graph-Line-Analysis_RGB_Flat.png
+  providerDisplayName: "Red Hat, Inc."
+plans:
+  - name: default
+    description: This default plan deploys telemetry-framework-apb
+    free: True
+    metadata:
+        displayName: Default
+    parameters:
+        - name: oc_login_username
+          type: string
+          title: OpenShift administration login username
+          required: true
+        - name: oc_login_password
+          type: string
+          display_type: password
+          required: true
