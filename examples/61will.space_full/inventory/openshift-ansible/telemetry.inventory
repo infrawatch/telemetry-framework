@@ -23,6 +23,7 @@ debug_level=4
 # install telemetry
 sa_telemetry_install=true
 sa_telemetry_namespace=sa-telemetry
+sa_telemetry_node_labels=[{'name': 'blue', 'host': 'openshift-infra-node-1'}, {'name': 'green', 'host': 'openshift-infra-node-2'}]
 
 # storage
 openshift_storage_glusterfs_namespace=glusterfs
