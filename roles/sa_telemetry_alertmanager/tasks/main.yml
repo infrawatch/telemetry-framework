@@ -44,7 +44,7 @@
   oc_route:
     state: present
     name: "{{ item.name }}"
-    host: "{{ item.host }}"
+    #host: "{{ item.host }}"
     namespace: "{{ sa_telemetry_alertmanager_namespace }}"
     service_name: "{{ item.name }}"
   with_items:

@@ -18,8 +18,49 @@ plans:
           type: string
           title: OpenShift administration login username
           required: true
+          display_group: OpenShift Credentials
         - name: oc_login_password
           type: string
           title: OpenShift administration login password
           display_type: password
           required: true
+          display_group: OpenShift Credentials
+        - name: deploy_blue
+          type: boolean
+          display_type: checkbox
+          required: true
+          default: false
+          display_group: Blue Infrastructure
+          title: Deploy to blue infrastructure?
+        - name: host_blue
+          type: string
+          display_type: text
+          required: false
+          display_group: Blue Infrastructure
+          title: Name of blue infrastructure node
+        - name: ip_blue
+          type: string
+          display_type: text
+          required: false
+          display_group: Blue Infrastructure
+          title: External IP address of blue infrastructure node
+        - name: deploy_green
+          type: boolean
+          display_type: checkbox
+          required: true
+          default: false
+          display_group: Green Infrastructure
+          title: Deploy to green infrastructure?
+        - name: host_green
+          type: string
+          display_type: text
+          required: false
+          display_group: Green Infrastructure
+          title: Name of green infrastructure node
+        - name: ip_green
+          type: string
+          display_type: text
+          required: false
+          display_group: Green Infrastructure
+          title: External IP address of green infrastructure node
+

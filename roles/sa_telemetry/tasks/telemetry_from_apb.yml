@@ -1,0 +1,8 @@
+---
+- set_fact:
+    sa_telemetry_node_labels: "{{ sa_telemetry_node_labels + [{ 'name': 'blue', 'host': '{{ host_blue }}', 'ip': '{{ ip_blue }}' }] }}"
+  when: deploy_blue
+
+- set_fact:
+    sa_telemetry_node_labels: "{{ sa_telemetry_node_labels + [{ 'name': 'green', 'host': '{{ host_green }}', 'ip': '{{ ip_green }}' }] }}"
+  when: deploy_green

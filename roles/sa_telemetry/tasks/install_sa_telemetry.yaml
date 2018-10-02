@@ -5,6 +5,9 @@
     name: "{{ sa_telemetry_namespace }}"
     node_selector: "{{ sa_telemetry_nodeselector | default(null) }}"
 
+- include_tasks: telemetry_from_apb.yml
+  when: sa_telemetry_via_apb
+
 - include_role:
     name: sa_telemetry_prometheus_operator
   vars:
