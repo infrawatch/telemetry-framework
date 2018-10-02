@@ -3,9 +3,7 @@
   oc_route:
     state: present
     name: "{{ item.name }}"
-    #host: "{{ item.host }}"
     namespace: "{{ sa_telemetry_qdr_namespace }}"
     service_name: "{{ item.name }}"
   with_items:
-    - name: messaging-external-{{ node_label.name }}
-      host: "{{ node_label.name }}.{{ sa_telemetry_qdr_hostname }}"
+    - name: "{{ node_label.name }}-qdr"

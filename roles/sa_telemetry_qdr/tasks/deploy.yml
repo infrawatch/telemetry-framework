@@ -26,7 +26,7 @@
 
 - name: Create external message Service
   oc_service:
-    name: messaging-external-{{ node_label.name }}
+    name: "{{ node_label.name }}-qdr"
     namespace: "{{ sa_telemetry_qdr_namespace }}"
     labels:
       app: qdr

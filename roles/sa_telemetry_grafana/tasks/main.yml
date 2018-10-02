@@ -21,12 +21,10 @@
   oc_route:
     state: present
     name: "{{ item.name }}"
-    #host: "{{ item.host }}"
     namespace: "{{ sa_telemetry_grafana_namespace }}"
     service_name: "{{ item.name }}"
   with_items:
     - name: grafana
-      host: "{{ sa_telemetry_grafana_hostname }}"
 
 - name: create services for grafana
   oc_service:

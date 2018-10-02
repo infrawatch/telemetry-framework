@@ -1,3 +1,1 @@
 ---
-sa_telemetry_qdr_hostname: qdr-{{ sa_telemetry_qdr_namespace }}
-sa_telemetry_qdr_id: "{{ ansible_hostname }}"

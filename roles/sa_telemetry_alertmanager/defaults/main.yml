@@ -4,7 +4,6 @@ sa_telemetry_alertmanager_serviceaccount_name: alertmanager
 sa_telemetry_alertmanager_service_name: alertmanager
 sa_telemetry_alertmanager_service_port: 9093
 sa_telemetry_alertmanager_service_targetport: web
-sa_telemetry_alertmanager_hostname: alertmanager-{{ sa_telemetry_alertmanager_namespace }}
 sa_telemetry_alertmanager_config: |
   global:
     resolve_timeout: 5m
