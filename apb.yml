@@ -20,5 +20,6 @@ plans:
           required: true
         - name: oc_login_password
           type: string
+          title: OpenShift administration login password
           display_type: password
           required: true
