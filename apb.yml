@@ -63,4 +63,3 @@ plans:
           required: false
           display_group: Green Infrastructure
           title: External IP address of green infrastructure node
-
