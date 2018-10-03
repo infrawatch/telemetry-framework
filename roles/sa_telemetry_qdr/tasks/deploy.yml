@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    node_external_ip: "{{ hostvars[node_label.host]['ansible_host'] }}"
+    node_external_ip: "{{ hostvars[node_label.host]['ansible_default_ipv4']['address'] }}"
   when: not sa_telemetry_via_apb and node_label.ip is undefined
 
 - set_fact:
