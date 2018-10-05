@@ -39,7 +39,7 @@ ICAgICAgdGl0bGU6IE5hbWUgb2YgZ3JlZW4gaW5mcmFzdHJ1Y3R1cmUgbm9kZQogICAgICAgIC0g\
 bmFtZTogaXBfZ3JlZW4KICAgICAgICAgIHR5cGU6IHN0cmluZwogICAgICAgICAgZGlzcGxheV90\
 eXBlOiB0ZXh0CiAgICAgICAgICByZXF1aXJlZDogZmFsc2UKICAgICAgICAgIGRpc3BsYXlfZ3Jv\
 dXA6IEdyZWVuIEluZnJhc3RydWN0dXJlCiAgICAgICAgICB0aXRsZTogRXh0ZXJuYWwgSVAgYWRk\
-cmVzcyBvZiBncmVlbiBpbmZyYXN0cnVjdHVyZSBub2RlCgo="
+cmVzcyBvZiBncmVlbiBpbmZyYXN0cnVjdHVyZSBub2RlCg=="
 
 COPY apb/playbooks/* /opt/apb/project/
 COPY . /opt/apb/project/
