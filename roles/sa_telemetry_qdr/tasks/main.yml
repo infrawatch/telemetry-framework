@@ -1,71 +1,9 @@
 ---
-- name: Create messaging Service
-  oc_service:
-    name: messaging-internal-{{ item.name }}
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    labels:
-      app: qdr-{{ item.name }}
-      node: "{{ item.name }}"
-    ports:
-    - name: amqp
-      port: 5672
-    - name: amqps
-      port: 5671
-    selector:
-      type: router
-      node: "{{ item.name }}"
-  loop: "{{ sa_telemetry_node_labels }}"
-
-- name: Create external message Service
-  oc_service:
-    name: messaging-external-{{ item.name }}
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    labels:
-      app: qdr
-      node: "{{ item.name }}"
-    ports:
-    - name: inter-router
-      port: 20001
-    selector:
-      type: router
-      node: "{{ item.name }}"
-    external_ips:
-      - "{{ hostvars[item.host]['ansible_host'] }}"
-  loop: "{{ sa_telemetry_node_labels }}"
-
-
-- debug:
-    msg: "qdrouterd-config-{{ item.name }}"
+- name: Deploy QDR routers
+  include_tasks: deploy.yml
   loop: "{{ sa_telemetry_node_labels }}"
   loop_control:
-    index_var: label_index
-
-
-- name: Create QDR ConfigMap
-  oc_obj:
-    name: qdrouterd-config-{{ item.name }}
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    state: present
-    kind: ConfigMap
-    content:
-      path: /tmp/cmout
-      data: "{{ lookup('template', 'qdrouterd.conf.j2') | from_yaml }}"
-  loop: "{{ sa_telemetry_node_labels }}"
-  loop_control:
-    index_var: label_index
-
-- name: Create QDR Deployment
-  oc_obj:
-    force: yes
-    name: qdr-central-router-{{ item.name }}
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    state: present
-    kind: deployment
-    content:
-      path: /tmp/dout
-      data: "{{ lookup('template', 'qdr-deployment.yaml.j2') | from_yaml }}"
-  ignore_errors: true
-  loop: "{{ sa_telemetry_node_labels }}"
+    loop_var: node_label
 
 - include_tasks: routes.yml
   with_items: "{{ sa_telemetry_node_labels }}"

@@ -46,7 +46,6 @@ spec:
     resources: {}
     volumeClaimTemplate:
       spec:
-        storageClassName: {{ openshift_storage_glusterfs_namespace }}-{{ openshift_storage_glusterfs_name }}
         resources:
           requests:
             storage: {{ sa_telemetry_prometheus_storage_size }}

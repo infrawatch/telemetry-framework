@@ -1,0 +1,25 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: 2018-09-26T21:13:43Z
+  name: alertmanager
+  namespace: sa-telemetry
+  resourceVersion: "9894"
+  selfLink: /apis/route.openshift.io/v1/namespaces/sa-telemetry/routes/alertmanager
+  uid: 0c62d53f-c1d1-11e8-b514-525400acc3dd
+spec:
+  host: alertmanager-sa-telemetry.apps.dev.home.61will.space
+  to:
+    kind: Service
+    name: alertmanager
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - lastTransitionTime: 2018-09-26T21:13:43Z
+      status: "True"
+      type: Admitted
+    host: alertmanager-sa-telemetry.apps.dev.home.61will.space
+    routerName: router
+    wildcardPolicy: None

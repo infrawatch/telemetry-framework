@@ -43,4 +43,5 @@
       vars:
         sa_telemetry_install: true
         sa_telemetry_namespace: "{{ namespace }}"
+        sa_telemetry_via_apb: true
 

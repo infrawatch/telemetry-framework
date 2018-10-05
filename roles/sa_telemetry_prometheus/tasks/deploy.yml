@@ -31,13 +31,14 @@
   oc_route:
     state: present
     name: "{{ node.name }}-prometheus"
-    host: "{{ node.name }}-prometheus-{{ sa_telemetry_prometheus_namespace }}.{{ openshift_master_default_subdomain }}"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
     service_name: "prometheus-{{ node.name }}"
 
 - name: ServiceMonitor for prometheus {{ node.name }}
   oc_obj:
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
+    name: "{{ node.name }}-prometheus"
+    kind: ServiceMonitor
     content:
       path: /tmp/psmout
       data: "{{ lookup('template', 'prometheus-sa-telemetry-service-monitor.yaml.j2') | from_yaml }}"

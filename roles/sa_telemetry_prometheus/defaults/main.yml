@@ -1,7 +1,6 @@
 ---
 sa_telemetry_prometheus_image_version: 2.3.2
 sa_telemetry_prometheus_serviceaccount_name: prometheus-sa
-sa_telemetry_prometheus_hostname: prometheus-{{ sa_telemetry_prometheus_namespace }}.{{ openshift_master_default_subdomain }}
 sa_telemetry_prometheus_service_name: prometheus
 sa_telemetry_prometheus_service_port: 9090
 sa_telemetry_prometheus_service_targetport: web

@@ -1,8 +1,7 @@
 # vim: set ft=dosini shiftwidth=2 tabstop=2 expandtab :
-openshift-master-1 ansible_host=openshift-master-1.home.61will.space
-openshift-node-1 ansible_host=openshift-node-1.home.61will.space
-openshift-node-2 ansible_host=openshift-node-2.home.61will.space
-openshift-infra-node-1 ansible_host=192.168.3.36
+openshift-master ansible_host=openshift-master.dev.home.61will.space
+openshift-node-1 ansible_host=openshift-node-1.dev.home.61will.space
+openshift-node-2 ansible_host=openshift-node-2.dev.home.61will.space
 
 [OSEv3:children]
 masters
@@ -14,10 +13,13 @@ glusterfs
 ansible_become=yes
 debug_level=4
 
+# no examples
+openshift_install_examples=false
+
 # install telemetry
-sa_telemetry_install=true
+sa_telemetry_install=false
 sa_telemetry_namespace=sa-telemetry
-sa_telemetry_node_labels=[{'name': 'blue', 'host': 'openshift-infra-node-1'}]   # defaults in roles/sa_telemetry/defaults/main.yml
+sa_telemetry_node_labels=[{'name': 'blue', 'host': 'openshift-master'}]
 
 # storage
 openshift_storage_glusterfs_namespace=glusterfs
@@ -42,14 +44,11 @@ openshift_pkg_version=-3.9.0-1.el7.git.0.ba7faec
 enable_excluders=false
 openshift_clock_enabled=true
 
-# Native HA
-openshift_master_cluster_method=native
-openshift_master_cluster_hostname=master.home.61will.space
-openshift_master_cluster_public_hostname=console.home.61will.space
-
 # hostname setup
 openshift_hostname_check=true
-openshift_master_default_subdomain=apps.home.61will.space
+openshift_master_default_subdomain=apps.dev.home.61will.space
+openshift_master_cluster_hostname=master.dev.home.61will.space
+openshift_master_cluster_public_hostname=console.dev.home.61will.space
 
 # ansible service broker
 #ansible_service_broker_registry_user=dockerhub_username
@@ -60,19 +59,18 @@ ansible_service_broker_registry_whitelist=[".*-apb$"]
 ansible_service_broker_local_registry_whitelist=[".*"]
 
 [masters]
-openshift-master-1
+openshift-master
 
 [etcd]
-openshift-master-1
+openshift-master
 
 [nodes]
-openshift-master-1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+openshift-master openshift_node_labels="{'region': 'infra', 'zone': 'default', 'node': 'blue'}"
 openshift-node-1 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue', 'application': 'sa-telemetry'}"
 openshift-node-2 openshift_node_labels="{'region': 'primary', 'zone': 'default', 'node': 'blue', 'application': 'sa-telemetry'}"
-openshift-infra-node-1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
 [glusterfs]
-openshift-master-1
+openshift-master
 openshift-node-1
 openshift-node-2
 
