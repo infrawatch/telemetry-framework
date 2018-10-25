@@ -42,6 +42,6 @@ dXA6IEdyZWVuIEluZnJhc3RydWN0dXJlCiAgICAgICAgICB0aXRsZTogRXh0ZXJuYWwgSVAgYWRk\
 cmVzcyBvZiBncmVlbiBpbmZyYXN0cnVjdHVyZSBub2RlCg=="
 
 COPY apb/playbooks/* /opt/apb/project/
-COPY . /opt/apb/project/
+COPY openshift/roles/* /opt/apb/project/roles/
 RUN chmod -R g=u /opt/{ansible,apb}
 USER apb

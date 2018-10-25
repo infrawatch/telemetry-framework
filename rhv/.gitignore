@@ -1,0 +1,4 @@
+roles/*
+!roles/.keepit
+vars/*
+!vars/.keepit

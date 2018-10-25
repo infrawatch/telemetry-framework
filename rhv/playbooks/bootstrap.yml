@@ -1,0 +1,19 @@
+---
+- name: Setup repositories for RHV environment
+  hosts: virthosts
+  become: true
+  become_user: root
+
+  vars_files:
+    # Contains encrypted `username` and `password` variables using ansible-vault
+    - ../vars/{{ password_file }}
+
+  vars:
+    ovirt_repositories_use_subscription_manager: True
+    ovirt_repositories_force_register: False
+    ovirt_repositories_rh_username: "{{ ovirt_repositories_rh_username }}"
+    ovirt_repositories_rh_password: "{{ ovirt_repositories_rh_password }}"
+    ovirt_repositories_pool_ids: "{{ ovirt_repositories_pool_ids }}"
+
+  roles:
+    - role: oVirt.repositories

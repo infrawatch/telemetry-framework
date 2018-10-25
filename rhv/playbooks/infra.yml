@@ -1,0 +1,64 @@
+- name: oVirt infra
+  hosts: engine
+  #  connection: local
+  gather_facts: false
+
+  vars_files:
+    - ../vars/passwords.yml
+
+  vars:
+     engine_url: https://ovirtmgr.management.61will.space/ovirt-engine/api
+     engine_user: admin@internal
+     engine_cafile: /etc/pki/ovirt-engine/ca.pem
+     data_center_name: Default
+     data_center_local: true
+     compatibility_version: 4.2
+
+     clusters:
+      - name: Default
+        cpu_type: Intel Skylake Client Family
+        profile: production
+
+     hosts:
+      - name: virthost2
+        address: virthost2.management.61will.space
+        cluster: Default
+        public_key: true
+
+     storages:
+       data:
+         master: true
+         state: present
+         localfs:
+           path: "/home/ovirt/storage/data"
+
+     logical_networks:
+       - name: ovirtexternal
+         clusters:
+           - name: Default
+             assigned: yes
+             required: no
+             display: no
+             migration: no
+             gluster: no
+
+  tasks:
+    - name: Login to oVirt
+      ovirt_auth:
+        url: "{{ engine_url }}"
+        username: "{{ engine_user }}"
+        password: "{{ engine_password }}"
+        ca_file: "{{ engine_cafile | default(omit) }}"
+        insecure: "{{ engine_insecure | default(true) }}"
+      tags:
+        - always
+
+    - include_role:
+        name: oVirt.infra
+
+    - name: Logout from oVirt
+      ovirt_auth:
+        state: absent
+        ovirt_auth: "{{ ovirt_auth }}"
+      tags:
+        - always

@@ -1,0 +1,6 @@
+---
+- src: oVirt.engine-setup
+- src: oVirt.infra
+- src: oVirt.image-template
+- src: oVirt.repositories
+- src: oVirt.vm-infra
