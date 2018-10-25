@@ -1,4 +1,5 @@
 # telemetry-framework-rhv
+
 Automation for installation of telemetry framework on RHV. Purpose of this repository
 is to provide documentation and automation for:
 
@@ -28,7 +29,7 @@ Ansible playbooks against your host server).
 
 # Topology
 
-![Topology](docs/images/telemetry_framework_on_rhv.png)
+![Topology](imgs/telemetry_framework_on_rhv.png)
 
 # DNS Configuration
 
@@ -269,29 +270,29 @@ in [Install RHV Engine](#install-rhv-engine) for the web interface.
 
 On the left bar, select `Compute > Data Centers`.
 
-![Compute > Data Centers](docs/images/data-center-storage-local.png)
+![Compute > Data Centers](imgs/data-center-storage-local.png)
 
 Then right-click on the `Default` data center.
 
-![Edit Data Center](docs/images/data-center-edit-default.png)
+![Edit Data Center](imgs/data-center-edit-default.png)
 
 Change the _Storage Type_ from _Shared_ to _Local_.
 
-![Set storage Local](docs/images/data-center-storage-set-local.png)
+![Set storage Local](imgs/data-center-storage-set-local.png)
 
 ## Add a Host to the Data Center Cluster
 
 Now we need to add our host to the engine so that it can be managed, allowing
 us to create our virtual machines.
 
-![Hosts menu](docs/images/data-center-host-setup.png)
+![Hosts menu](imgs/data-center-host-setup.png)
 
 And then click on the _New_ button and create your host (which in our case
 is the `10.19.110.7` host where we installed the RHV engine since we're
 doing a single node installation here. If you have the RHV engine somewhere
 else then you just add one or more hosts the same as we're doing here).
 
-![Add host](docs/images/data-center-add-host.png)
+![Add host](imgs/data-center-add-host.png)
 
 You should now have a host that says it is _Non-Operational_ because we need to
 setup networking and storage for the node. If you received a failure then you'll
@@ -309,18 +310,18 @@ interfere with our existing DHCP network. Your networking requirements may diffe
 
 First let's load up our `dot7` host.
 
-![Hosts menu](docs/images/data-center-host-setup.png)
+![Hosts menu](imgs/data-center-host-setup.png)
 
 Then click on the _Network Interfaces_ tab within the `dot7` host itself.
 
-![Host networking screen](docs/images/data-center-host-network-interfaces.png)
+![Host networking screen](imgs/data-center-host-network-interfaces.png)
 
 Click on _Setup Host Networks_ then drag the `ovirtmgmt` networking interface over
 to the `eno1` physical interface. Before we make these changes, let's setup the
 interface to have a static IP address of `10.19.111.100` since our `eno2` network
 is designed to use `10.19.111.0/24` subnet.
 
-![ovirtmgmt interface static address](docs/images/data-center-ovirtmgmt-static-address.png)
+![ovirtmgmt interface static address](imgs/data-center-ovirtmgmt-static-address.png)
 
 And with everything configured we can now click on the _OK_ button in the network
 configuration screen, and then in the _Setup Host dot7 Networks_ screen as well.
@@ -354,7 +355,7 @@ templates and images.
 
 Go to _Storage > Domains_ from the left menu.
 
-![Storage domain configuration](docs/images/data-center-storage-domains.png)
+![Storage domain configuration](imgs/data-center-storage-domains.png)
 
 Then we're going to create the new data domain by clicking on _New Domain_. We
 need to configure the local storage to point at the directory we just created above.
@@ -366,7 +367,7 @@ to _Local on Host_.
 > As this is a POC we're setting this up fairly dirty, but in the future we'll
 > convert this to shared storage using something like GlusterFS or NFS.
 
-![Storage new domain](docs/images/data-center-storage-domain-config.png)
+![Storage new domain](imgs/data-center-storage-domain-config.png)
 
 Once we've configured the storage, click on _OK_ and you should see a pop
 up box saying the storage has been configured on the host.
