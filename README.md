@@ -1,25 +1,43 @@
 # telemetry-framework
 
-Automation for telemetry framework using Ansible playbooks layered on top of
-OpenShift Ansible
+The telemetry framework is a project that aims to centralize metrics and events
+of various platform components (not applications) in order to provide a
+centralized view of multiple platform deployments.
 
-## Prerequisites
+Telemetry framework is also known as Service Assurance (SA), or Service
+Assurance Framework, and naming may be interchangable throughout the
+documentation.
 
-The `bootstrap.sh` script assumes you already have `git` installed on your
-system and that you have access to `github.com`. No checks are performed to
-validate this for you.
+## Documentation
 
-## Usage
-
-Run `bootstrap.sh` which will clone the OpenShift Ansible repository and setup
-the _telemetry framework_ components inside the repository.
-
-The script is intended to be run from the root of the repository.
-
-```
-./scripts/bootstrap.sh
-```
+Documentation is available in the [documentation](docs/README.md) folder.
 
 ## Installation
 
-Installation of the telemetry framework is currently being developed. Documentation is available in the [documentation](docs/README.md) folder.
+Installation of the telemetry framework is currently being developed. The
+recommended installation method out of this repository is currently to leverage
+RHV (Red Hat Virtualization) on top of RHEL to build out a place to run the
+initial bits of infrastructure.
+
+An older method exists which uses the
+[base-infra-bootstrap](https://github.com/redhat-nfvpe/base-infra-bootstrap)
+playbooks and roles, but is no longer the recommended way to install the
+telemetry-framework.
+
+## Dependencies
+
+The focus of this repository is to gather the information required to build out
+the infrastructure to result in a near-production (i.e. staging) environment
+for evaluation of the telemetry framework micro-service application, which runs
+on top of OpenShift. It is installed via the [Automation
+Broker](https://automationbroker.io) using an Ansible Playbook Bundle.
+
+The primary dependency is to provide an OpenShift cluster (virtual or
+otherwise) which has a working `ansible-service-broker` and service catalog,
+pointing at a registry with the APB available to it, and listed in the service
+catalog. OpenShift must also have persistent storage configured so that
+persistent volume claims (PVC) can be made by the APB for persistent storage.
+
+Our testing and automation were designed with GlusterFS in mind for the
+persistent storage backend. Using other methods may result in issues that we
+haven't seen.
