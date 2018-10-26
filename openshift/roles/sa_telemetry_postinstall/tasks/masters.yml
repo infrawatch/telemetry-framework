@@ -1,4 +1,10 @@
 ---
+- name: Set SA telemetry project
+  oc_project:
+    state: present
+    name: "{{ sa_telemetry_namespace }}"
+    node_selector: "{{ sa_telemetry_nodeselector }}"
+
 - name: Add login information to masters htpasswd
   template:
     src: origin_master_htpasswd.j2

@@ -2,3 +2,5 @@ roles/*
 !roles/.keepit
 vars/*
 !vars/.keepit
+openshift-ansible
+playbooks/openshift-ansible-playbook

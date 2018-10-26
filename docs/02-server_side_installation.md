@@ -1,8 +1,9 @@
 # Telemetry Platform Deployment
 
-Instructions in this gist are for the deployment of the telemetry platform on top of OpenShift Origin v3.9. Deployment of
-the platform is done in two (2) steps. The first step is bootstrap of the virtual hosts and installation of the virtual
-machines (VM) on those virtual hosts (virthost).
+Instructions in this gist are for the deployment of the telemetry platform on
+top of OpenShift Origin v3.9. Deployment of the platform is done in two (2)
+steps. The first step is bootstrap of the virtual hosts and installation of the
+virtual machines (VM) on those virtual hosts (virthost).
 
 # Prerequisites
 
@@ -429,22 +430,27 @@ have now been automated in the `sa-telemetry-postinstall` role.
 
 ## Add ssh keys into ssh-agent
 
-From your control machine (i.e. laptop), you may need to load the `blue` and `green` SSH keys into the ssh-agent so you
-can connect to the remote hosts.
+From your control machine (i.e. laptop), you may need to load the `blue` and
+`green` SSH keys into the ssh-agent so you can connect to the remote hosts.
 
     ssh-add ~/.ssh/blue
     ssh-add ~/.ssh/green
 
-Validate you can login to the remote nodes with something like `ssh centos@10.19.110.65` (`openshift-master-1`).
+Validate you can login to the remote nodes with something like `ssh
+centos@10.19.110.65` (`openshift-master-1`).
 
 ## Deploy ElasticSearch Cluster from Catalog
 
-The automation does not automatically deploy ElasticSearch for you (which is required for events). You'll do this through
-the web interface using the catalog. If you've gotten the Automation Broker (aka Ansible Service Broker) working (which
-should be done if you've used the supplied inventory file), then you can click on the `ElasticSearch (APB)` catalog item
-and deploy an ElasticSearch cluster.
+The automation does not automatically deploy ElasticSearch for you (which is
+required for events). You'll do this through the web interface using the
+catalog. If you've gotten the Automation Broker (aka Ansible Service Broker)
+working (which should be done if you've used the supplied inventory file), then
+you can click on the `ElasticSearch (APB)` catalog item and deploy an
+ElasticSearch cluster.
 
-Use the persistent storage version of the cluster deployment, set the cluster size to 2 or more, and create the secret
-token during deployment so that it can live in the `sa-telemetry` namespace. Creating a route should not be necessary
-unless you want to access the web interface. An internal service will be automatically created, and the Events Consumer
-container should already be configured by default to attempt to connect to it.
+Use the persistent storage version of the cluster deployment, set the cluster
+size to 2 or more, and create the secret token during deployment so that it can
+live in the `sa-telemetry` namespace. Creating a route should not be necessary
+unless you want to access the web interface. An internal service will be
+automatically created, and the Events Consumer container should already be
+configured by default to attempt to connect to it.

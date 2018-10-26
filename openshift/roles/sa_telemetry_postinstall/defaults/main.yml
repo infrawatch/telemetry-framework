@@ -1,5 +1,8 @@
 ---
 sa_telemetry_users:
   - name: admin
-    pass: $apr1$DzSA6Q2T$BfrvcDKO.TLKk41zw8dpJ.
+    pass: $apr1$XIz.kOcR$j7BIUYeonw9JjsW5pyFcN/
     role: admin
+
+sa_telemetry_namespace: sa-telemetry
+sa_telemetry_nodeselector: null

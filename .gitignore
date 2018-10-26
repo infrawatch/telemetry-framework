@@ -5,3 +5,4 @@ openshift/examples/*
 !openshift/examples/61will.space_full
 !openshift/examples/nfvpe.site_full
 !openshift/examples/README.md
+rhv/playbooks/openshift-ansible-playbooks
