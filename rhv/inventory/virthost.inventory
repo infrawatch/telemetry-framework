@@ -1,12 +1,7 @@
-manager ansible_host=ovirtmgr.management.61will.space
-virthost2 ansible_host=virthost2.management.61will.space
+virt_host ansible_host=10.19.110.7 ansible_ssh_user=root
 
 [virthosts]
-manager
-virthost2
-
-[engine]
-manager
+virt_host
 
 [all:vars]
-ansible_user=root
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
