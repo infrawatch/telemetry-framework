@@ -22,7 +22,7 @@
     state: present
     user: "{{ item.name }}"
     namespace: "{{ sa_telemetry_postinstall_namespace }}"
-    resource_kind: role
-    resource_name: admin
+    resource_kind: cluster-role
+    resource_name: cluster-admin
   with_items: "{{ sa_telemetry_users }}"
   run_once: true

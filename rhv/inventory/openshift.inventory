@@ -54,12 +54,11 @@ openshift_master_cluster_public_hostname=console.dev.nfvpe.site
 ansible_service_broker_sandbox_role=admin
 ansible_service_broker_registry_whitelist=[".*-apb$"]
 ansible_service_broker_local_registry_whitelist=[".*"]
-ansible_service_broker_registry_type=docker
-ansible_service_broker_registry_name=dh
-ansible_service_broker_registry_url="https://docker.io"
-ansible_service_broker_registry_user=null
-ansible_service_broker_registry_password=null
+ansible_service_broker_registry_type=dockerhub
+ansible_service_broker_registry_name=nfvpe
+ansible_service_broker_registry_url="https://registry.hub.docker.com"
 ansible_service_broker_registry_organization=nfvpe
+ansible_service_broker_registry_tag=latest
 
 [masters]
 openshift-master
