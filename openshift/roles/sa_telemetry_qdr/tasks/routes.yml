@@ -1,7 +1,7 @@
 ---
 - name: Create QDR Route
   oc_route:
-    state: present
+    state: "{{ state }}"
     name: "{{ item.name }}"
     namespace: "{{ sa_telemetry_qdr_namespace }}"
     service_name: "{{ item.name }}"

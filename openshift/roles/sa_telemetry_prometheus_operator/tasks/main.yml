@@ -1,7 +1,7 @@
 ---
 - name: Create prometheus-operator service account
   oc_serviceaccount:
-    state: present
+    state: "{{ state }}"
     name: prometheus-operator
     namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
 
@@ -10,12 +10,12 @@
     namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
     resource_kind: scc
     resource_name: privileged
-    state: present
+    state: "{{ state }}"
     user: "system:serviceaccount:{{ sa_telemetry_prometheus_operator_namespace }}:prometheus-operator"
 
 - name: Create prometheus-operator cluster role
   oc_clusterrole:
-    state: present
+    state: "{{ state }}"
     name: prometheus-operator
     rules:
       - apiGroups: ["extensions"]
@@ -48,7 +48,7 @@
 
 - name: Bind prometheus-operator to prometheus-operator service account
   oc_adm_policy_user:
-    state: present
+    state: "{{ state }}"
     resource_kind: cluster-role
     resource_name: prometheus-operator
     user: "system:serviceaccount:{{ sa_telemetry_prometheus_operator_namespace }}:prometheus-operator"
@@ -56,7 +56,7 @@
 - name: Deploy the operator
   oc_obj:
     namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
-    state: present
+    state: "{{ state }}"
     kind: DeploymentConfig
     name: prometheus-operator
     content:
@@ -65,7 +65,7 @@
 
 - name: Set the service for Prometheus Operator
   oc_service:
-    state: present
+    state: "{{ state }}"
     name: prometheus-operator
     namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
     labels:
@@ -77,3 +77,13 @@
         protocol: TCP
     selector:
       app: prometheus-operator
+
+- name: Delete services created by the operator when deprovisioning
+  oc_service:
+    state: absent
+    name: "{{ item }}"
+    namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
+  loop:
+    - alertmanager-operated
+    - prometheus-operated
+  when: state == "absent"

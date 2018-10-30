@@ -1,8 +1,8 @@
 ---
 - name: PrometheusRules for SA Telemetry
   oc_obj:
-    state: present
-    name: sa-telemetry-prometheusrules
+    state: "{{ state }}"
+    name: sa-telemetry-rules
     namespace: "{{ sa_telemetry_prometheusrules_namespace }}"
     kind: PrometheusRule
     content:
