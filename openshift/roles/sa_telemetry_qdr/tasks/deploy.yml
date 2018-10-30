@@ -9,6 +9,7 @@
 
 - name: Create messaging Service
   oc_service:
+    state: "{{ state }}"
     name: messaging-internal-{{ node_label.name }}
     namespace: "{{ sa_telemetry_qdr_namespace }}"
     labels:
@@ -26,6 +27,7 @@
 
 - name: Create external message Service
   oc_service:
+    state: "{{ state }}"
     name: "{{ node_label.name }}-qdr"
     namespace: "{{ sa_telemetry_qdr_namespace }}"
     labels:
@@ -43,9 +45,9 @@
 
 - name: Create QDR ConfigMap
   oc_obj:
+    state: "{{ state }}"
     name: qdrouterd-config-{{ node_label.name }}
     namespace: "{{ sa_telemetry_qdr_namespace }}"
-    state: present
     kind: ConfigMap
     content:
       path: /tmp/cmout
@@ -56,15 +58,13 @@
 
 - name: Create QDR Deployment
   oc_obj:
+    state: "{{ state }}"
     force: yes
     name: qdr-central-router-{{ node_label.name }}
     namespace: "{{ sa_telemetry_qdr_namespace }}"
-    state: present
-    kind: deployment
+    kind: deploymentconfig
     content:
       path: /tmp/dout
       data: "{{ lookup('template', 'qdr-deployment.yaml.j2') | from_yaml }}"
   ignore_errors: true
   loop: "{{ sa_telemetry_node_labels }}"
-
-

@@ -1,7 +1,7 @@
 ---
 - name: PrometheusRules for SA Telemetry
   oc_obj:
-    state: present
+    state: "{{ state }}"
     name: sa-telemetry-prometheusrules
     namespace: "{{ sa_telemetry_prometheusrules_namespace }}"
     kind: PrometheusRule

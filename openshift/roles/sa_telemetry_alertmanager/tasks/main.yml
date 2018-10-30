@@ -1,14 +1,14 @@
 ---
 - name: Create alertmanager serviceaccount
   oc_serviceaccount:
-    state: present
+    state: "{{ state }}"
     name: "{{ sa_telemetry_alertmanager_serviceaccount_name }}"
     namespace: "{{ sa_telemetry_alertmanager_namespace }}"
   changed_when: false
 
 - name: Add configuration (secret) for alertmanager
   oc_secret:
-    state: present
+    state: "{{ state }}"
     name: alertmanager-sa
     namespace: "{{ sa_telemetry_alertmanager_namespace }}"
     contents:
@@ -17,6 +17,7 @@
 
 - name: Deploy Alertmanager via Operator
   oc_obj:
+    state: "{{ state }}"
     force: yes
     name: alertmanager-sa
     namespace: "{{ sa_telemetry_alertmanager_namespace }}"
@@ -28,6 +29,7 @@
 
 - name: Create services for alertmanager
   oc_service:
+    state: "{{ state }}"
     name: "{{ sa_telemetry_alertmanager_service_name }}"
     namespace: "{{ sa_telemetry_alertmanager_namespace }}"
     labels:
@@ -42,7 +44,7 @@
 
 - name: Create Alertmanager route
   oc_route:
-    state: present
+    state: "{{ state }}"
     name: "{{ item.name }}"
     namespace: "{{ sa_telemetry_alertmanager_namespace }}"
     service_name: "{{ item.name }}"

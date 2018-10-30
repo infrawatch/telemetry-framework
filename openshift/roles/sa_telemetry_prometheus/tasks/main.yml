@@ -1,14 +1,14 @@
 ---
 - name: Create prometheus serviceaccount
   oc_serviceaccount:
-    state: present
+    state: "{{ state }}"
     name: "{{ sa_telemetry_prometheus_serviceaccount_name }}"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
   changed_when: false
 
 - name: Create prometheus role for this.namespace
   oc_obj:
-    state: present
+    state: "{{ state }}"
     name: prometheus-sa-telemetry
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
     kind: Role
@@ -18,7 +18,7 @@
 
 - name: Create prometheus role for kube-system namespace
   oc_obj:
-    state: present
+    state: "{{ state }}"
     name: prometheus-sa-telemetry
     namespace: kube-system
     kind: Role
@@ -28,7 +28,7 @@
 
 - name: Create prometheus role for default namespace
   oc_obj:
-    state: present
+    state: "{{ state }}"
     name: prometheus-sa-telemetry
     namespace: default
     kind: Role
@@ -38,7 +38,7 @@
 
 - name: Create prometheus clusterrole
   oc_clusterrole:
-    state: present
+    state: "{{ state }}"
     name: prometheus-sa-telemetry
     rules:
       - apiGroups: [""]
@@ -49,6 +49,7 @@
 
 - name: Create RoleBinding for this.namespace
   oc_obj:
+    state: "{{ state }}"
     name: prometheus-sa-telemetry
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
     kind: RoleBinding
@@ -58,6 +59,7 @@
 
 - name: Create RoleBinding for kube-system namespace
   oc_obj:
+    state: "{{ state }}"
     name: prometheus-sa-telemetry
     namespace: kube-system
     kind: RoleBinding
@@ -67,6 +69,7 @@
 
 - name: Create service for prometheus deployments
   oc_service:
+    state: "{{ state }}"
     name: "{{ sa_telemetry_prometheus_service_name }}"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
     labels:
@@ -81,7 +84,7 @@
 
 - name: Create prometheus route
   oc_route:
-    state: present
+    state: "{{ state }}"
     name: "{{ item.name }}"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
     service_name: "{{ item.name }}"

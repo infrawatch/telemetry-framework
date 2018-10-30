@@ -1,9 +1,9 @@
-- name: telemetry-framework-apb playbook to provision the application
+- name: telemetry-framework-apb playbook to deprovision the application
   hosts: localhost
   gather_facts: false
   connection: local
   vars:
-    apb_action: provision
+    apb_action: deprovision
     kubeconfig: "{{ lookup('env', 'HOME') }}/.kube/config"
   module_defaults:
     oc_adm_policy_user:
@@ -41,6 +41,6 @@
     - include_role:
         name: sa_telemetry
       vars:
-        sa_telemetry_install: true
+        sa_telemetry_install: false
         sa_telemetry_namespace: "{{ namespace }}"
         sa_telemetry_via_apb: true

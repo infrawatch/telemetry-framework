@@ -4,6 +4,7 @@
     force: yes
     name: "{{ node.name }}"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
+    state: "{{ state }}"
     kind: Prometheus
     content:
       path: /tmp/pout
@@ -17,6 +18,7 @@
   oc_service:
     name: "{{ sa_telemetry_prometheus_service_name }}-{{ node.name }}"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
+    state: "{{ state }}"
     labels:
       sa-app: prometheus-{{ node.name }}
     ports:
@@ -29,7 +31,7 @@
 
 - name: Create prometheus route for {{ node.name }}
   oc_route:
-    state: present
+    state: "{{ state }}"
     name: "{{ node.name }}-prometheus"
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
     service_name: "prometheus-{{ node.name }}"
@@ -38,6 +40,7 @@
   oc_obj:
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
     name: "{{ node.name }}-prometheus"
+    state: "{{ state }}"
     kind: ServiceMonitor
     content:
       path: /tmp/psmout

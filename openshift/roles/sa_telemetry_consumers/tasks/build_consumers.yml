@@ -1,7 +1,7 @@
 ---
 - name: ConfigMap for {{ consumer_type }} consumer
   oc_obj:
-    state: present
+    state: "{{ state }}"
     name: "{{ consumer_type }}-config-{{ item.name }}"
     namespace: "{{ sa_telemetry_consumers_namespace }}"
     kind: ConfigMap
@@ -11,12 +11,13 @@
   ignore_errors: true
   with_items: "{{ sa_telemetry_node_labels }}"
 
-- name: Deployment for {{ consumer_type }} consumer
+- name: DeploymentConfig for {{ consumer_type }} consumer
   oc_obj:
+    state: "{{ state }}"
     force: yes
     name: sa-telemetry-{{ consumer_type }}-consumer-{{ item.name }}
     namespace: "{{ sa_telemetry_consumers_namespace }}"
-    kind: deployment
+    kind: deploymentconfig
     content:
       path: /tmp/dout
       data: "{{ lookup('template', '{{ consumer_type }}-consumer-deployment.yaml.j2') | from_yaml }}"
@@ -25,6 +26,7 @@
 
 - name: Service for {{ consumer_type }} consumer
   oc_service:
+    state: "{{ state }}"
     name: "{{ consumer_type }}-consumer-{{ item.name }}"
     namespace: "{{ sa_telemetry_consumers_namespace }}"
     labels:
@@ -42,7 +44,7 @@
 
 - name: ServiceMonitor for {{ consumer_type }} consumer
   oc_obj:
-    state: present
+    state: "{{ state }}"
     name: sa-telemetry-{{ consumer_type }}-consumer-{{ item.name }}
     namespace: "{{ sa_telemetry_consumers_namespace }}"
     kind: ServiceMonitor

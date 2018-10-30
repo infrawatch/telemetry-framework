@@ -2,7 +2,7 @@
 # openshift metrics
 - name: Create kube-state-metrics serviceaccount
   oc_serviceaccount:
-    state: present
+    state: "{{ state }}"
     name: kube-state-metrics
     namespace: kube-system
   changed_when: false
@@ -11,6 +11,7 @@
   oc_service:
     name: kube-scheduler-prometheus-discovery
     namespace: kube-system
+    state: "{{ state }}"
     labels:
       k8s-app: kube-scheduler
     selector:
@@ -25,6 +26,7 @@
   oc_service:
     name: kube-controller-manager-prometheus-discovery
     namespace: kube-system
+    state: "{{ state }}"
     labels:
       k8s-app: kube-controller-manager
     selector:
@@ -39,6 +41,7 @@
   oc_service:
     name: kube-state-metrics
     namespace: "{{ sa_telemetry_ksm_namespace }}"
+    state: "{{ state }}"
     labels:
       k8s-app: kube-state-metrics
     annotations:
@@ -58,7 +61,7 @@
 - name: Create KSM role
   oc_obj:
     namespace: kube-system
-    state: present
+    state: "{{ state }}"
     kind: Role
     name: kube-state-metrics-resizer
     content:
@@ -69,7 +72,7 @@
 - name: Create KSM role binding
   oc_obj:
     namespace: kube-system
-    state: present
+    state: "{{ state }}"
     kind: RoleBinding
     name: kube-state-metrics-resizer
     content:
@@ -79,7 +82,7 @@
 
 - name: Create KSM cluster role
   oc_obj:
-    state: present
+    state: "{{ state }}"
     kind: ClusterRole
     name: kube-state-metrics
     content:
@@ -90,7 +93,7 @@
 - name: Create KSM cluster role binding
   oc_obj:
     namespace: kube-system
-    state: present
+    state: "{{ state }}"
     kind: ClusterRoleBinding
     name: kube-state-metrics
     content:
@@ -101,7 +104,7 @@
 - name: Deploy kube-state-metrics
   oc_obj:
     namespace: kube-system
-    state: present
+    state: "{{ state }}"
     kind: Deployment
     name: kube-state-metrics
     content:
@@ -112,7 +115,7 @@
 - name: Create service monitor for KSM
   oc_obj:
     namespace: "{{ sa_telemetry_ksm_namespace }}"
-    state: present
+    state: "{{ state }}"
     kind: ServiceMonitor
     name: kube-state-metrics
     content:
