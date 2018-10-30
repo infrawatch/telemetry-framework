@@ -64,6 +64,23 @@ Now we need to fill in 2 (or 3) sections:
 * Blue Infrastructure
 * Green Infrastructure (optional)
 
+> **Blue vs Blue/Green Installation**
+>
+> When installing, the Green infrastructure data is optional since you can
+> deploy in a non-high availability setup with minimal infrastructure.
+>
+> For example, if you have a single master and 2 compute nodes (for 3 virtual
+> nodes total) then you would only use the blue infrastructure since you only
+> have a single infrastructure node (router) as openshift-master. If you create
+> a redundant structure such as with a load balancer, 3 masters, multiple
+> compute, and at least 2 infrastructure nodes, then you could use both blue
+> and green deployments, with the infrastructure nodes (routers) being the 2
+> endpoints for each of the blue and the green infrastructure.
+>
+> You'll also need to make sure your nodes have been labeled for blue and green
+> properly so that your workloads are distributed across the nodes for your
+> blue and green physical machines.
+
 You'll need to know the cluster administrator login, along with the node name
 and IP address of an infrastructure node in your environment.
 
