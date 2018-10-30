@@ -1,11 +1,26 @@
 ---
-- name: Deploy QDR routers
-  include_tasks: deploy.yml
-  loop: "{{ sa_telemetry_node_labels }}"
-  loop_control:
-    loop_var: node_label
+- block:
+    - name: Deploy QDR routers
+      include_tasks: deploy.yml
+      loop: "{{ sa_telemetry_node_labels }}"
+      loop_control:
+        loop_var: node_label
 
-- include_tasks: routes.yml
-  with_items: "{{ sa_telemetry_node_labels }}"
-  loop_control:
-    loop_var: node_label
+    - include_tasks: routes.yml
+      with_items: "{{ sa_telemetry_node_labels }}"
+      loop_control:
+        loop_var: node_label
+  when: state == "present"
+
+- block:
+    - include_tasks: routes.yml
+      with_items: "{{ sa_telemetry_node_labels }}"
+      loop_control:
+        loop_var: node_label
+
+    - name: Deploy QDR routers
+      include_tasks: deploy.yml
+      loop: "{{ sa_telemetry_node_labels }}"
+      loop_control:
+        loop_var: node_label
+  when: state == "absent"

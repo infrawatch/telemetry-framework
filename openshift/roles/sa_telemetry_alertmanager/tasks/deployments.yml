@@ -1,9 +1,8 @@
 - name: Deploy Alertmanager via Operator
   oc_obj:
-    debug: true
     state: "{{ state }}"
     force: yes
-    name: alertmanager-sa
+    name: sa
     namespace: "{{ sa_telemetry_alertmanager_namespace }}"
     kind: Alertmanager
     content:

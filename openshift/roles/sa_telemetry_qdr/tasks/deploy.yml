@@ -7,64 +7,17 @@
     node_external_ip: "{{ node_label.ip }}"
   when: node_label.ip is defined
 
-- name: Create messaging Service
-  oc_service:
-    state: "{{ state }}"
-    name: messaging-internal-{{ node_label.name }}
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    labels:
-      app: qdr-{{ node_label.name }}
-      node: "{{ node_label.name }}"
-    ports:
-    - name: amqp
-      port: 5672
-    - name: amqps
-      port: 5671
-    selector:
-      type: router
-      node: "{{ node_label.name }}"
-  loop: "{{ sa_telemetry_node_labels }}"
+- set_fact:
+    play_list:
+      - services
+      - configmaps
+      - deployments
 
-- name: Create external message Service
-  oc_service:
-    state: "{{ state }}"
-    name: "{{ node_label.name }}-qdr"
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    labels:
-      app: qdr
-      node: "{{ node_label.name }}"
-    ports:
-    - name: inter-router
-      port: 20001
-    selector:
-      type: router
-      node: "{{ node_label.name }}"
-    external_ips:
-      - "{{ node_external_ip }}"
-  loop: "{{ sa_telemetry_node_labels }}"
+- set_fact:
+    play_list: "{{ play_list | reverse | list }}"
+  when: state == " absent"
 
-- name: Create QDR ConfigMap
-  oc_obj:
-    state: "{{ state }}"
-    name: qdrouterd-config-{{ node_label.name }}
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    kind: ConfigMap
-    content:
-      path: /tmp/cmout
-      data: "{{ lookup('template', 'qdrouterd.conf.j2') | from_yaml }}"
-  loop: "{{ sa_telemetry_node_labels }}"
+- include_tasks: "{{ play }}.yml"
+  loop: "{{ play_list }}"
   loop_control:
-    index_var: label_index
-
-- name: Create QDR Deployment
-  oc_obj:
-    state: "{{ state }}"
-    force: yes
-    name: qdr-central-router-{{ node_label.name }}
-    namespace: "{{ sa_telemetry_qdr_namespace }}"
-    kind: deploymentconfig
-    content:
-      path: /tmp/dout
-      data: "{{ lookup('template', 'qdr-deployment.yaml.j2') | from_yaml }}"
-  ignore_errors: true
-  loop: "{{ sa_telemetry_node_labels }}"
+    loop_var: play

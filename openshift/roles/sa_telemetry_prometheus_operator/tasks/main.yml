@@ -77,3 +77,13 @@
         protocol: TCP
     selector:
       app: prometheus-operator
+
+- name: Delete services created by the operator when deprovisioning
+  oc_service:
+    state: absent
+    name: "{{ item }}"
+    namespace: "{{ sa_telemetry_prometheus_operator_namespace }}"
+  loop:
+    - alertmanager-operated
+    - prometheus-operated
+  when: state == "absent"

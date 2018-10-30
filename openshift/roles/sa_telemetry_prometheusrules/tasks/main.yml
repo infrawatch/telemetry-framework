@@ -2,7 +2,7 @@
 - name: PrometheusRules for SA Telemetry
   oc_obj:
     state: "{{ state }}"
-    name: sa-telemetry-prometheusrules
+    name: sa-telemetry-rules
     namespace: "{{ sa_telemetry_prometheusrules_namespace }}"
     kind: PrometheusRule
     content:

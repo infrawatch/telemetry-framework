@@ -43,7 +43,7 @@
 
 - name: Create configmap for datasources
   oc_obj:
-    name: "grafana-datasource"
+    name: "grafana-datasources"
     namespace: "{{ sa_telemetry_grafana_namespace }}"
     state: "{{ state }}"
     kind: ConfigMap

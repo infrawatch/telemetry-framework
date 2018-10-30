@@ -39,7 +39,7 @@
 - name: ServiceMonitor for prometheus {{ node.name }}
   oc_obj:
     namespace: "{{ sa_telemetry_prometheus_namespace }}"
-    name: "{{ node.name }}-prometheus"
+    name: "prometheus-{{ node.name }}"
     state: "{{ state }}"
     kind: ServiceMonitor
     content:
