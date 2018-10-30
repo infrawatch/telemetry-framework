@@ -1,0 +1,15 @@
+- name: Create services for alertmanager
+  oc_service:
+    debug: true
+    state: "{{ state }}"
+    name: "{{ sa_telemetry_alertmanager_service_name }}"
+    namespace: "{{ sa_telemetry_alertmanager_namespace }}"
+    labels:
+      app: sa-telemetry-alertmanager
+    ports:
+    - name: web
+      port: "{{ sa_telemetry_alertmanager_service_port }}"
+      targetPort: "{{ sa_telemetry_alertmanager_service_targetport }}"
+      protocol: TCP
+    selector:
+      sa-app: alertmanager

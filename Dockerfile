@@ -41,6 +41,8 @@ eXBlOiB0ZXh0CiAgICAgICAgICByZXF1aXJlZDogZmFsc2UKICAgICAgICAgIGRpc3BsYXlfZ3Jv\
 dXA6IEdyZWVuIEluZnJhc3RydWN0dXJlCiAgICAgICAgICB0aXRsZTogRXh0ZXJuYWwgSVAgYWRk\
 cmVzcyBvZiBncmVlbiBpbmZyYXN0cnVjdHVyZSBub2RlCg=="
 
+ENV BUNDLE_DEBUG=true
+
 COPY apb/playbooks/* /opt/apb/project/
 COPY openshift/roles/ /opt/apb/project/roles/
 RUN chmod -R g=u /opt/{ansible,apb}

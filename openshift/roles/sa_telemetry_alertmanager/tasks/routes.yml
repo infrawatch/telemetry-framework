@@ -1,0 +1,9 @@
+- name: Create Alertmanager route
+  oc_route:
+    debug: true
+    state: "{{ state }}"
+    name: "{{ item.name }}"
+    namespace: "{{ sa_telemetry_alertmanager_namespace }}"
+    service_name: "{{ item.name }}"
+  with_items:
+    - name: alertmanager
