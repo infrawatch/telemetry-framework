@@ -25,6 +25,10 @@ plans:
           display_type: password
           required: true
           display_group: OpenShift Credentials
+        - name: sa_telemetry_qdr_hostname
+          type: string
+          title: Application subdomain (e.g. apps.openshift.tld)
+          required: true
         - name: deploy_blue
           type: boolean
           display_type: checkbox
