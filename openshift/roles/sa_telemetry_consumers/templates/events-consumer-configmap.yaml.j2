@@ -5,10 +5,10 @@ metadata:
 data:
   sa.events.config.json: |+
     {
-            "AMQP1EventURL": "messaging-internal-{{ item.name }}.sa-telemetry.svc:5672/collectd/notify",
-            "ElasticHostURL": "http://elasticsearch.sa-telemetry.svc:9200",
+            "AMQP1EventURL": "messaging-internal-{{ item.name }}.{{ sa_telemetry_consumers_namespace }}.svc:5672/collectd/notify",
+            "ElasticHostURL": "http://elasticsearch.{{ sa_telemetry_consumers_namespace }}.svc:9200",
             "RestIndex": false,
             "Debug": false,
             "Prefetch": 0,
-            "AlertManagerURL": "http://alertmanager.sa-telemetry.svc:9093/api/v1/alerts"
+            "AlertManagerURL": "http://alertmanager.{{ sa_telemetry_consumers_namespace }}.svc:9093/api/v1/alerts"
     }

@@ -11,7 +11,7 @@ data:
       type: prometheus
       access: proxy
       orgId: 1
-      url: http://prometheus.sa-telemetry.svc:9090
+      url: http://prometheus.{{ sa_telemetry_grafana_namespace }}.svc:9090
       jsonData:
          timeInterval: "4s"
       version: 1
@@ -20,7 +20,7 @@ data:
       type: prometheus
       access: proxy
       orgId: 1
-      url: http://prometheus-blue.sa-telemetry.svc:9090
+      url: http://prometheus-blue.{{ sa_telemetry_grafana_namespace }}.svc:9090
       jsonData:
          timeInterval: "4s"
       version: 1
@@ -29,7 +29,7 @@ data:
       type: prometheus
       access: proxy
       orgId: 1
-      url: http://prometheus-green.sa-telemetry.svc:9090
+      url: http://prometheus-green.{{ sa_telemetry_grafana_namespace }}.svc:9090
       jsonData:
          timeInterval: "4s"
       version: 1
@@ -39,7 +39,7 @@ data:
       typeLogoUrl: "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg"
       access: proxy
       orgId: 1
-      url: http://elasticsearch.sa-telemetry.svc:9200
+      url: http://elasticsearch.{{ sa_telemetry_grafana_namespace }}.svc:9200
       database: "collectd_connectivity"
       basicAuth: false
       isDefault: false
@@ -53,7 +53,7 @@ data:
       typeLogoUrl: "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg"
       access: proxy
       orgId: 1
-      url: http://elasticsearch.sa-telemetry.svc:9200
+      url: http://elasticsearch.{{ sa_telemetry_grafana_namespace }}.svc:9200
       database: "collectd_procevent"
       basicAuth: false
       isDefault: false
@@ -67,7 +67,7 @@ data:
       typeLogoUrl: "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg"
       access: proxy
       orgId: 1
-      url: http://elasticsearch.sa-telemetry.svc:9200
+      url: http://elasticsearch.{{ sa_telemetry_grafana_namespace }}.svc:9200
       database: "collectd_sysevent"
       basicAuth: false
       isDefault: false
