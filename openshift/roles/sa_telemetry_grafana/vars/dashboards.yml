@@ -5,8 +5,8 @@ sa_telemetry_grafana_dashboards:
     {
       "__inputs": [
         {
-          "name": "prometheus",
-          "label": "prometheus",
+          "name": "prometheus-internal-green",
+          "label": "prometheus-internal-green",
           "description": "",
           "type": "datasource",
           "pluginId": "prometheus",
@@ -15,14 +15,6 @@ sa_telemetry_grafana_dashboards:
         {
           "name": "prometheus-internal-blue",
           "label": "prometheus-internal-blue",
-          "description": "",
-          "type": "datasource",
-          "pluginId": "prometheus",
-          "pluginName": "Prometheus"
-        },
-        {
-          "name": "prometheus-internal-green",
-          "label": "prometheus-internal-green",
           "description": "",
           "type": "datasource",
           "pluginId": "prometheus",
@@ -79,7 +71,7 @@ sa_telemetry_grafana_dashboards:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": "-- Mixed --",
           "fill": 0,
           "gridPos": {
             "h": 9,
@@ -111,11 +103,20 @@ sa_telemetry_grafana_dashboards:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": "prometheus-internal-green",
               "expr": "up{job=~\".*metrics.*\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "{{job}}",
               "refId": "A"
+            },
+            {
+              "datasource": "prometheus-internal-blue",
+              "expr": "up{job=~\".*metrics.*\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{job}}",
+              "refId": "B"
             }
           ],
           "thresholds": [],
@@ -282,7 +283,7 @@ sa_telemetry_grafana_dashboards:
           "targets": [
             {
               "datasource": "prometheus-internal-blue",
-              "expr": "rate(sa_collectd_total_amqp_processed_message_count[10s])",
+              "expr": "sum without(pod,instance) (rate(sa_collectd_total_amqp_processed_message_count[10s]))",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "{{service}}",
@@ -290,7 +291,7 @@ sa_telemetry_grafana_dashboards:
             },
             {
               "datasource": "prometheus-internal-green",
-              "expr": "rate(sa_collectd_total_amqp_processed_message_count[10s])",
+              "expr": "sum without(pod,instance) (rate(sa_collectd_total_amqp_processed_message_count[10s]))",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "{{service}}",
@@ -301,6 +302,95 @@ sa_telemetry_grafana_dashboards:
           "timeFrom": null,
           "timeShift": null,
           "title": "AMQP Messages Processed",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "-- Mixed --",
+          "fill": 1,
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 9
+          },
+          "id": 12,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": "prometheus-internal-blue",
+              "expr": "topk(20,sa_collectd_metric_per_host)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{exported_instance}}-blue",
+              "refId": "A"
+            },
+            {
+              "datasource": "prometheus-internal-green",
+              "expr": "topk(20,sa_collectd_metric_per_host)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{exported_instance}}-green",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Metrics Count Per Host",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -407,7 +497,7 @@ sa_telemetry_grafana_dashboards:
               "unit": "short"
             },
             {
-              "alias": "",
+              "alias": "Service",
               "colorMode": null,
               "colors": [
                 "rgba(245, 54, 54, 0.9)",
@@ -417,6 +507,7 @@ sa_telemetry_grafana_dashboards:
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
               "decimals": 2,
               "pattern": "service",
+              "sanitize": false,
               "thresholds": [],
               "type": "string",
               "unit": "short"
@@ -482,6 +573,90 @@ sa_telemetry_grafana_dashboards:
               "unit": "short"
             },
             {
+              "alias": "Host",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "exported_instance",
+              "thresholds": [],
+              "type": "string",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": "prometheus-internal-blue",
+              "expr": "timestamp(sa_collectd_last_metric_for_host_status)",
+              "format": "table",
+              "instant": true,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "foot",
+              "refId": "A"
+            },
+            {
+              "datasource": "prometheus-internal-green",
+              "expr": "timestamp(sa_collectd_last_metric_for_host_status)",
+              "format": "table",
+              "instant": true,
+              "intervalFactor": 1,
+              "refId": "B"
+            }
+          ],
+          "timeFrom": "10s",
+          "timeShift": null,
+          "title": "Last Metric",
+          "transform": "table",
+          "transparent": false,
+          "type": "table"
+        },
+        {
+          "columns": [],
+          "datasource": "prometheus-internal-blue",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 18
+          },
+          "id": 14,
+          "links": [],
+          "pageSize": null,
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 2,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "Name",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "__name__",
+              "thresholds": [],
+              "type": "string",
+              "unit": "short"
+            },
+            {
               "alias": "",
               "colorMode": null,
               "colors": [
@@ -498,32 +673,19 @@ sa_telemetry_grafana_dashboards:
           ],
           "targets": [
             {
-              "datasource": "prometheus-internal-blue",
-              "expr": "sa_collectd_last_metric_for_host_status",
+              "expr": "topk(10, count by (__name__)({__name__=~\".+\"}))",
               "format": "table",
-              "instant": false,
-              "interval": "",
+              "instant": true,
               "intervalFactor": 1,
-              "legendFormat": "foot",
               "refId": "A"
-            },
-            {
-              "datasource": "prometheus-internal-green",
-              "expr": "sa_collectd_last_metric_for_host_status",
-              "format": "table",
-              "intervalFactor": 1,
-              "refId": "B"
             }
           ],
-          "timeFrom": "10s",
-          "timeShift": null,
-          "title": "Last Metric",
+          "title": "Top Series by Usage",
           "transform": "table",
-          "transparent": false,
           "type": "table"
         }
       ],
-      "refresh": "10s",
+      "refresh": "30s",
       "schemaVersion": 16,
       "style": "dark",
       "tags": [],
@@ -565,8 +727,7 @@ sa_telemetry_grafana_dashboards:
       "version": 7
     }
 
-
-- name: prometheus-test-dashboard.json
+- name: prometheus-health-dashboard.json
   content: !unsafe |+
     {
       "__inputs": [
@@ -579,16 +740,8 @@ sa_telemetry_grafana_dashboards:
           "pluginName": "Prometheus"
         },
         {
-          "name": "prometheus",
-          "label": "prometheus",
-          "description": "",
-          "type": "datasource",
-          "pluginId": "prometheus",
-          "pluginName": "Prometheus"
-        },
-        {
           "name": "connectivity",
-          "label": "Connectivity",
+          "label": "connectivity",
           "description": "",
           "type": "datasource",
           "pluginId": "elasticsearch",
@@ -596,7 +749,7 @@ sa_telemetry_grafana_dashboards:
         },
         {
           "name": "sysevent",
-          "label": "SYSEVENT",
+          "label": "sysevent",
           "description": "",
           "type": "datasource",
           "pluginId": "elasticsearch",
@@ -664,7 +817,7 @@ sa_telemetry_grafana_dashboards:
       "gnetId": null,
       "graphTooltip": 0,
       "id": null,
-      "iteration": 1534273823097,
+      "iteration": 1541099044979,
       "links": [],
       "panels": [
         {
@@ -1052,7 +1205,7 @@ sa_telemetry_grafana_dashboards:
             }
           ],
           "thresholds": "50.80",
-          "title": "Connectivity Counts",
+          "title": "Interface Events",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -1182,7 +1335,7 @@ sa_telemetry_grafana_dashboards:
             }
           ],
           "thresholds": "50,80",
-          "title": "SYS Events",
+          "title": "System Events",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -1420,7 +1573,7 @@ sa_telemetry_grafana_dashboards:
             }
           ],
           "thresholds": "5,10",
-          "title": "Failure Metrics Process",
+          "title": "Process Failure Events",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -1471,7 +1624,7 @@ sa_telemetry_grafana_dashboards:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "min by(cpu,exported_instance)(min_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval]))",
+              "expr": "max by(cpu,exported_instance)(topk(10,max_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval])))",
               "format": "time_series",
               "hide": false,
               "intervalFactor": 1,
@@ -1482,7 +1635,7 @@ sa_telemetry_grafana_dashboards:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "MAX CPU User Utilization",
+          "title": "Top 10 MAX CPU User Utilization",
           "tooltip": {
             "shared": false,
             "sort": 0,
@@ -2735,7 +2888,7 @@ sa_telemetry_grafana_dashboards:
           ]
         }
       ],
-      "refresh": false,
+      "refresh": "30s",
       "schemaVersion": 16,
       "style": "dark",
       "tags": [],
@@ -2753,7 +2906,7 @@ sa_telemetry_grafana_dashboards:
             "options": [],
             "query": "label_values(exported_instance)",
             "refresh": 1,
-            "regex": "/node.*/",
+            "regex": "/.*/",
             "sort": 1,
             "tagValuesQuery": "",
             "tags": [],
@@ -2860,9 +3013,9 @@ sa_telemetry_grafana_dashboards:
         ]
       },
       "timezone": "",
-      "title": "Prometheus_test",
+      "title": "Prometheus Health",
       "uid": "000000008",
-      "version": 101
+      "version": 6
     }
 
 - name: prometheus-v1-dashboard.json
@@ -2871,7 +3024,7 @@ sa_telemetry_grafana_dashboards:
       "__inputs": [
         {
           "name": "connectivity",
-          "label": "Connectivity",
+          "label": "connectivity",
           "description": "",
           "type": "datasource",
           "pluginId": "elasticsearch",
@@ -2879,27 +3032,11 @@ sa_telemetry_grafana_dashboards:
         },
         {
           "name": "procevent",
-          "label": "ProcEvent",
+          "label": "procevent",
           "description": "",
           "type": "datasource",
           "pluginId": "elasticsearch",
           "pluginName": "Elasticsearch"
-        },
-        {
-          "name": "sysevent",
-          "label": "SYSEVENT",
-          "description": "",
-          "type": "datasource",
-          "pluginId": "elasticsearch",
-          "pluginName": "Elasticsearch"
-        },
-        {
-          "name": "DS_prometheus",
-          "label": "prometheus",
-          "description": "",
-          "type": "datasource",
-          "pluginId": "prometheus",
-          "pluginName": "Prometheus"
         },
         {
           "name": "prometheus",
@@ -2911,12 +3048,6 @@ sa_telemetry_grafana_dashboards:
         }
       ],
       "__requires": [
-        {
-          "type": "panel",
-          "id": "alertlist",
-          "name": "Alert List",
-          "version": "5.0.0"
-        },
         {
           "type": "datasource",
           "id": "elasticsearch",
@@ -2952,6 +3083,12 @@ sa_telemetry_grafana_dashboards:
           "id": "singlestat",
           "name": "Singlestat",
           "version": "5.0.0"
+        },
+        {
+          "type": "panel",
+          "id": "table",
+          "name": "Table",
+          "version": "5.0.0"
         }
       ],
       "annotations": {
@@ -2971,26 +3108,9 @@ sa_telemetry_grafana_dashboards:
       "gnetId": null,
       "graphTooltip": 0,
       "id": null,
-      "iteration": 1533844465192,
+      "iteration": 1541098735288,
       "links": [],
       "panels": [
-        {
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 0,
-            "y": 0
-          },
-          "id": 25,
-          "limit": 10,
-          "links": [],
-          "onlyAlertsOnDashboard": false,
-          "show": "current",
-          "sortOrder": 1,
-          "stateFilter": [],
-          "title": "Alert Panel",
-          "type": "alertlist"
-        },
         {
           "cacheTimeout": null,
           "colorBackground": false,
@@ -3013,7 +3133,7 @@ sa_telemetry_grafana_dashboards:
           "gridPos": {
             "h": 8,
             "w": 6,
-            "x": 6,
+            "x": 0,
             "y": 0
           },
           "id": 5,
@@ -3050,9 +3170,10 @@ sa_telemetry_grafana_dashboards:
             "lineColor": "rgb(31, 120, 193)",
             "show": true
           },
-          "tableColumn": "startsAt",
+          "tableColumn": "annotations.ves.sourceName.keyword",
           "targets": [
             {
+              "alias": "",
               "bucketAggs": [
                 {
                   "field": "startsAt",
@@ -3082,15 +3203,16 @@ sa_telemetry_grafana_dashboards:
               ],
               "metrics": [
                 {
-                  "field": "annotations.ves.eventId",
+                  "field": "annotations.ves.lastEpochMicrosec.keyword",
                   "id": "1",
                   "meta": {},
                   "settings": {},
-                  "type": "count"
+                  "type": "cardinality"
                 }
               ],
               "orderByTime": "ASC",
               "policy": "default",
+              "query": "labels.severity:FAILURE",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -3112,7 +3234,7 @@ sa_telemetry_grafana_dashboards:
             }
           ],
           "thresholds": "50.80",
-          "title": "Connectivity Counts",
+          "title": "Connectivity Event Count",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -3145,7 +3267,7 @@ sa_telemetry_grafana_dashboards:
           "gridPos": {
             "h": 8,
             "w": 6,
-            "x": 12,
+            "x": 6,
             "y": 0
           },
           "id": 9,
@@ -3187,8 +3309,9 @@ sa_telemetry_grafana_dashboards:
             {
               "bucketAggs": [
                 {
+                  "fake": true,
                   "field": "startsAt",
-                  "id": "2",
+                  "id": "3",
                   "settings": {
                     "interval": "auto",
                     "min_doc_count": 0,
@@ -3217,16 +3340,16 @@ sa_telemetry_grafana_dashboards:
               "intervalFactor": 1,
               "metrics": [
                 {
-                  "field": "select field",
+                  "field": "annotations.ves.lastEpochMicrosec",
                   "id": "1",
                   "meta": {},
                   "settings": {},
-                  "type": "count"
+                  "type": "cardinality"
                 }
               ],
               "orderByTime": "ASC",
               "policy": "default",
-              "query": "labels.severity:FAILURE AND annotations.ves.sourceName:metric-listener",
+              "query": "labels.severity:FAILURE  AND annotations.ves.sourceName:qemu-kvm",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -3248,7 +3371,7 @@ sa_telemetry_grafana_dashboards:
             }
           ],
           "thresholds": "5,10",
-          "title": "Failure Metrics Process",
+          "title": "Process Event Count",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -3261,229 +3384,19 @@ sa_telemetry_grafana_dashboards:
           "valueName": "total"
         },
         {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "#299c46",
-            "rgba(237, 129, 40, 0.89)",
-            "#d44a3a"
-          ],
-          "datasource": "sysevent",
-          "format": "short",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": true,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prometheus",
+          "fill": 0,
           "gridPos": {
             "h": 8,
-            "w": 6,
-            "x": 18,
-            "y": 0
-          },
-          "id": 6,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "startsAt",
-          "targets": [
-            {
-              "bucketAggs": [
-                {
-                  "field": "startsAt",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "dsType": "elasticsearch",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "type": "count"
-                }
-              ],
-              "orderByTime": "ASC",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [],
-              "timeField": "startsAt"
-            }
-          ],
-          "thresholds": "50,80",
-          "title": "SYS Events",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "total"
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "fill": 1,
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 0,
-            "y": 8
-          },
-          "id": 23,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": true,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "topk(5,max by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval])))",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "legendFormat": "Top Max Utilization {{cpu}} --{{exported_instance}}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Top 5 Max System Utilization",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "fill": 1,
-          "gridPos": {
-            "h": 9,
             "w": 12,
             "x": 12,
-            "y": 8
+            "y": 0
           },
-          "id": 21,
+          "id": 15,
           "legend": {
             "avg": false,
             "current": false,
@@ -3498,8 +3411,8 @@ sa_telemetry_grafana_dashboards:
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 5,
-          "points": false,
+          "pointradius": 2,
+          "points": true,
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
@@ -3507,31 +3420,48 @@ sa_telemetry_grafana_dashboards:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval])) ",
+              "annotations": false,
+              "expr": "sa_collectd_last_metric_for_host_status{source=\"$Prometheus\"}",
               "format": "time_series",
+              "hide": false,
+              "instant": false,
               "intervalFactor": 1,
-              "legendFormat": "max {{exported_instance}} - {{cpu}}",
-              "refId": "A"
+              "legendFormat": "collectd in host status {{source}}",
+              "refId": "A",
+              "target": "Query",
+              "type": "timeserie"
             },
             {
-              "expr": "min by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval])) ",
+              "expr": "floor(sa_collectd_last_pull_timestamp_seconds)-time()>20",
               "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "5s",
               "intervalFactor": 1,
-              "legendFormat": "min {{exported_instance}} - {{cpu}}",
+              "legendFormat": "{{source}}  -Slow",
               "refId": "B"
             },
             {
-              "expr": "avg by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval])) ",
+              "expr": "sa_collectd_qpid_router_status==0",
               "format": "time_series",
+              "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "avg {{exported_instance}} - {{cpu}}",
+              "legendFormat": "qpid router -{{source}}  ",
               "refId": "C"
+            },
+            {
+              "expr": "sa_collectd_elasticsearch_status==0",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 1,
+              "legendFormat": "elastic-search -{{source}}  ",
+              "refId": "D"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "CPU System Utilization",
+          "title": "Components status",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -3565,112 +3495,277 @@ sa_telemetry_grafana_dashboards:
           ]
         },
         {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "fill": 1,
+          "columns": [],
+          "datasource": "connectivity",
+          "fontSize": "100%",
           "gridPos": {
-            "h": 9,
-            "w": 12,
+            "h": 8,
+            "w": 6,
             "x": 0,
-            "y": 17
+            "y": 8
           },
-          "id": 19,
-          "legend": {
-            "alignAsTable": false,
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "rightSide": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
+          "id": 25,
           "links": [],
-          "nullPointMode": "null as zero",
-          "percentage": true,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": true,
-          "steppedLine": false,
-          "targets": [
+          "pageSize": null,
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
             {
-              "expr": "100 * (1 - sum(rate(sa_collectd_cpu_total{type=\"user\",exported_instance=~\"$Prometheus\" }[$interval])) by (cpu,exported_instance) / sum(rate(sa_collectd_cpu_total{exported_instance=~\"$Prometheus\"}[$interval])) by (cpu,exported_instance))",
-              "format": "time_series",
-              "hide": true,
-              "instant": false,
-              "intervalFactor": 1,
-              "legendFormat": "Max  {{exported_instance}} - {{cpu}}",
-              "refId": "A"
+              "alias": "Time",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
             },
             {
-              "expr": " max by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval])) ",
-              "format": "time_series",
-              "instant": false,
-              "intervalFactor": 1,
-              "legendFormat": "  Max- {{exported_instance}} - {{cpu}}",
-              "refId": "B"
+              "alias": "Host",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "labels.instance.keyword",
+              "thresholds": [],
+              "type": "number",
+              "unit": "short"
             },
             {
-              "expr": "min by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval])) ",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 1,
-              "legendFormat": "Min  {{exported_instance}} - {{cpu}}",
-              "refId": "C"
+              "alias": "Event",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "annotations.ves.eventName.keyword",
+              "thresholds": [],
+              "type": "number",
+              "unit": "short"
             },
             {
-              "expr": "avg by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval])) ",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 1,
-              "legendFormat": "Avg  {{exported_instance}} - {{cpu}}",
-              "refId": "D"
+              "alias": "Interface / Target",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "annotations.ves.sourceName.keyword",
+              "thresholds": [],
+              "type": "number",
+              "unit": "short"
+            },
+            {
+              "alias": "",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "decimals": 2,
+              "pattern": "Count",
+              "thresholds": [],
+              "type": "hidden",
+              "unit": "short"
             }
           ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "CPU User Utilization",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
+          "targets": [
             {
-              "format": "percent",
-              "label": "Percentage",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
+              "alias": "Interface Name",
+              "bucketAggs": [
+                {
+                  "fake": true,
+                  "field": "labels.instance.keyword",
+                  "id": "3",
+                  "settings": {
+                    "min_doc_count": 1,
+                    "order": "desc",
+                    "orderBy": "_term",
+                    "size": "10"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "fake": true,
+                  "field": "annotations.ves.eventName.keyword",
+                  "id": "4",
+                  "settings": {
+                    "min_doc_count": 1,
+                    "order": "desc",
+                    "orderBy": "_term",
+                    "size": "10"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "field": "annotations.ves.sourceName.keyword",
+                  "id": "2",
+                  "settings": {
+                    "min_doc_count": 1,
+                    "order": "desc",
+                    "orderBy": "_term",
+                    "size": "10"
+                  },
+                  "type": "terms"
+                }
+              ],
+              "hide": false,
+              "metrics": [
+                {
+                  "field": "select field",
+                  "id": "1",
+                  "type": "count"
+                }
+              ],
+              "query": "labels.severity:FAILURE",
+              "refId": "A",
+              "timeField": "startsAt"
+            }
+          ],
+          "title": "Connectivity Events",
+          "transform": "table",
+          "type": "table"
+        },
+        {
+          "columns": [],
+          "datasource": "procevent",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 8,
+            "w": 6,
+            "x": 6,
+            "y": 8
+          },
+          "id": 27,
+          "links": [],
+          "pageSize": null,
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
             },
             {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
+              "alias": "Host",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "labels.instance.keyword",
+              "thresholds": [],
+              "type": "number",
+              "unit": "short"
+            },
+            {
+              "alias": "Event",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "annotations.ves.eventName.keyword",
+              "thresholds": [],
+              "type": "number",
+              "unit": "short"
+            },
+            {
+              "alias": "Count",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "decimals": 2,
+              "pattern": "Unique Count",
+              "thresholds": [],
+              "type": "number",
+              "unit": "short"
             }
-          ]
+          ],
+          "targets": [
+            {
+              "bucketAggs": [
+                {
+                  "fake": true,
+                  "field": "labels.instance.keyword",
+                  "id": "3",
+                  "settings": {
+                    "min_doc_count": 1,
+                    "order": "desc",
+                    "orderBy": "_term",
+                    "size": "10"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "fake": true,
+                  "field": "startsAt",
+                  "id": "5",
+                  "settings": {
+                    "min_doc_count": 1,
+                    "order": "desc",
+                    "orderBy": "_term",
+                    "size": "10"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "fake": true,
+                  "field": "annotations.ves.eventName.keyword",
+                  "id": "4",
+                  "settings": {
+                    "min_doc_count": 1,
+                    "order": "desc",
+                    "orderBy": "_term",
+                    "size": "10"
+                  },
+                  "type": "terms"
+                }
+              ],
+              "metrics": [
+                {
+                  "field": "labels.instance.keyword",
+                  "id": "1",
+                  "meta": {},
+                  "settings": {},
+                  "type": "cardinality"
+                }
+              ],
+              "query": "labels.severity:FAILURE",
+              "refId": "A",
+              "timeField": "startsAt"
+            }
+          ],
+          "title": "Process Events",
+          "transform": "table",
+          "type": "table"
         },
         {
           "aliasColors": {},
@@ -3680,10 +3775,10 @@ sa_telemetry_grafana_dashboards:
           "datasource": "prometheus",
           "fill": 1,
           "gridPos": {
-            "h": 6,
+            "h": 8,
             "w": 12,
             "x": 12,
-            "y": 17
+            "y": 8
           },
           "id": 7,
           "legend": {
@@ -3691,7 +3786,7 @@ sa_telemetry_grafana_dashboards:
             "current": false,
             "max": false,
             "min": false,
-            "show": true,
+            "show": false,
             "total": false,
             "values": false
           },
@@ -3710,7 +3805,7 @@ sa_telemetry_grafana_dashboards:
           "targets": [
             {
               "dsType": "influxdb",
-              "expr": "rate(sa_collectd_memory{exported_instance=~\"$Prometheus\"}[$interval])",
+              "expr": "topk(5,avg_over_time(sa_collectd_memory{memory=~\"free\",exported_instance=~\"$Prometheus\"}[$interval]))",
               "format": "time_series",
               "groupBy": [
                 {
@@ -3755,7 +3850,7 @@ sa_telemetry_grafana_dashboards:
           "timeShift": null,
           "title": "Memory",
           "tooltip": {
-            "shared": true,
+            "shared": false,
             "sort": 0,
             "value_type": "individual"
           },
@@ -3763,282 +3858,18 @@ sa_telemetry_grafana_dashboards:
           "type": "graph",
           "xaxis": {
             "buckets": null,
-            "mode": "time",
+            "mode": "series",
             "name": null,
             "show": true,
-            "values": []
+            "values": [
+              "avg"
+            ]
           },
           "yaxes": [
             {
               "format": "short",
               "label": null,
               "logBase": 2,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "sysevent",
-          "fill": 1,
-          "gridPos": {
-            "h": 6,
-            "w": 12,
-            "x": 12,
-            "y": 23
-          },
-          "id": 2,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": false,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 4,
-          "points": true,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "bucketAggs": [
-                {
-                  "field": "startsAt",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "dsType": "elasticsearch",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "type": "count"
-                }
-              ],
-              "orderByTime": "ASC",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [],
-              "timeField": "startsAt"
-            },
-            {
-              "bucketAggs": [
-                {
-                  "field": "startsAt",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "dsType": "elasticsearch",
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "type": "count"
-                }
-              ],
-              "query": "annotations.ves.sourceName:os-collect-config",
-              "refId": "B",
-              "timeField": "startsAt"
-            },
-            {
-              "bucketAggs": [
-                {
-                  "field": "startsAt",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "dsType": "elasticsearch",
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "meta": {},
-                  "settings": {},
-                  "type": "count"
-                }
-              ],
-              "query": "annotations.ves.sourceName:journal",
-              "refId": "C",
-              "timeField": "startsAt"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Sysevents- Elastic Search",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 2,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "fill": 0,
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 0,
-            "y": 26
-          },
-          "id": 13,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "annotations": false,
-              "expr": "irate(sa_collectd_cpu_total{exported_instance=~\"$Prometheus\"}[5m]) ",
-              "format": "time_series",
-              "hide": false,
-              "interval": "",
-              "intervalFactor": 1,
-              "legendFormat": "",
-              "refId": "A",
-              "target": "Query",
-              "type": "timeserie"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "CPU",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
               "max": null,
               "min": null,
               "show": true
@@ -4068,10 +3899,10 @@ sa_telemetry_grafana_dashboards:
           "dataFormat": "timeseries",
           "datasource": "connectivity",
           "gridPos": {
-            "h": 6,
+            "h": 4,
             "w": 12,
-            "x": 12,
-            "y": 29
+            "x": 0,
+            "y": 16
           },
           "heatmap": {},
           "highlightCards": true,
@@ -4196,138 +4027,48 @@ sa_telemetry_grafana_dashboards:
           "dashLength": 10,
           "dashes": false,
           "datasource": "prometheus",
-          "decimals": null,
-          "fill": 1,
+          "fill": 0,
           "gridPos": {
-            "h": 6,
+            "h": 8,
             "w": 12,
-            "x": 0,
-            "y": 35
+            "x": 12,
+            "y": 16
           },
-          "id": 1,
+          "id": 23,
           "legend": {
-            "alignAsTable": false,
             "avg": false,
             "current": false,
-            "hideEmpty": false,
             "max": false,
             "min": false,
             "show": true,
             "total": false,
             "values": false
           },
-          "lines": false,
-          "linewidth": 1,
+          "lines": true,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 4,
-          "points": true,
+          "pointradius": 5,
+          "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "stack": false,
+          "stack": true,
           "steppedLine": false,
           "targets": [
             {
-              "dsType": "influxdb",
-              "expr": "rate(sa_collectd_uptime{exported_instance=~\"$Prometheus\"}[$interval])",
+              "expr": "topk(5,max by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval])))",
               "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "instant": false,
-              "interval": "5s",
               "intervalFactor": 1,
-              "legendFormat": "Collectd_Uptime",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": []
-            },
-            {
-              "expr": "rate(sa_collectd_ovs_stats_if_tx_octets_total{exported_instance=~\"$Prometheus\"}[$interval])",
-              "format": "time_series",
-              "hide": false,
-              "instant": false,
-              "interval": "5s",
-              "intervalFactor": 1,
-              "legendFormat": "last pull",
-              "refId": "B"
-            },
-            {
-              "expr": "rate(sa_collectd_ipmi_fanspeed{exported_instance=~\"$Prometheus\"}[$interval])",
-              "format": "time_series",
-              "hide": false,
-              "interval": "5s",
-              "intervalFactor": 1,
-              "legendFormat": "Fan speed",
-              "refId": "C"
-            },
-            {
-              "expr": "rate(sa_collectd_ipmi_temperature{exported_instance=~\"$Prometheus\"}[$interval])",
-              "format": "time_series",
-              "hide": false,
-              "interval": "5s",
-              "intervalFactor": 1,
-              "legendFormat": "Temp",
-              "refId": "D"
-            },
-            {
-              "expr": "rate(http_request_duration_microseconds_count{exported_instance=~\"$Prometheus\"}[$interval])",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 1,
-              "legendFormat": "{{handler}}",
-              "refId": "E"
-            },
-            {
-              "expr": "rate(sa_collectd_processes_fork_rate_total{exported_instance=~\"$Prometheus\"}[$interval])",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 1,
-              "legendFormat": "fork_rate",
-              "refId": "F"
-            },
-            {
-              "expr": "rate(sa_collectd_last_metric_for_host_status{exported_instance=~\"$Prometheus\"}[$interval])",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 1,
-              "refId": "H"
+              "legendFormat": "Top Max Utilization {{cpu}} --{{exported_instance}}",
+              "refId": "A"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Metrics-Source prometheus",
+          "title": "Top 5 Max System Utilization",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -4368,10 +4109,10 @@ sa_telemetry_grafana_dashboards:
           "datasource": "connectivity",
           "fill": 1,
           "gridPos": {
-            "h": 6,
+            "h": 4,
             "w": 12,
-            "x": 12,
-            "y": 35
+            "x": 0,
+            "y": 20
           },
           "id": 3,
           "legend": {
@@ -4528,9 +4269,9 @@ sa_telemetry_grafana_dashboards:
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 41
+            "y": 24
           },
-          "id": 15,
+          "id": 21,
           "legend": {
             "avg": false,
             "current": false,
@@ -4541,11 +4282,219 @@ sa_telemetry_grafana_dashboards:
             "values": false
           },
           "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "max by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval])) ",
+              "format": "time_series",
+              "hide": true,
+              "intervalFactor": 1,
+              "legendFormat": "max {{exported_instance}} - {{cpu}}",
+              "refId": "A"
+            },
+            {
+              "expr": "min by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval])) ",
+              "format": "time_series",
+              "hide": true,
+              "intervalFactor": 1,
+              "legendFormat": "min {{exported_instance}} - {{cpu}}",
+              "refId": "B"
+            },
+            {
+              "expr": "avg by(cpu,exported_instance)(topk(5,max_over_time(sa_collectd_cpu_percent{type=\"system\",exported_instance=~\"$Prometheus\"}[$interval]))) ",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{exported_instance}} - {{cpu}}",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Top 5  AVG CPU System Utilization",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prometheus",
+          "fill": 0,
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 24
+          },
+          "id": 19,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null as zero",
+          "percentage": true,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": true,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "100 * (1 - sum(rate(sa_collectd_cpu_total{type=\"user\",exported_instance=~\"$Prometheus\" }[$interval])) by (cpu,exported_instance) / sum(rate(sa_collectd_cpu_total{exported_instance=~\"$Prometheus\"}[$interval])) by (cpu,exported_instance))",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "intervalFactor": 1,
+              "legendFormat": "Max  {{exported_instance}} - {{cpu}}",
+              "refId": "A"
+            },
+            {
+              "expr": " max by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval])) ",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "intervalFactor": 1,
+              "legendFormat": "  Max- {{exported_instance}} - {{cpu}}",
+              "refId": "B"
+            },
+            {
+              "expr": "min by(cpu,exported_instance)(max_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval])) ",
+              "format": "time_series",
+              "hide": true,
+              "intervalFactor": 1,
+              "legendFormat": "Min  {{exported_instance}} - {{cpu}}",
+              "refId": "C"
+            },
+            {
+              "expr": "avg by(cpu,exported_instance)(topk(5,max_over_time(sa_collectd_cpu_percent{type=\"user\",exported_instance=~\"$Prometheus\"}[$interval]))) ",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 1,
+              "legendFormat": " {{exported_instance}} - {{cpu}}",
+              "refId": "D"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Top 5 AVG CPU User Utilization",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "percent",
+              "label": "Percentage",
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prometheus",
+          "decimals": null,
+          "fill": 1,
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 33
+          },
+          "id": 1,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": false,
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 2,
+          "pointradius": 4,
           "points": true,
           "renderer": "flot",
           "seriesOverrides": [],
@@ -4554,48 +4503,104 @@ sa_telemetry_grafana_dashboards:
           "steppedLine": false,
           "targets": [
             {
-              "annotations": false,
-              "expr": "sa_collectd_last_metric_for_host_status{source=\"$Prometheus\"}",
+              "dsType": "influxdb",
+              "expr": "rate(sa_collectd_uptime{exported_instance=~\"$Prometheus\"}[$interval])",
               "format": "time_series",
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
               "hide": false,
               "instant": false,
+              "interval": "5s",
               "intervalFactor": 1,
-              "legendFormat": "collectd in host status {{source}}",
+              "legendFormat": "Collectd_Uptime",
+              "orderByTime": "ASC",
+              "policy": "default",
               "refId": "A",
-              "target": "Query",
-              "type": "timeserie"
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
             },
             {
-              "expr": "floor(sa_collectd_last_pull_timestamp_seconds)-time()>20",
+              "expr": "rate(sa_collectd_ovs_stats_if_tx_octets_total{exported_instance=~\"$Prometheus\"}[$interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
               "interval": "5s",
               "intervalFactor": 1,
-              "legendFormat": "{{source}}  -Slow",
+              "legendFormat": "last pull",
               "refId": "B"
             },
             {
-              "expr": "sa_collectd_qpid_router_status==0",
+              "expr": "rate(sa_collectd_ipmi_fanspeed{exported_instance=~\"$Prometheus\"}[$interval])",
               "format": "time_series",
               "hide": false,
+              "interval": "5s",
               "intervalFactor": 1,
-              "legendFormat": "qpid router -{{source}}  ",
+              "legendFormat": "Fan speed",
               "refId": "C"
             },
             {
-              "expr": "sa_collectd_elasticsearch_status==0",
+              "expr": "rate(sa_collectd_ipmi_temperature{exported_instance=~\"$Prometheus\"}[$interval])",
+              "format": "time_series",
+              "hide": false,
+              "interval": "5s",
+              "intervalFactor": 1,
+              "legendFormat": "Temp",
+              "refId": "D"
+            },
+            {
+              "expr": "rate(http_request_duration_microseconds_count{exported_instance=~\"$Prometheus\"}[$interval])",
               "format": "time_series",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "elastic-search -{{source}}  ",
-              "refId": "D"
+              "legendFormat": "{{handler}}",
+              "refId": "E"
+            },
+            {
+              "expr": "rate(sa_collectd_processes_fork_rate_total{exported_instance=~\"$Prometheus\"}[$interval])",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 1,
+              "legendFormat": "fork_rate",
+              "refId": "F"
+            },
+            {
+              "expr": "rate(sa_collectd_last_metric_for_host_status{exported_instance=~\"$Prometheus\"}[$interval])",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 1,
+              "refId": "H"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Components status",
+          "title": "Metrics-Source prometheus",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -4629,7 +4634,7 @@ sa_telemetry_grafana_dashboards:
           ]
         }
       ],
-      "refresh": false,
+      "refresh": "5s",
       "schemaVersion": 16,
       "style": "dark",
       "tags": [],
@@ -4647,7 +4652,7 @@ sa_telemetry_grafana_dashboards:
             "options": [],
             "query": "label_values(exported_instance)",
             "refresh": 1,
-            "regex": "/node.*/",
+            "regex": "/.*/",
             "sort": 1,
             "tagValuesQuery": "",
             "tags": [],
@@ -4660,20 +4665,20 @@ sa_telemetry_grafana_dashboards:
             "auto_count": 30,
             "auto_min": "10s",
             "current": {
-              "text": "10m",
-              "value": "10m"
+              "text": "5m",
+              "value": "5m"
             },
             "hide": 0,
             "label": null,
             "name": "interval",
             "options": [
               {
-                "selected": false,
+                "selected": true,
                 "text": "5m",
                 "value": "5m"
               },
               {
-                "selected": true,
+                "selected": false,
                 "text": "10m",
                 "value": "10m"
               },
@@ -4725,7 +4730,7 @@ sa_telemetry_grafana_dashboards:
         ]
       },
       "time": {
-        "from": "now-5m",
+        "from": "now-6h",
         "to": "now"
       },
       "timepicker": {
@@ -4756,9 +4761,10 @@ sa_telemetry_grafana_dashboards:
       "timezone": "",
       "title": "Prometheus-v1",
       "uid": "Ii0drx5ik",
-      "version": 1
+      "version": 22
     }
-- name: deployment-dashboard.json
+
+- name: cloud-nodes.json
   content: !unsafe |+
     {
       "__inputs": [
@@ -4814,7 +4820,7 @@ sa_telemetry_grafana_dashboards:
       "gnetId": null,
       "graphTooltip": 0,
       "id": null,
-      "iteration": 1525040836346,
+      "iteration": 1541097669429,
       "links": [],
       "panels": [
         {
@@ -4878,7 +4884,7 @@ sa_telemetry_grafana_dashboards:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sa_collectd_uptime{exported_instance=\"$exported_instances\"}",
+              "expr": "max_over_time(sa_collectd_uptime{exported_instance=\"$exported_instances\"}[$__interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -5144,16 +5150,255 @@ sa_telemetry_grafana_dashboards:
         },
         {
           "aliasColors": {},
-          "bars": true,
+          "bars": false,
           "dashLength": 10,
           "dashes": false,
           "datasource": "prometheus",
-          "fill": 2,
+          "fill": 1,
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 6
+          },
+          "id": 23,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "avg_over_time(sa_collectd_df_percent_bytes{type=\"free\",exported_instance=\"$exported_instances\",df=\"root\"}[1h])",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Percentage Free (Root)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prometheus",
+          "fill": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 6
+          },
+          "id": 12,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "rate(sa_collectd_interface_if_packets_rx_total{exported_instance=\"$exported_instances\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{interface}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RX Packets",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "bytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prometheus",
+          "fill": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 13
+          },
+          "id": 21,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "rate(sa_collectd_interface_if_packets_tx_total{exported_instance=\"$exported_instances\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{interface}}",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TX Packets",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "bytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prometheus",
+          "fill": 0,
           "gridPos": {
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 6
+            "y": 15
           },
           "id": 10,
           "legend": {
@@ -5165,7 +5410,7 @@ sa_telemetry_grafana_dashboards:
             "total": false,
             "values": false
           },
-          "lines": false,
+          "lines": true,
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
@@ -5228,22 +5473,25 @@ sa_telemetry_grafana_dashboards:
           "dashLength": 10,
           "dashes": false,
           "datasource": "prometheus",
-          "fill": 1,
+          "decimals": null,
+          "fill": 0,
           "gridPos": {
-            "h": 7,
+            "h": 9,
             "w": 12,
             "x": 12,
-            "y": 6
+            "y": 20
           },
-          "id": 12,
+          "id": 16,
           "legend": {
             "avg": false,
             "current": false,
-            "max": false,
-            "min": false,
+            "max": true,
+            "min": true,
+            "rightSide": false,
             "show": true,
+            "sideWidth": 250,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 2,
@@ -5259,14 +5507,14 @@ sa_telemetry_grafana_dashboards:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(sa_collectd_interface_if_packets_rx_total{exported_instance=\"$exported_instances\"}[1m])",
+              "expr": "rate(sa_collectd_interface_if_errors_rx_total{exported_instance=\"$exported_instances\",interface=~\"ens.*\"}[1m])",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "RX interface {{interface}}",
               "refId": "A"
             },
             {
-              "expr": "rate(sa_collectd_interface_if_packets_tx_total{exported_instance=\"$exported_instances\"}[1m])",
+              "expr": "rate(sa_collectd_interface_if_errors_tx_total{exported_instance=\"$exported_instances\",interface=~\"ens.*\"}[1m])",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "TX interface {{interface}}",
@@ -5276,7 +5524,7 @@ sa_telemetry_grafana_dashboards:
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Packets Total",
+          "title": "Interface Errors Total",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -5292,11 +5540,11 @@ sa_telemetry_grafana_dashboards:
           },
           "yaxes": [
             {
-              "format": "bytes",
+              "format": "short",
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": null,
+              "min": "0",
               "show": true
             },
             {
@@ -5315,12 +5563,12 @@ sa_telemetry_grafana_dashboards:
           "dashLength": 10,
           "dashes": false,
           "datasource": "prometheus",
-          "fill": 1,
+          "fill": 0,
           "gridPos": {
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 13
+            "y": 22
           },
           "id": 14,
           "legend": {
@@ -5333,7 +5581,7 @@ sa_telemetry_grafana_dashboards:
             "values": false
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -5395,28 +5643,25 @@ sa_telemetry_grafana_dashboards:
           "dashLength": 10,
           "dashes": false,
           "datasource": "prometheus",
-          "decimals": null,
-          "fill": 1,
+          "fill": 0,
           "gridPos": {
-            "h": 7,
+            "h": 9,
             "w": 12,
-            "x": 12,
-            "y": 13
+            "x": 0,
+            "y": 29
           },
-          "id": 16,
+          "id": 18,
           "legend": {
             "avg": false,
             "current": false,
-            "max": true,
-            "min": true,
-            "rightSide": false,
+            "max": false,
+            "min": false,
             "show": true,
-            "sideWidth": 250,
             "total": false,
-            "values": true
+            "values": false
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -5429,24 +5674,17 @@ sa_telemetry_grafana_dashboards:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(sa_collectd_interface_if_errors_rx_total{exported_instance=\"$exported_instances\"}[1m])",
+              "expr": "avg_over_time(sa_collectd_virt_percent{exported_instance=~\"$exported_instances\"}[1m])",
               "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "RX interface {{interface}}",
+              "intervalFactor": 1,
+              "legendFormat": "{{ virt }}",
               "refId": "A"
-            },
-            {
-              "expr": "rate(sa_collectd_interface_if_errors_tx_total{exported_instance=\"$exported_instances\"}[1m])",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "TX interface {{interface}}",
-              "refId": "B"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Interface Errors Total",
+          "title": "Virtual Machine VCPU Percentage",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -5466,7 +5704,7 @@ sa_telemetry_grafana_dashboards:
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": "0",
+              "min": null,
               "show": true
             },
             {
@@ -5475,7 +5713,87 @@ sa_telemetry_grafana_dashboards:
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": false
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "prometheus",
+          "fill": 0,
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 29
+          },
+          "id": 20,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "rate(sa_collectd_virt_disk_ops_write_total{exported_instance=~\"$exported_instances\"}[1m])",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ virt }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Virtual Machine Disk Ops Write",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
             }
           ]
         }
@@ -5505,11 +5823,25 @@ sa_telemetry_grafana_dashboards:
             "tagsQuery": "",
             "type": "query",
             "useTags": false
+          },
+          {
+            "current": {
+              "text": "prometheus-internal-green",
+              "value": "prometheus-internal-green"
+            },
+            "hide": 0,
+            "label": "DataSource",
+            "name": "promsource",
+            "options": [],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "/.*-internal-(.*)/",
+            "type": "datasource"
           }
         ]
       },
       "time": {
-        "from": "now-3h",
+        "from": "now-5m",
         "to": "now"
       },
       "timepicker": {
@@ -5540,5 +5872,5 @@ sa_telemetry_grafana_dashboards:
       "timezone": "",
       "title": "Cloud Nodes",
       "uid": "UsETchimz",
-      "version": 5
+      "version": 13
     }
