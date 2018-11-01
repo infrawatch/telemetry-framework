@@ -29,6 +29,14 @@ plans:
           type: string
           title: Application subdomain (e.g. apps.openshift.tld)
           required: true
+          display_group: Platform Information
+        - name: sa_telemetry_grafana_default_dashboards
+          display_type: checkbox
+          type: boolean
+          required: true
+          default: true
+          title: Install default Grafana dashboards?
+          display_group: Platform Information
         - name: deploy_blue
           type: boolean
           display_type: checkbox
@@ -42,12 +50,14 @@ plans:
           required: false
           display_group: Blue Infrastructure
           title: Name of blue infrastructure node
+          maxlength: 63
         - name: ip_blue
           type: string
           display_type: text
           required: false
           display_group: Blue Infrastructure
           title: External IP address of blue infrastructure node
+          maxlength: 15
         - name: deploy_green
           type: boolean
           display_type: checkbox

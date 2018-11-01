@@ -1,4 +1,8 @@
 ---
+- include_vars:
+    file: dashboards.yml
+  when: sa_telemetry_grafana_default_dashboards | default(true)
+
 - name: Create secret for grafana login
   oc_secret:
     state: "{{ state }}"

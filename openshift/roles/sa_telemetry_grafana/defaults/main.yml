@@ -7,3 +7,4 @@ sa_telemetry_grafana_service_port: 3000
 sa_telemetry_grafana_service_targetport: web
 
 sa_telemetry_grafana_dashboards: []
+sa_telemetry_grafana_default_dashboards: true
