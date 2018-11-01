@@ -22,12 +22,12 @@ data:
         role: inter-router
         authenticatePeer: no
         saslMechanisms: ANONYMOUS
-{% if sa_telemetry_node_labels[(label_index + 1)] is defined %}        failoverList: {{ sa_telemetry_node_labels[(label_index + 1)]['name'] }}.{{ sa_telemetry_qdr_hostname }}
+{% if sa_telemetry_node_labels[(label_index + 1)] is defined %}        failoverList: {{ sa_telemetry_node_labels[(label_index + 1)]['name'] }}-qdr.{{ sa_telemetry_qdr_hostname }}
 {% endif %}    }
 
 {% if sa_telemetry_node_labels[(label_index + 1)] is defined %}    connector {
         role: inter-router
-        host: messaging-external-{{ sa_telemetry_node_labels[(label_index + 1)]['name'] }}.{{ sa_telemetry_qdr_namespace }}.svc
+        host: {{ sa_telemetry_node_labels[(label_index + 1)]['name'] }}-qdr.{{ sa_telemetry_qdr_namespace }}.svc
         port: 20001
         saslMechanisms: ANONYMOUS
     }{% endif %}
