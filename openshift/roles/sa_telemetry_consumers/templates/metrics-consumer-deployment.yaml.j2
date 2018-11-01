@@ -27,6 +27,7 @@ spec:
         args:
           - '-config=/config/sa.metrics.config.json'
           - '-uname=$(MY_POD_NAME)'
+          - '-servicetype=metrics'
         env:
           - name: MY_POD_NAME
             valueFrom:

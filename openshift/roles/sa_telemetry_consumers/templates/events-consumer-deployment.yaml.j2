@@ -24,7 +24,9 @@ spec:
           limits:
             memory: {{ sa_telemetry_events_memory_limit }}
             cpu: {{ sa_telemetry_events_cpu_limit }}
-        args: ["-config=/config/sa.events.config.json"]
+        args:
+          - '-config=/config/sa.events.config.json'
+          - '-servicetype=events'
         ports:
         - name: events
           containerPort: 8081
