@@ -5,8 +5,5 @@
     namespace: "{{ sa_telemetry_qdr_namespace }}"
     kind: ConfigMap
     content:
-      path: /tmp/cmout
+      path: /tmp/cmout-{{ node_label.name }}
       data: "{{ lookup('template', 'qdrouterd.conf.j2') | from_yaml }}"
-  loop: "{{ sa_telemetry_node_labels }}"
-  loop_control:
-    index_var: label_index

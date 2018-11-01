@@ -9,4 +9,3 @@
       path: /tmp/dout
       data: "{{ lookup('template', 'qdr-deployment.yaml.j2') | from_yaml }}"
   ignore_errors: true
-  loop: "{{ sa_telemetry_node_labels }}"

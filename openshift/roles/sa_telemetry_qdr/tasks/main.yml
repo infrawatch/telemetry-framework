@@ -5,16 +5,17 @@
       loop: "{{ sa_telemetry_node_labels }}"
       loop_control:
         loop_var: node_label
+        index_var: label_index
 
     - include_tasks: routes.yml
-      with_items: "{{ sa_telemetry_node_labels }}"
+      loop: "{{ sa_telemetry_node_labels }}"
       loop_control:
         loop_var: node_label
   when: state == "present"
 
 - block:
     - include_tasks: routes.yml
-      with_items: "{{ sa_telemetry_node_labels }}"
+      loop: "{{ sa_telemetry_node_labels }}"
       loop_control:
         loop_var: node_label
 
@@ -23,4 +24,5 @@
       loop: "{{ sa_telemetry_node_labels }}"
       loop_control:
         loop_var: node_label
+        index_var: label_index
   when: state == "absent"

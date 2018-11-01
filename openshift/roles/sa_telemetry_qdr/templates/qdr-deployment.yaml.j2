@@ -1,7 +1,7 @@
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
-  name: qdr-{{ item.name }}
+  name: qdr-{{ node_label.name }}
 spec:
   replicas: 1
   template:
@@ -10,10 +10,10 @@ spec:
         app: qdr
         version: v1
         type: router
-        node: {{ item.name }}
+        node: {{ node_label.name }}
     spec:
       containers:
-      - name: qdr-{{ item.name }}
+      - name: qdr-{{ node_label.name }}
         image: nfvpe/qpid-dispatch-router:1.2.0-2
         imagePullPolicy: IfNotPresent
         ports:
@@ -29,6 +29,6 @@ spec:
       volumes:
       - name: qdrouterd-config
         configMap:
-          name: qdrouterd-config-{{ item.name }}
+          name: qdrouterd-config-{{ node_label.name }}
       nodeSelector:
-        node: {{ item.name }}
+        node: {{ node_label.name }}

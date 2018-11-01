@@ -14,7 +14,6 @@
     selector:
       type: router
       node: "{{ node_label.name }}"
-  loop: "{{ sa_telemetry_node_labels }}"
 
 - name: Create external message Service
   oc_service:
@@ -32,4 +31,3 @@
       node: "{{ node_label.name }}"
     external_ips:
       - "{{ node_external_ip }}"
-  loop: "{{ sa_telemetry_node_labels }}"

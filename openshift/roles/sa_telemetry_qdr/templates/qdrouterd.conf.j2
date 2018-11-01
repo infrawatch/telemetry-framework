@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: qdrouterd-config-{{ item.name }}
+  name: qdrouterd-config-{{ node_label.name }}
 data:
   qdrouterd.conf: |+
     router {
         mode: interior
-        id: central-qdr-{{ item.name }}
+        id: central-qdr-{{ node_label.name }}
     }
 
     listener {
