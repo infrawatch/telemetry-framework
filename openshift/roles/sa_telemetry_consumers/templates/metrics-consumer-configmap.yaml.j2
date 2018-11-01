@@ -5,12 +5,13 @@ metadata:
 data:
   sa.metrics.config.json: |+
     {
+            "AMQP1MetricURL": "messaging-internal-{{ item.name }}.{{ sa_telemetry_consumers_namespace }}.svc:5672/collectd/telemetry",
             "Exporterhost": "0.0.0.0",
             "Exporterport": 8081,
-            "AMQP1MetricURL": "messaging-internal-{{ item.name }}.{{ sa_telemetry_consumers_namespace }}.svc:5672/collectd/telemetry",
             "CPUStats": false,
             "DataCount": -1,
-            "Debug": false,
             "UseSample": false,
+            "ServiceType": "metrics",
+            "Debug": true,
             "Prefetch": 1000
     }

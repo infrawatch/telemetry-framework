@@ -7,8 +7,13 @@ data:
     {
             "AMQP1EventURL": "messaging-internal-{{ item.name }}.{{ sa_telemetry_consumers_namespace }}.svc:5672/collectd/notify",
             "ElasticHostURL": "http://elasticsearch.{{ sa_telemetry_consumers_namespace }}.svc:9200",
-            "RestIndex": false,
-            "Debug": false,
+            "AlertManagerURL": "http://alertmanager.{{ sa_telemetry_consumers_namespace }}.svc:9093/api/v1/alerts",
+            "ResetIndex": false,
+            "Debug": true,
+            "ServiceType": "events",
             "Prefetch": 0,
-            "AlertManagerURL": "http://alertmanager.{{ sa_telemetry_consumers_namespace }}.svc:9093/api/v1/alerts"
+            "API": {
+                "APIEndpointURL": "localhost:9999",
+                "AMQP1PublishURL": "http://messaging-internal-{{ item.name }}.{{ sa_telemetry_consumers_namespace }}.svc:5672/collectd/alerts2"
+            }
     }

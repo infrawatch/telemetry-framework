@@ -13,7 +13,7 @@ spec:
         nonroot: true
       containers:
       - name: metrics-consumer
-        image: docker.io/nfvpe/metrics_consumer:latest
+        image: {{ sa_telemetry_consumers_container_image }}:{{ sa_telemetry_consumers_container_version }}
         volumeMounts:
         - name: metrics-config
           mountPath: /config
