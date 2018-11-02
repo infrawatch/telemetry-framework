@@ -238,7 +238,7 @@ Create a directory for the image to live.
 Once you've done that, download it onto the host machine with `curl`. The image should live
 in `/home/images/engine/`. We'll use this to spin up our initial `engine` virtual machine.
 
-    curl https://access.cdn.redhat.com//content/origin/files/sha256/<unique_string>/rhel-server-7.5-update-4-x86_64-kvm.qcow2?_auth_=<unique_auth_from_link> \
+    curl "https://access.cdn.redhat.com//content/origin/files/sha256/<unique_string>/rhel-server-7.5-update-4-x86_64-kvm.qcow2?_auth_=<unique_auth_from_link>" \
       --output /home/images/engine/rhel-server-7.5-update-4-x86_64-kvm.qcow2
       
 > **Invalid `resolv.conf` in guest image**
