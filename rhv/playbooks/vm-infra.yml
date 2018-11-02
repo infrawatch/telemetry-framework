@@ -15,25 +15,14 @@
         msg: Bail out because we are deleting the virtual machines. Expected error.
       when: vm_state == "absent"
 
-    - name: Link playbooks into playbooks local
-      file:
-        src: ../openshift-ansible/playbooks/
-        dest: openshift-ansible-playbooks
-        state: link
-      connection: local
+- block:
+    - name: Run prerequisites for OpenShift
+      import_playbook: openshift-ansible-playbooks/prerequisites.yml
 
-    - name: Link roles into roles local
-      file:
-        src: ../openshift-ansible/roles/
-        dest: ../roles/openshift-ansible-roles
-        state: link
-      connection: local
+    - name: Install OpenShift on the nodes
+      import_playbook: openshift-ansible-playbooks/deploy_cluster.yml
 
-- name: Run prerequisites for OpenShift
-  import_playbook: openshift-ansible-playbooks/prerequisites.yml
-
-- name: Install OpenShift on the nodes
-  import_playbook: openshift-ansible-playbooks/deploy_cluster.yml
-
-- name: SA telemetry post-install
-  import_playbook: sa-telemetry-postinstall.yml
+    - name: SA telemetry post-install
+      import_playbook: sa-telemetry-postinstall.yml
+  tags:
+    - openshift-install
