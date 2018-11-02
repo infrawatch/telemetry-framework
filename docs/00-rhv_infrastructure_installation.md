@@ -517,6 +517,8 @@ The following is the default list of virtual machines that will be configured fo
 the service assurance framework. The requirement of 3 virtual machines is for the
 installation of GlusterFS within OpenShift for storage and persistent volumes.
 
+This configuration is available in the `hosts.yml` we created earlier.
+
     vms:
       - name: openshift-master
         tag: openshift_master
@@ -561,12 +563,18 @@ installation of GlusterFS within OpenShift for storage and persistent volumes.
           nic_on_boot: true
           nic_name: eth0
 
-Instantiation of the virtual machines can be run from our `telemetry-framework-rhv`
+Instantiation of the virtual machines can be run from our `telemetry-framework/rhv`
 source directory with Ansible, much like we've been doing previously. The following
 commands are run on your bastion machine.
 
-    cd ~/src/github/redhat-nfvpe/telemetry-framework-rhv
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/rhv
     ansible-playbook -i inventory/hosts.yml --ask-vault-pass playbooks/vm-infra.yml
 
 After your virtual machines have instantiated, the next steps are to install your
 OpenShift environment to the virtual machines.
+
+> **Actually...**
+>
+> In the `vm-infra.yml` file you'll see now that we actually leverage the installation
+> of OpenShift at the same time as VM instantiation. This section may not be directly
+> applicable to you now.
