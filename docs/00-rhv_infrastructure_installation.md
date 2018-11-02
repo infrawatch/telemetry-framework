@@ -319,6 +319,7 @@ Then create the `vars` for configuring the virtual machine.
         node_type: other
         system_ram_mb: 8192
         static_ip: 10.19.110.80
+    EOF
 
 ## Create engine virtual machine
 
