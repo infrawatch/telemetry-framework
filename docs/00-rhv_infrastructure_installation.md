@@ -46,14 +46,14 @@ Host setup will be dealt with in the following sections.
 
 The following sections will be executed on your bastion host.
 
-### Clone `telemetry-framework-rhv`
+### Clone `telemetry-framework`
 
     mkdir -p ~/src/github/redhat-nfvpe/ && cd $_
-    git clone https://github.com/redhat-nfvpe/telemetry-framework-rhv
-    cd telemtry-framework-rhv
+    git clone https://github.com/redhat-nfvpe/telemetry-framework
+    cd telemetry-framework/rhv
     ansible-galaxy install -r requirements.yml
 
-### Setup `telemetry-framework-rhv` configuration
+### Setup `telemetry-framework RHV` configuration
 
 We need to create an inventory file that we'll be able to run our
 playbooks against to setup the nodes. Here is an example inventory file
