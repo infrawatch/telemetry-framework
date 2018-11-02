@@ -488,6 +488,7 @@ to our host machine, and then we'll `scp` the file over to the engine virtual
 machine so that we can create our RHEL template with Ansible.
 
     ssh root@10.19.111.100
+    ssh-add ~/.ssh/id_vm_rsa
     cd /home/images/engine
     scp rhel-server-7.5-update-4-x86_64-kvm.qcow2 cloud-user@10.19.110.80:
 
