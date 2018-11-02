@@ -209,11 +209,15 @@ Then we need to put in some configuration contents to these files.
 ### Subscribe and setup repositories
 
 With our subscription information all setup, we can run the `bootstrap.yml`
-playbook to subscribe our server and setup the repositories.
+playbook to subscribe our server and setup the repositories. We're skipping
+the backup tasks since this is a fresh install of RHEL withhout any
+repositories setup (since we're not yet subscribed). If your environment is
+different then remove `--skip-tags=backup` as necessary.
 
     ansible-playbook -i inventory/hosts.yml \
       --limit virthost \
       --ask-vault-pass \
+      --skip-tags=backup \
       playbooks/bootstrap.yml
 
 ## Download RHEL 7.5 cloud image
