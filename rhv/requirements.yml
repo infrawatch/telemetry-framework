@@ -4,3 +4,6 @@
 - src: oVirt.image-template
 - src: oVirt.repositories
 - src: oVirt.vm-infra
+- src: https://github.com/openshift/openshift-ansible
+  name: openshift.openshift-ansible
+  version: "openshift-ansible-3.9.39-1"

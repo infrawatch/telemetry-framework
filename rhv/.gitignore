@@ -4,6 +4,4 @@ roles/*
 !roles/sa_telemetry_postinstall
 vars/*
 !vars/.keepit
-openshift-ansible
-playbooks/openshift-ansible-playbook
 base-infra-bootstrap/

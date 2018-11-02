@@ -15,13 +15,6 @@
         msg: Bail out because we are deleting the virtual machines. Expected error.
       when: vm_state == "absent"
 
-    - name: Clone OpenShift-Ansible locally
-      git:
-        repo: "https://github.com/openshift/openshift-ansible"
-        dest: ../openshift-ansible
-        version: openshift-ansible-3.9.39-1
-      connection: local
-
     - name: Link playbooks into playbooks local
       file:
         src: ../openshift-ansible/playbooks/
