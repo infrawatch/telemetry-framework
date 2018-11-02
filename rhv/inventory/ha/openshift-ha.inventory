@@ -15,6 +15,7 @@ glusterfs
 [OSEv3:vars]
 ansible_become=yes
 debug_level=4
+os_firewall_use_firewalld=true
 
 # no examples
 openshift_install_examples=false
