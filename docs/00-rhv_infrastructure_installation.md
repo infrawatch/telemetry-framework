@@ -443,7 +443,7 @@ to store our images, templates, and virtual machines on the node.
 > to installation of GlusterFS, NFS, or another distributed storage system
 > where we can leverage the _Shared_ storage method.
 
-Login to the host (at `10.19.110.7`) and run the following commands to create
+Login to the host (at `10.19.111.100`) and run the following commands to create
 the proper directory structure, ownership, and filesystem permissions.
 
     mkdir -p /home/local/data/images
