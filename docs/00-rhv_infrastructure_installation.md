@@ -401,11 +401,14 @@ The ogs should be mostly available in `/var/log/` under some `ovirt-` directorie
 ## Setup Networking
 
 Before we setup the storage for the node, we need to add the `ovirtmgmt` virtual
-interface to the node so that we can communicate with it properly. This will move
-your networking around a bit, and setup your existing interface on `eno1` to be
-on a bridged network `br1`. We'll be attaching `ovirtmgmt` to the `eno2` interface
-since we'll be setting the nodes up for static addressing, and we don't want to
-interfere with our existing DHCP network. Your networking requirements may differ.
+interface to the node so that we can communicate with it properly.
+
+This will move your networking around a bit, and setup your existing interface 
+on `eno1` to be on a bridged network `br1`.
+
+We'll be attaching `ovirtmgmt` to the `eno2` interface since we'll be setting
+the nodes up for static addressing, and we don't want to interfere with our
+existing DHCP network. Your networking requirements may differ.
 
 First let's load up our `dot7` host.
 
@@ -416,7 +419,7 @@ Then click on the _Network Interfaces_ tab within the `dot7` host itself.
 ![Host networking screen](imgs/data-center-host-network-interfaces.png)
 
 Click on _Setup Host Networks_ then drag the `ovirtmgmt` networking interface over
-to the `eno1` physical interface. Before we make these changes, let's setup the
+to the `eno2` pysical interface. Before we make these changes, let's setup the
 interface to have a static IP address of `10.19.111.100` since our `eno2` network
 is designed to use `10.19.111.0/24` subnet.
 
