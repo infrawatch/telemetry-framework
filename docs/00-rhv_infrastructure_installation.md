@@ -336,7 +336,7 @@ As done previously, we setup our `vars` file so that we can register the node an
 the repositories that we need to get RHV engine setup on the virtual machine. Run the
 following commands to make this so.
 
-    cd ~/src/github/redhat-nfvpe/telemetry-framework-rhv
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/rhv
     ansible-playbook -i inventory/hosts.yml \
       --limit engine \
       --ask-vault-pass \
@@ -346,7 +346,7 @@ following commands to make this so.
 
 Installation of RHV engine should be as simple as running the following commands:
 
-    cd ~/src/github/redhat-nfvpe/telemetry-framework-rhv
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/rhv
     ansible-playbook -i inventory/hosts.yml --ask-vault-pass playbooks/engine-setup.yml
 
 After that, you should be able to access the web console at
@@ -356,7 +356,7 @@ Login by default (per above) is `admin / admin`.
 
 # Post-Install Setup
 
-The follow steps will require some interaction with the GUI available at the link provided
+The following steps will require some interaction with the GUI available at the link provided
 in [Install RHV Engine](#install-rhv-engine) for the web interface.
 
 ## Set Data Center to Local Storage
@@ -437,9 +437,9 @@ to store our images, templates, and virtual machines on the node.
 Login to the host (at `10.19.110.7`) and run the following commands to create
 the proper directory structure, ownership, and filesystem permissions.
 
-    mkdir -p /var/local/data/images
-    chown 36:36 /var/local/data /var/local/data/images
-    chmod 0755 /var/local/data /var/local/data/images
+    mkdir -p /home/local/data/images
+    chown 36:36 /home/local/data /home/local/data/images
+    chmod 0755 /home/local/data /home/local/data/images
 
 Now that we've configured our directories and setup the proper permissions and
 ownership, we need to go back to the web interface and create _Storage Domains_
@@ -488,7 +488,7 @@ From our bastion host (laptop) we'll create the RHEL template with our
 `telemetry-framework-rhv` repository and playbooks. Run the following commands
 to import the RHEL image to the host and create our RHEL 7.5 VM template.
 
-    cd ~/src/github/telemetry-framework-rhv/
+    cd ~/src/github/telemetry-framework/rhv/
     ansible-playbook -i inventory/hosts.yml --ask-vault-pass playbooks/rhel-template.yml
 
 At this point, the final step is create the virtual machines for the OpenShift
