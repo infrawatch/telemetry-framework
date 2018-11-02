@@ -4,3 +4,4 @@ vars/*
 !vars/.keepit
 openshift-ansible
 playbooks/openshift-ansible-playbook
+base-infra-bootstrap/
