@@ -1,5 +1,7 @@
 roles/*
 !roles/.keepit
+!roles/openshift-ansible-roles
+!roles/sa_telemetry_postinstall
 vars/*
 !vars/.keepit
 openshift-ansible
