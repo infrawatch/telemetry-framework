@@ -11,18 +11,15 @@
     - oVirt.vm-infra
 
   tasks:
-    - block:
-        - name: Run prerequisites for OpenShift
-          import_playbook: openshift-ansible-playbooks/prerequisites.yml
+    - fail:
+        msg: Bail out because we are deleting the virtual machines. Expected error.
+      when: vm_state == "absent"
 
-        - name: Install OpenShift on the nodes
-          import_playbook: openshift-ansible-playbooks/deploy_cluster.yml
+- name: Run prerequisites for OpenShift
+  import_playbook: openshift-ansible-playbooks/prerequisites.yml
 
-        - name: SA telemetry post-install
-          import_playbook: sa-telemetry-postinstall.yml
+- name: Install OpenShift on the nodes
+  import_playbook: openshift-ansible-playbooks/deploy_cluster.yml
 
-        - fail:
-            msg: Bail out because we are deleting the virtual machines. Expected error.
-          when: vm_state == "absent"
-      tags:
-        - openshift-install
+- name: SA telemetry post-install
+  import_playbook: sa-telemetry-postinstall.yml
