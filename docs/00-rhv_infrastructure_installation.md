@@ -1,4 +1,4 @@
-# telemetry-framework-rhv
+# telemetry-framework/rhv
 
 Automation for installation of telemetry framework on RHV. Purpose of this repository
 is to provide documentation and automation for:
@@ -253,6 +253,12 @@ in `/home/images/engine/`. We'll use this to spin up our initial `engine` virtua
 >     systemctl start libvirtd.service
 >     virt-edit --expr 's/nameserver 192.168.122.1//g' \
 >       -a /home/images/engine/rhel-server-7.5-update-4-x86_64-kvm.qcow2 /etc/resolv.conf
+
+## Update and Reboot Host
+
+Now is a good time to run a `yum update` and reboot the host (if kernel update happened).
+
+    yum update -y && systemctl reboot
 
 # RHV Engine virtual machine creation
 
