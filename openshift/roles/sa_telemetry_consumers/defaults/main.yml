@@ -8,5 +8,5 @@ sa_telemetry_metrics_memory_request: 250Mi
 sa_telemetry_metrics_cpu_request: 1000m
 sa_telemetry_metrics_memory_limit: 500Mi
 sa_telemetry_metrics_cpu_limit: 2000m
-sa_telemetry_consumers_container_image: docker.io/nfvpe/telemetry_consumer
+sa_telemetry_consumers_container_image: quay.io/redhat-nfvpe/smart-gateway
 sa_telemetry_consumers_container_version: latest
