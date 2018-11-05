@@ -3,8 +3,8 @@ openshift-master-1 ansible_host=openshift-master-1.dev.nfvpe.site
 openshift-compute-1 ansible_host=openshift-compute-1.dev.nfvpe.site
 openshift-compute-2 ansible_host=openshift-compute-2.dev.nfvpe.site
 openshift-compute-3 ansible_host=openshift-compute-3.dev.nfvpe.site
-openshift-infra-node-1 ansible_host=openshift-node-1.dev.nfvpe.site
-openshift-infra-node-2 ansible_host=openshift-node-2.dev.nfvpe.site
+openshift-infra-node-1 ansible_host=openshift-infra-node-1.dev.nfvpe.site
+openshift-infra-node-2 ansible_host=openshift-infra-node-2.dev.nfvpe.site
 
 [OSEv3:children]
 masters
@@ -15,7 +15,7 @@ glusterfs
 [OSEv3:vars]
 ansible_become=yes
 debug_level=4
-os_firewall_use_firewalld=true
+os_firewall_use_firewalld=false
 
 # no examples
 openshift_install_examples=false

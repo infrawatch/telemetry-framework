@@ -7,10 +7,12 @@
     # Contains encrypted `engine_password` variable using ansible-vault
     - ../vars/{{ password_file }}
 
-  roles:
-    - oVirt.vm-infra
-
   tasks:
+    - include_role:
+        name: oVirt.vm-infra
+      tags:
+        - install-vm-infra
+
     - fail:
         msg: Bail out because we are deleting the virtual machines. Expected error.
       when: vm_state == "absent"
