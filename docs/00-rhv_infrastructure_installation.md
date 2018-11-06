@@ -346,6 +346,7 @@ following commands to make this so.
     ansible-playbook -i inventory/hosts.yml \
       --limit engine \
       --ask-vault-pass \
+      --skip-tags=backup \
       playbooks/bootstrap.yml
 
 ## Install RHV engine
