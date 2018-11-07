@@ -27,6 +27,12 @@ CentOS for oVirt is not in scope, but easily done with some extra effort.
 You'll also need a bastion host (your laptop, or another place to run the
 Ansible playbooks against your host server).
 
+A DNS server will either need to be configured or created to support your
+infrastructure. If you're using DNSmasq (or wish to configure a host running
+DNSmasq to point your nodes and virtual machines to as we'll be doing
+throughout our documentation, referenced at `10.19.110.9`) you can find example
+configurations at [DNSmasq Configuration](https://github.com/redhat-nfvpe/telemetry-framework/blob/master/docs/02-server_side_installation.md#dnsmasq-configuration).
+
 # Topology
 
 ![Topology](imgs/telemetry_framework_on_rhv.png)
