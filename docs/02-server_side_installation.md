@@ -25,6 +25,21 @@ virtual machines (VM) on those virtual hosts (virthost).
 
 # DNSMasq Configuration
 
+Installation of OpenShift and other components will require the proper setup
+of DNS lookups on your network. We're using DNSmasq as a standalone DNS server
+that we can set both the static hostnames and wildcard domain for OpenShift
+applications.
+
+Below is the configuration of `/etc/dnsmasq.conf` where you set the passthrough
+DNS server IP addresses, and for the wildcard domain (`*.apps.<your_domain>`).
+
+The `address=/apps.nfvpe.site/10.19.110.71` line is an example configuration for
+the wildcard domain required for routes to be used in OpenShift. The IP address
+for the wildcard domain needs to point at an infrastructure node (in simpler
+setups your infrastructure node will be the master), or the load balancer that
+distributes the load amongst multiple infrastructure nodes. You can only
+point at a single IP address.
+
     cat > /etc/dnsmasq.conf <<EOF
     log-facility=/var/log/dnsmasq.log
     interface=br1
@@ -34,14 +49,37 @@ virtual machines (VM) on those virtual hosts (virthost).
     server=10.11.5.19
     server=10.5.30.160
     server=127.0.0.1
-    expand-hosts
+    no-hosts
+    addn-hosts=/etc/hosts.dnsmasq
     address=/apps.nfvpe.site/10.19.110.71
     no-resolv
     EOF
-
-    systemctl restart dnsmasq.service
     
 Reference: https://wiki.libvirt.org/page/Libvirtd_and_dnsmasq
+
+Additionally, you'll need to configure the static hostnames of your servers
+as well so they can lookup the hostnames of the other servers (important during
+OpenShift installation). The configuration will look similar to applying the
+changes to `/etc/hosts` on every server, but this will be centralized to
+make things less aggrevating.
+
+The hosts are defined in `/etc/hosts.dnsmasq` and is referenced by our
+`/etc/dnsmasq.conf` configuration above. An example configuration for
+`hosts.dnsmasq` is shown below:
+
+    cat /etc/hosts.dnsmasq
+    10.19.110.80	engine.dev.nfvpe.site
+    10.19.111.104	master.dev.nfvpe.site
+    10.19.111.104	console.dev.nfvpe.site
+    10.19.111.101	openshift-master.dev.nfvpe.site
+    10.19.111.102	openshift-node-1.dev.nfvpe.site
+    10.19.111.103	openshift-node-2.dev.nfvpe.site
+
+With all our configuration done, we can restart the `dnsmasq`
+service so that everything is active. You'll need to do this after any
+changes to the files as well.
+
+    systemctl restart dnsmasq.service
 
 # Post-Host Installation Setup
 
