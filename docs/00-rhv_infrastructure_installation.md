@@ -342,6 +342,17 @@ Then create the `vars` for configuring the virtual machine.
 
 Engine configuration will be dealt with in the following sections.
 
+## Load SSH key into ssh-agent
+
+Before running the next set of commands you'll need to load the generated `halabdot7`
+key (or `id_vm_rsa` by default from `base-infra-bootstrap`) as defined by the
+`vm_ssh_key_path` variable in the inventory previously used.
+
+    ssh-add /home/lmadsen/.ssh/halabdot7
+
+If you have issues running the following commands due to failed login, this is the
+most likely culprit.
+
 ## Subscribe and setup repositories
 
 As done previously, we setup our `vars` file so that we can register the node and install
