@@ -67,13 +67,14 @@ The hosts are defined in `/etc/hosts.dnsmasq` and is referenced by our
 `/etc/dnsmasq.conf` configuration above. An example configuration for
 `hosts.dnsmasq` is shown below:
 
-    cat /etc/hosts.dnsmasq
+    cat > /etc/hosts.dnsmasq <<EOF
     10.19.110.80	engine.dev.nfvpe.site
     10.19.111.104	master.dev.nfvpe.site
     10.19.111.104	console.dev.nfvpe.site
     10.19.111.101	openshift-master.dev.nfvpe.site
     10.19.111.102	openshift-node-1.dev.nfvpe.site
     10.19.111.103	openshift-node-2.dev.nfvpe.site
+    EOF
 
 With all our configuration done, we can restart the `dnsmasq`
 service so that everything is active. You'll need to do this after any
