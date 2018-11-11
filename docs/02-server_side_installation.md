@@ -21,6 +21,14 @@ virtual machines (VM) on those virtual hosts (virthost).
 
 # Telemetry Platform Layout
 
+> **WARNING**
+>
+> [Leif] I'm no longer recommending this setup for now. A preferred installation
+> would be done with Red Hat Hyperconverged Infrastructure for Virtualization.
+> You would have 3 nodes with hyperconverged GlusterFS. You should be able to re-use
+> the Gluster installation for your OpenShift platform, or just run it virtual across
+> the virtual machines (which would be set distributed via affinity).
+
 ![Telemetry Platform Layout](imgs/telemetry_layout.png)
 
 # DNSMasq Configuration
