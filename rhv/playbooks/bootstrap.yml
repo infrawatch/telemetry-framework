@@ -1,6 +1,6 @@
 ---
 - name: Setup repositories for RHV environment
-  hosts: virthosts
+  hosts: all
   become: true
   become_user: root
 
