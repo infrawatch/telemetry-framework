@@ -12,13 +12,14 @@
     engine_user: admin@internal
     engine_cafile: /etc/pki/ovirt-engine/ca.pem
 
-    qcow_url: file:///home/cloud-user/rhel-server-7.5-update-4-x86_64-kvm.qcow2
+    qcow_url: file:///root/rhel-server-7.6-x86_64-kvm.qcow2
     template_cluster: Default
-    template_name: rhel75_template
+    template_name: rhel76_template
+    storage_domain: hosted_storage
     template_memory: 16GiB
     template_cpu: 4
     template_disk_size: 20GiB
-    template_disk_storage: data
+    template_disk_storage: hosted_storage
 
   roles:
     - oVirt.image-template
