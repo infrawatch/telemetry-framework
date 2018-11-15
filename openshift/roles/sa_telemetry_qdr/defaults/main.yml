@@ -1,1 +1,5 @@
 ---
+sa_telemetry_qdr_container_image: tripleomaster/centos-binary-qdrouterd
+sa_telemetry_qdr_container_version: current-tripleo-rdo
+sa_telemetry_qdr_kolla_config_files: /var/lib/kolla/config_files
+sa_telemetry_qdr_config_data_puppet_generated: /var/lib/config-data/puppet-generated/qdrouterd

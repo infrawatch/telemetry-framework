@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qdrouterd-json-{{ node_label.name }}
+data:
+  config.json: |+
+    {
+        "command": "/usr/sbin/qdrouterd", 
+        "config_files": [
+            {
+                "dest": "/opt/qdrouterd/qdrouterd.kolla", 
+                "merge": true, 
+                "preserve_properties": true, 
+                "source": "{{ sa_telemetry_qdr_kolla_config_files }}/src/etc/qdrouterd.conf"
+            }
+        ], 
+        "permissions": [
+            {
+                "path": "/var/lib/qdrouterd",
+                "owner": "qdrouterd:qdrouterd",
+                "recurse": true
+            },
+            {
+                "path": "/var/log/qdrouterd",
+                "owner": "qdrouterd:qdrouterd",
+                "recurse": true
+            }
+        ]
+    }

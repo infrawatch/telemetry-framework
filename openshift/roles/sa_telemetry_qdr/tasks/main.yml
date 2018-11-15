@@ -1,5 +1,19 @@
 ---
 - block:
+    - name: Create qdr service account
+      oc_serviceaccount:
+        state: "{{ state }}"
+        name: qdr
+        namespace: "{{ sa_telemetry_qdr_namespace }}"
+
+    - name: Add qdr SCC
+      oc_adm_policy_user:
+        namespace: "{{ sa_telemetry_qdr_namespace }}"
+        resource_kind: scc
+        resource_name: anyuid
+        state: "{{ state }}"
+        user: "system:serviceaccount:{{ sa_telemetry_qdr_namespace }}:qdr"
+
     - name: Deploy QDR routers
       include_tasks: deploy.yml
       loop: "{{ sa_telemetry_node_labels }}"
@@ -25,4 +39,18 @@
       loop_control:
         loop_var: node_label
         index_var: label_index
+
+    - name: Add qdr SCC
+      oc_adm_policy_user:
+        namespace: "{{ sa_telemetry_qdr_namespace }}"
+        resource_kind: scc
+        resource_name: anyuid
+        state: "{{ state }}"
+        user: "system:serviceaccount:{{ sa_telemetry_qdr_namespace }}:qdr"
+
+    - name: Create qdr service account
+      oc_serviceaccount:
+        state: "{{ state }}"
+        name: qdr
+        namespace: "{{ sa_telemetry_qdr_namespace }}"
   when: state == "absent"

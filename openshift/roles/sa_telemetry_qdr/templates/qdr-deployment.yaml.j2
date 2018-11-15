@@ -12,10 +12,16 @@ spec:
         type: router
         node: {{ node_label.name }}
     spec:
+      serviceAccountName: qdr
+      securityContext:
+        privileged: true
       containers:
       - name: qdr-{{ node_label.name }}
-        image: nfvpe/qpid-dispatch-router:1.2.0-2
+        image: "{{ sa_telemetry_qdr_container_image }}:{{ sa_telemetry_qdr_container_version }}"
         imagePullPolicy: IfNotPresent
+        env:
+         - name: KOLLA_CONFIG_STRATEGY
+           value: COPY_ALWAYS
         ports:
         - name: internal
           containerPort: 5672
@@ -26,9 +32,27 @@ spec:
         volumeMounts:
         - name: qdrouterd-config
           mountPath: /etc/qpid-dispatch
+        - name: qdrouterd-config-kolla
+          mountPath: /var/lib/kolla/config_files/src/etc
+        - name: qdrouterd-json
+          mountPath: /var/lib/kolla/config_files
+        - name: var-log-qdrouterd
+          mountPath: /var/log/qdrouterd
+        - name: opt-qdrouterd
+          mountPath: /opt/qdrouterd
       volumes:
       - name: qdrouterd-config
         configMap:
           name: qdrouterd-config-{{ node_label.name }}
+      - name: qdrouterd-config-kolla
+        configMap:
+          name: qdrouterd-config-{{ node_label.name }}
+      - name: qdrouterd-json
+        configMap:
+          name: qdrouterd-json-{{ node_label.name }}
+      - name: var-log-qdrouterd
+        emptyDir: {}
+      - name: opt-qdrouterd
+        emptyDir: {}
       nodeSelector:
         node: {{ node_label.name }}
