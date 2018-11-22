@@ -8,10 +8,6 @@
     - ../vars/{{ password_file }}
 
   vars:
-    engine_url: https://engine.dev.nfvpe.site/ovirt-engine/api
-    engine_user: admin@internal
-    engine_cafile: /etc/pki/ovirt-engine/ca.pem
-
     qcow_url: file:///root/rhel-server-7.6-x86_64-kvm.qcow2
     template_cluster: Default
     template_name: rhel76_template

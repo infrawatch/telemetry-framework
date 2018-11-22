@@ -8,10 +8,6 @@
     - ../vars/{{ password_file }}
 
   vars:
-    engine_url: https://engine.dev.nfvpe.site/ovirt-engine/api
-    engine_user: admin@internal
-    engine_cafile: /etc/pki/ovirt-engine/ca.pem
-
     qcow_url: https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2
     template_cluster: Default
     template_name: centos7_template
