@@ -1,20 +1,26 @@
 ---
 language: generic
 
+git:
+  depth: 1
+
 services:
 - docker
 
 env:
   global:
   - REGISTRY_USER="nfvperobot"
-  - secure: pv9Ti1pifBsF9Gv1RKqO6H0lR7/YtiHCWnQHIukVfAzKd3tDHK+xDW5AjnO9fmuy8XAxDwTvFuIYPboJwI1a24nGgDD+bU1OSBJzHvZydnQrUi0AI14w7kHnN6gSGrxlP98d6y69S6ZDTeAO88N6qudyfsjc7GUJ7GiXuqmCGv3cqfwccYO4ZSivVIGtQA0iEndrhurmBSStGD4lviFavshNqixC4EgJNE0p6r3wEnDlchEiH0a5g8My6GFgfKynNGgSgMVGDkAbBVgFFt9vcs58dF/zuhrt5H0yDL29e/EwGTijQ02/w+xeMZpLdg/WLBc4bdhEmKj8Ee/HLBFjY52QNZwomp0gaLIJXfG/F+uxOu41BZd7nDaOr9G7uIhIoZqQj0P/EHGq6fHvpYtGxQU9p9vguzDuBaEZddiekrE+X/5aMEf0oVGTEb6fAn7zs6BRwYx8AEuB2/I+dfbJMLnClDv67gVYYTRQdNtey/8hGEpRggVdd0vQw7FX6c8pRNhhBCZk2tRlDrzdkY2hftaJHALlOB7FVHaPjmUTf1MfzlEORlwt79XbtJeYL6VivgOOREk8ZhVJdqzSzbSNRkkzw7/K6x7SWEd0z+lRBcRxzsxG3uRxi7BNmI8jWIWYaRbaqw9TAxLKPSvNAG2lemDvlIt9Em0JWPIF/NoZi8Q=
+  - secure: "sGs6T850gLa3ogzKIsY3VAo2AUZ8akWZHVOW5M5J2N5D6lW/ecZRhv18w9Ny0Yk+Dhihef8cpqiSz2FYnzWZPob/+F+R3K4hOUcq3fIfcUcntRgsvC4ep9Hb3TAS0c34wE76ZRLuk3dUcSq4CTmA6G6ZaliCzxmSgtPHVyZDtE3pjXKZgEBFXpjk1dLKYvSmHJdW908REGKh9gfeBD8brSN+3LPNa6sp+u+kypv6z3MtGBUKRkyXtdM1sN8PLk5Fb9YAjr269RpAo2fX4OpN2t61B+8ql1n8Iak1UU75KxMP6xJsaBk7Pfwbbvux8e9BOXJCLBDy4/oMSQvgAU3vMpP/VcAtmeFGcn/N+VUlRoxVuLIGLWVGtg3S/eWNBhlOT+PZ91XIDtCX0wLD63INCSFNJP2nkmUnDx07T4qjL9146qqgLWQiz4c9LcEWVpUGxdZm76MtlJWilx/ySg6RF9piy8e4MsGCBim7HYXOAQMaZjN8k5D6OmFiOw/xF0SkiVcSLWR8QeuY51obopCoISe/286ALjicwB38afpHxfaG2CXAyqCQ2Vf+dD5xqOfa9/8oT6UI3m0rMjIPhMVVcB5QIcNEFEz7fsWcjrl7oJRg7vOe3DoG/wGqWP7gvc8jZbQVdeI55gEAWXhmsB3paNRY8ymiWCRYF5Wm4N1kfcU="
 
 before_deploy:
-- docker login -u $REGISTRY_USER -p $REGISTRY_PASS
-- docker build --tag nfvpe/telemetry-framework-apb:latest .
-- docker images
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+    - docker build --tag nfvpe/telemetry-framework-apb:latest .
+    - docker images
+
 deploy:
   provider: script
   script: docker push nfvpe/telemetry-framework-apb:latest
   on:
     branch: master
+
+# vim: set ft=yaml ts=2 sts=2 sw=2 expandtab:
