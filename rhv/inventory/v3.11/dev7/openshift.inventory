@@ -62,6 +62,8 @@ ansible_service_broker_registry_name=nfvpe
 ansible_service_broker_registry_url="https://registry.hub.docker.com"
 ansible_service_broker_registry_organization=nfvpe
 ansible_service_broker_registry_tag=latest
+ansible_service_broker_registry_user=""
+ansible_service_broker_registry_pass=""
 ansible_service_broker_registry_auth_type=""
 ansible_service_broker_registry_auth_name=""
 
