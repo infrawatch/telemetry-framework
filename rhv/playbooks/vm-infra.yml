@@ -21,6 +21,28 @@
         msg: Bail out because we are deleting the virtual machines. Expected error.
       when: vm_state == "absent"
 
+- name: Prerequisites on the nodes
+  hosts: nodes
+  gather_facts: false
+
+  tasks:
+    - yum:
+        name: '*'
+        state: latest
+      register: yum_upgrade
+
+    - reboot:
+      when: yum_upgrade.changed
+
+    - package:
+        name: NetworkManager
+        state: present
+
+    - systemd:
+        name: NetworkManager.service
+        enabled: true
+        state: started
+
 # WARNING: this will fail with Ansible 2.7.0 (use 2.6.x or >= 2.7.1)
 - name: Run prerequisites for OpenShift
   import_playbook: openshift-ansible-playbooks/prerequisites.yml
@@ -30,3 +52,4 @@
 
 - name: SA telemetry post-install
   import_playbook: sa-telemetry-postinstall.yml
+  when: sa_telemetry | default(true)
