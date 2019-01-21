@@ -19,11 +19,6 @@ recommended installation method out of this repository is currently to leverage
 RHV (Red Hat Virtualization) on top of RHEL to build out a place to run the
 initial bits of infrastructure.
 
-An older method exists which uses the
-[base-infra-bootstrap](https://github.com/redhat-nfvpe/base-infra-bootstrap)
-playbooks and roles, but is no longer the recommended way to install the
-telemetry-framework.
-
 ## Dependencies
 
 The focus of this repository is to gather the information required to build out
