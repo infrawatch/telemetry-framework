@@ -21,6 +21,10 @@
         msg: Bail out because we are deleting the virtual machines. Expected error.
       when: vm_state == "absent"
 
+# WARNING: this will fail with Ansible 2.7.0 (use 2.6.x or >= 2.7.1)
+- name: Run prerequisites for OpenShift
+  import_playbook: openshift-ansible-playbooks/prerequisites.yml
+
 - name: Prerequisites on the nodes
   hosts: nodes
   gather_facts: false
@@ -43,9 +47,6 @@
         enabled: true
         state: started
 
-# WARNING: this will fail with Ansible 2.7.0 (use 2.6.x or >= 2.7.1)
-- name: Run prerequisites for OpenShift
-  import_playbook: openshift-ansible-playbooks/prerequisites.yml
 
 - name: Install OpenShift on the nodes
   import_playbook: openshift-ansible-playbooks/deploy_cluster.yml

@@ -17,8 +17,8 @@ debug_level=4
 openshift_version='3.11'
 openshift_release=v3.11
 openshift_deployment_type=openshift-enterprise
-openshift_install_examples=false
-#openshift_disable_check=disk_availability,memory_availability,docker_image_availability,package_version
+openshift_install_examples=true
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability,package_version
 
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 openshift_clock_enabled=true
