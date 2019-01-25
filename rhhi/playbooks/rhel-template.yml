@@ -1,7 +1,6 @@
 ---
 - name: Create a template from qcow
   hosts: engine
-  #  connection: local
   gather_facts: false
 
   vars_files:

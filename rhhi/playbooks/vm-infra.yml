@@ -13,10 +13,6 @@
       tags:
         - install-vm-infra
 
-    - set_fact:
-        ansible_service_broker_registry_auth_type: ""
-        ansible_service_broker_registry_auth_name: ""
-
     - fail:
         msg: Bail out because we are deleting the virtual machines. Expected error.
       when: vm_state == "absent"
@@ -46,7 +42,6 @@
         name: NetworkManager.service
         enabled: true
         state: started
-
 
 - name: Install OpenShift on the nodes
   import_playbook: openshift-ansible-playbooks/deploy_cluster.yml
