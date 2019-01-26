@@ -15,6 +15,7 @@ masters
 nodes
 etcd
 glusterfs
+lb
 
 [OSEv3:vars]
 ansible_become=yes
@@ -31,6 +32,12 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 openshift_clock_enabled=true
 os_firewall_use_firewalld=true
 enable_excluders=false
+
+# lb values
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=openshift-lb.dev7.nfvpe.site
+openshift_master_cluster_public_hostname=openshift-lb.dev7.nfvpe.site
+
 
 # hostname setup
 openshift_hostname_check=true
@@ -78,6 +85,9 @@ openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kube
 openshift-master-1
 openshift-master-2
 openshift-master-3
+
+[lb]
+openshift-lb
 
 [etcd]
 openshift-master-1
