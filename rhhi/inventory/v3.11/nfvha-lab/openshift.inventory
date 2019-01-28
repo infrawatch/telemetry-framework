@@ -22,8 +22,8 @@ ansible_become=yes
 debug_level=4
 
 # openshift general values
-openshift_version='3.11'
-openshift_release=v3.11
+#openshift_version='3.11'
+#openshift_release=v3.11
 openshift_deployment_type=openshift-enterprise
 openshift_install_examples=true
 openshift_disable_check=disk_availability,memory_availability,docker_image_availability,package_version
@@ -38,15 +38,19 @@ openshift_master_cluster_method=native
 openshift_master_cluster_hostname=openshift-lb.dev7.nfvpe.site
 openshift_master_cluster_public_hostname=openshift-lb.dev7.nfvpe.site
 
-
 # hostname setup
 openshift_hostname_check=true
 openshift_master_default_subdomain=apps.dev7.nfvpe.site
 openshift_master_cluster_hostname=master.dev7.nfvpe.site
 openshift_master_cluster_public_hostname=console.dev7.nfvpe.site
 
+# monitoring
+openshift_cluster_monitoring_operator_install=false
+openshift_metrics_install_metrics=false
+
 # OLM
-openshift_enable_olm=true
+#openshift_enable_olm=true
+#openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'<USERNAME>','password':'<PASSWORD','test_image':'mongodb/enterprise-operator:0.3.2'}]
 
 # install telemetry
 sa_telemetry_install=false
@@ -56,7 +60,12 @@ sa_telemetry_node_labels=[{'name': 'blue', 'host': 'openshift-infra-node-1'},{'n
 # storage
 openshift_storage_glusterfs_namespace=glusterfs
 openshift_storage_glusterfs_name=storage
+openshift_storage_glusterfs_storageclass=true
 openshift_storage_glusterfs_storageclass_default=true
+#openshift_storage_glusterfs_block_deploy=true
+#openshift_storage_glusterfs_block_host_vol_size=100
+#openshift_storage_glusterfs_block_storageclass=true
+#openshift_storage_glusterfs_block_storageclass_default=false
 
 # service broker
 openshift_enable_service_catalog=true
@@ -68,6 +77,7 @@ logrotate_scripts=[{"name": "syslog", "path": "/var/log/cron\n/var/log/maillog\n
 journald_vars_to_replace=[{ "var": "Storage", "val": "persistent" },{ "var": "Compress", "val": "yes" },{ "var": "SyncIntervalSec", "val": "1s" },{ "var": "RateLimitInterval", "val": "1s" },{ "var": "RateLimitBurst", "val": "10000" },{ "var": "SystemMaxUse", "val": "500M" },{ "var": "SystemKeepFree", "val": "20%" },{ "var": "SystemMaxFileSize", "val": "10M" },{ "var": "MaxRetentionSec", "val": "1month" },{ "var": "MaxFileSec", "val": "1day" },{ "var": "ForwardToSyslog", "val": "no" },{ "var": "ForwardToWall", "val": "no" }]
 
 # ansible service broker
+ansible_service_broker_install=true
 ansible_service_broker_sandbox_role=admin
 ansible_service_broker_image='docker.io/ansibleplaybookbundle/origin-ansible-service-broker:v3.11'
 ansible_service_broker_registry_whitelist=[".*-apb$"]
@@ -77,9 +87,13 @@ ansible_service_broker_registry_name=nfvpe
 ansible_service_broker_registry_url="https://registry.hub.docker.com"
 ansible_service_broker_registry_organization=nfvpe
 ansible_service_broker_registry_tag=latest
+ansible_service_broker_registry_user=""
+ansible_service_broker_registry_pass=""
+ansible_service_broker_registry_auth_type=""
+ansible_service_broker_registry_auth_name=""
 
 # setup node groups for 3.11
-openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true', 'node-role.kubernetes.io/infra=true']}, {'name': 'node-config-infra-blue', 'labels': ['node-role.kubernetes.io/infra=true', 'node=blue']}, {'name': 'node-config-infra-green', 'labels': ['node-role.kubernetes.io/infra=true', 'node=green']}, {'name': 'node-config-infra-neutral', 'labels': ['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute-blue', 'labels': ['node-role.kubernetes.io/compute=true', 'node=blue', 'application=sa-telemetry']}, {'name': 'node-config-compute-green', 'labels': ['node-role.kubernetes.io/compute=true', 'node=blue', 'application=sa-telemetry']}, {'name': 'node-config-compute-neutral', 'labels': ['node-role.kubernetes.io/compute=true']}]
+openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true', 'node-role.kubernetes.io/infra=true']}, {'name': 'node-config-infra-blue', 'labels': ['node-role.kubernetes.io/infra=true', 'node=blue']}, {'name': 'node-config-infra-green', 'labels': ['node-role.kubernetes.io/infra=true', 'node=green']}, {'name': 'node-config-infra-neutral', 'labels': ['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute-blue', 'labels': ['node-role.kubernetes.io/compute=true', 'node=blue', 'application=sa-telemetry']}, {'name': 'node-config-compute-green', 'labels': ['node-role.kubernetes.io/compute=true', 'node=green', 'application=sa-telemetry']}, {'name': 'node-config-compute-neutral', 'labels': ['node-role.kubernetes.io/compute=true']}]
 
 [masters]
 openshift-master-1
