@@ -4,6 +4,7 @@
     state: present
     name: "{{ sa_telemetry_namespace }}"
     node_selector: "{{ sa_telemetry_nodeselector }}"
+  run_once: true
 
 - name: Add login information to masters htpasswd
   template:
