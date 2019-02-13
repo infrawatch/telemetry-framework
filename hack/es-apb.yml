@@ -1,0 +1,16 @@
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: elasticsearch
+  namespace: sa-telemetry
+spec:
+  clusterServiceClassExternalName: dh-es-apb
+  clusterServicePlanExternalName: persistent
+  parameters:
+    application_name: elasticsearch
+    cluster_size: "1"
+    es_memory_limit: "1Gi"
+    es_version: "6.2.1"
+
+# vim: set shiftwidth=2 tabstop=2 expandtab ft=yaml smartindent :
