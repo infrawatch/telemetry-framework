@@ -1,0 +1,17 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: telemetry-framework
+  namespace: sa-telemetry
+spec:
+  clusterServiceClassExternalName: dh-telemetry-framework-apb
+  clusterServicePlanExternalName: default
+    parameters:
+      deploy_blue: true
+      deploy_green: false
+      host_blue: "openshift-master-1"
+      ip_blue: "10.19.111.101"
+      oc_login_password: admin
+      oc_login_username: admin
+      sa_telemetry_grafana_default_dashboards: true
+      sa_telemetry_qdr_hostname: "apps.nfvpe-18.nfvpe.site"
