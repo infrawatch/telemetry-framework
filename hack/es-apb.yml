@@ -9,7 +9,7 @@ spec:
   clusterServicePlanExternalName: persistent
   parameters:
     application_name: elasticsearch
-    cluster_size: "1"
+    cluster_size: 1
     es_memory_limit: "1Gi"
     es_version: "6.2.1"
 
