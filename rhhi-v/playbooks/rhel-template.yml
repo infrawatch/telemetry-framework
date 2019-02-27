@@ -9,7 +9,7 @@
   vars:
     qcow_url: file:///root/rhel-server-7.6-x86_64-kvm.qcow2
     image_cache_download: false
-    storage_domain: hosted_storage
+    storage_domain: vmstore
     template_cluster: Default
     template_name: rhel76_template
     template_memory: 16GiB
