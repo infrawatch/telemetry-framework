@@ -8,14 +8,20 @@
     - ../vars/{{ password_file }}
 
   tasks:
+    # first we create the VMs and make them present, but not yet started
     - include_role:
         name: oVirt.vm-infra
       tags:
         - install-vm-infra
+      vars:
+        vm_state: present
+        wait_for_ip: false
 
-    - fail:
-        msg: Bail out because we are deleting the virtual machines. Expected error.
-      when: vm_state == "absent"
+    # execute this again to start the VMs which should allow for affinity
+    - include_role:
+        name: oVirt.vm-infra
+      tags:
+        - install-vm-infra
 
 # WARNING: this will fail with Ansible 2.7.0 (use 2.6.x or >= 2.7.1)
 - name: Run prerequisites for OpenShift
@@ -26,6 +32,10 @@
   gather_facts: false
 
   tasks:
+    - package:
+        name: cloud-init
+        state: absent
+
     - yum:
         name: '*'
         state: latest
