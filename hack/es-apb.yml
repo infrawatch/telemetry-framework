@@ -5,13 +5,13 @@ metadata:
   name: elasticsearch
   namespace: sa-telemetry
 spec:
-  clusterServiceClassExternalName: dh-es-apb
+  clusterServiceClassExternalName: nfvpe-es-apb
   clusterServicePlanExternalName: persistent
   parameters:
     application_name: elasticsearch
     cluster_size: 1
-    es_memory_limit: "1Gi"
-    es_pvc_size: "1Gi"
+    es_memory_limit: "2Gi"
+    es_pvc_size: "4Gi"
     es_version: "6.2.1"
 
 # vim: set shiftwidth=2 tabstop=2 expandtab ft=yaml smartindent :
