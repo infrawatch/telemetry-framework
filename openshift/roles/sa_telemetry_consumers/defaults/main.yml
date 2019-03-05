@@ -1,5 +1,5 @@
 ---
-sa_telemetry_consumers_default_interval: 1s
+sa_telemetry_consumers_default_interval: 30s
 sa_telemetry_events_memory_request: 100Mi
 sa_telemetry_events_cpu_request: 500m
 sa_telemetry_events_memory_limit: 200Mi

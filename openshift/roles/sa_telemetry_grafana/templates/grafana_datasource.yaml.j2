@@ -13,7 +13,7 @@ data:
       orgId: 1
       url: http://prometheus.{{ sa_telemetry_grafana_namespace }}.svc:9090
       jsonData:
-         timeInterval: "4s"
+         timeInterval: "30s"
       version: 1
       editable: true
     - name: prometheus-internal-blue
@@ -22,7 +22,7 @@ data:
       orgId: 1
       url: http://prometheus-blue.{{ sa_telemetry_grafana_namespace }}.svc:9090
       jsonData:
-         timeInterval: "4s"
+         timeInterval: "30s"
       version: 1
       editable: true
     - name: prometheus-internal-green
@@ -31,7 +31,7 @@ data:
       orgId: 1
       url: http://prometheus-green.{{ sa_telemetry_grafana_namespace }}.svc:9090
       jsonData:
-         timeInterval: "4s"
+         timeInterval: "30s"
       version: 1
       editable: true
     - name: connectivity
