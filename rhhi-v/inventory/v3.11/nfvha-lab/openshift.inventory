@@ -93,7 +93,7 @@ ansible_service_broker_registry_auth_type=""
 ansible_service_broker_registry_auth_name=""
 
 # setup node groups for 3.11
-openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true', 'node-role.kubernetes.io/infra=true']}, {'name': 'node-config-infra-blue', 'labels': ['node-role.kubernetes.io/infra=true', 'node=blue']}, {'name': 'node-config-infra-green', 'labels': ['node-role.kubernetes.io/infra=true', 'node=green']}, {'name': 'node-config-infra-neutral', 'labels': ['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute-blue', 'labels': ['node-role.kubernetes.io/compute=true', 'node=blue', 'application=sa-telemetry']}, {'name': 'node-config-compute-green', 'labels': ['node-role.kubernetes.io/compute=true', 'node=green', 'application=sa-telemetry']}, {'name': 'node-config-compute-neutral', 'labels': ['node-role.kubernetes.io/compute=true']}]
+openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true', 'node-role.kubernetes.io/infra=true']}, {'name': 'node-config-infra-blue', 'labels': ['node-role.kubernetes.io/infra=true', 'node=blue']}, {'name': 'node-config-infra-green', 'labels': ['node-role.kubernetes.io/infra=true', 'node=green']}, {'name': 'node-config-infra-neutral', 'labels': ['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute-blue', 'labels': ['node-role.kubernetes.io/compute=true', 'node=blue', 'application=sa-telemetry']}, {'name': 'node-config-compute-green', 'labels': ['node-role.kubernetes.io/compute=true', 'node=green', 'application=sa-telemetry']}, {'name': 'node-config-compute-neutral', 'labels': ['node-role.kubernetes.io/compute=true', 'application=sa-telemetry']}]
 
 [masters]
 openshift-master-1
