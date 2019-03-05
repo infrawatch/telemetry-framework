@@ -8,7 +8,7 @@
 - src: oVirt.repositories
   version: 1.1.2
 - src: oVirt.vm-infra
-  version: 1.1.11
+  version: master       # use of master only required until upstream tags 1.1.13 (PR #67)
 - src: https://github.com/openshift/openshift-ansible
   name: openshift.openshift-ansible
   version: "openshift-ansible-3.11.75-1"

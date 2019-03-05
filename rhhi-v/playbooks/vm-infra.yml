@@ -8,16 +8,7 @@
     - ../vars/{{ password_file }}
 
   tasks:
-    # first we create the VMs and make them present, but not yet started
-    - include_role:
-        name: oVirt.vm-infra
-      tags:
-        - install-vm-infra
-      vars:
-        vm_state: present
-        wait_for_ip: false
-
-    # execute this again to start the VMs which should allow for affinity
+    # instantiate our virtual machines before installing OpenShift
     - include_role:
         name: oVirt.vm-infra
       tags:
@@ -32,6 +23,7 @@
   gather_facts: false
 
   tasks:
+    # drop cloud-init so that it doesn't mess with our network configurations
     - package:
         name: cloud-init
         state: absent
