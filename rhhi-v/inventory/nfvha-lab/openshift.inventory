@@ -49,7 +49,7 @@ openshift_cluster_monitoring_operator_install=false
 openshift_metrics_install_metrics=false
 
 # OLM
-#openshift_enable_olm=true
+openshift_enable_olm=true
 #openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'<USERNAME>','password':'<PASSWORD','test_image':'mongodb/enterprise-operator:0.3.2'}]
 
 # install telemetry
