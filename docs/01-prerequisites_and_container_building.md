@@ -1,7 +1,13 @@
 # Pre-requisites Overview
 
-Prior to deploying the telemetry platform, there is some pre-requisite builds that need to happen. Items that
-need building include:
+> **No longer necessary**
+>
+> Creation of the containers yourself should no longer be necessary as all
+> packaging should be handled for us from upstream repositories. Documentation
+> here is for informational purposes only.
+
+Prior to deploying the telemetry platform, there is some pre-requisite builds
+that need to happen. Items that need building include:
 
 * barometer-collectd container (with patches)
 * metrics and events consumer containers
@@ -14,8 +20,9 @@ The `barometer-collectd` container is made up of two components:
 * forked barometer
 * forked collectd
 
-When building the `barometer-collectd` container, you'll make use of a multi-stage Docker build which pulls code from
-a collectd git repository containing upstream changes that are not yet fully merged.
+When building the `barometer-collectd` container, you'll make use of a
+multi-stage Docker build which pulls code from a collectd git repository
+containing upstream changes that are not yet fully merged.
 
 Code for these components are available at:
 
@@ -36,20 +43,25 @@ The `collectd` changes are from the following upstream contributions
 
 ## metrics and events consumers
 
-The metrics and events consumers are custom code that will (ideally) eventually make its way into the OPNFV
-Barometer project as their upstream homes.
+The metrics and events consumers are custom code that will (ideally) eventually
+make its way into the OPNFV Barometer project as their upstream homes.
 
-* [metrics and events consumers source](https://github.com/redhat-nfvpe/service-assurance-poc)
-* [Dockerfiles for building](https://github.com/redhat-nfvpe/service-assurance-poc/tree/master/docker)
+* [metrics and events consumers
+  source](https://github.com/redhat-nfvpe/service-assurance-poc)
+* [Dockerfiles for
+  building](https://github.com/redhat-nfvpe/service-assurance-poc/tree/master/docker)
 
 ## QPID dispatch router (QDR)
 
-Building QPID dispatch router container is primarily just a function of building an RPM, and installing that
-during container build time. We currently do not have any custom patches/code for the QDR. This is simply
-a packaging effort.
+Building QPID dispatch router container is primarily just a function of
+building an RPM, and installing that during container build time. We currently
+do not have any custom patches/code for the QDR. This is simply a packaging
+effort.
 
-* [instructions for building QDR RPMs](https://github.com/redhat-nfvpe/service-assurance-poc/tree/master/qdr)
-* [Dockerfile for creating QDR container](https://github.com/redhat-nfvpe/service-assurance-poc/tree/master/docker/qdr)
+* [instructions for building QDR
+  RPMs](https://github.com/redhat-nfvpe/service-assurance-poc/tree/master/qdr)
+* [Dockerfile for creating QDR
+  container](https://github.com/redhat-nfvpe/service-assurance-poc/tree/master/docker/qdr)
 
 # Building Containers
 
@@ -60,7 +72,8 @@ Four container images need to be built for telemetry.
 * events consumer
 * QPID dispatch router (QDR)
 
-The instructions for building these images is being performed in a virtual machine running Fedora 28.
+The instructions for building these images is being performed in a virtual
+machine running Fedora 28.
 
 ## Install Prerequisites
 
@@ -75,10 +88,11 @@ sudo dnf install git mock -y
 
 ## Installing Docker
 
-In Fedora 28, the latest version of Docker currently being shipped is Docker 1.13, which does not have multi-stage build
-capabilities. We'll need to install the Docker-CE repository and install Docker 16.x which has multi-stage building. We make
-use of the multi-stage build process in Docker to keep the images small, and the development tools and source off the
-base image.
+In Fedora 28, the latest version of Docker currently being shipped is Docker
+1.13, which does not have multi-stage build capabilities. We'll need to install
+the Docker-CE repository and install Docker 16.x which has multi-stage
+building. We make use of the multi-stage build process in Docker to keep the
+images small, and the development tools and source off the base image.
 
 Work is being performed as a non-root user (`admin` user in this case).
 

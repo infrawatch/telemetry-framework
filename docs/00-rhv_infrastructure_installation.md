@@ -1,28 +1,32 @@
-# telemetry-framework/rhv
+# Infrastructure Installation
 
-Automation for installation of telemetry framework on RHV. Purpose of this repository
-is to provide documentation and automation for:
+Installation of the infrastructure per this document is optional. The only
+requirement for installation of telemetry framework is an OpenShift v3.11
+installation with the service catalog and Ansible Service Broker enabled and
+configured.
+
+Infrastructure areas covered include:
 
 * installing a RHV engine
 * setting up a virtual machine host server
-* importing a RHEL 7.5 template
-* instantiating RHEL 7.5 virtual machines
+* importing a RHEL 7.6 template
+* instantiating RHEL 7.6 virtual machines
 
-Currently the documentation below covers installation of a single VM hosting the
-RHV engine which uses the same node for the installation of managed VMs via the
-RHV engine. Ultimately this will be expanded to multiple nodes, with the entire
-system being automated via Ansible.
+Currently the documentation below covers installation of a single VM hosting
+the RHV engine which uses the same node for the installation of managed VMs via
+the RHV engine. Ultimately this will be expanded to multiple nodes, with the
+entire system being automated via Ansible.
 
-As this is in the proof-of-concept stage, we're leveraging a single node with some
-manual configuration via the web interface, but that will eventually be converted
-to automation using the `oVirt.infra` role.
+As this is in the proof-of-concept stage, we're leveraging a single node with
+some manual configuration via the web interface, but that will eventually be
+converted to automation using the `oVirt.infra` role.
 
 # Prerequisites
 
-You'll need Ansible 2.6 or later along with a host machine already running
-RHEL 7.5. These instructions are generally applicable to oVirt as well but
-some modification of configuration will be required. Installing on top of
-CentOS for oVirt is not in scope, but easily done with some extra effort.
+You'll need Ansible 2.7 or later along with a host machine already running RHEL
+7.6. These instructions are generally applicable to oVirt as well but some
+modification of configuration will be required. Installing on top of CentOS for
+oVirt is not in scope, but easily done with some extra effort.
 
 You'll also need a bastion host (your laptop, or another place to run the
 Ansible playbooks against your host server).
@@ -31,7 +35,8 @@ A DNS server will either need to be configured or created to support your
 infrastructure. If you're using DNSmasq (or wish to configure a host running
 DNSmasq to point your nodes and virtual machines to as we'll be doing
 throughout our documentation, referenced at `10.19.110.9`) you can find example
-configurations at [DNSmasq Configuration](https://github.com/redhat-nfvpe/telemetry-framework/blob/master/docs/02-server_side_installation.md#dnsmasq-configuration).
+configurations at [DNSmasq
+Configuration](https://github.com/redhat-nfvpe/telemetry-framework/blob/master/docs/02-server_side_installation.md#dnsmasq-configuration).
 
 # Topology
 
@@ -39,10 +44,10 @@ configurations at [DNSmasq Configuration](https://github.com/redhat-nfvpe/teleme
 
 # DNS Configuration
 
-It's assumed you've setup `dnsmasq` for your internal DNS lookups for the nodes, or
-that you've manually added them to the `/etc/hosts` file on your bastion host and
-the physical host, virtual machines etc (it's recommended that you have a real DNS
-server setup for less overhead).
+It's assumed you've setup `dnsmasq` for your internal DNS lookups for the
+nodes, or that you've manually added them to the `/etc/hosts` file on your
+bastion host and the physical host, virtual machines etc (it's recommended that
+you have a real DNS server setup for less overhead).
 
 # Host Setup
 
@@ -54,9 +59,9 @@ The following sections will be executed on your bastion host.
 
 ### Clone `telemetry-framework`
 
-    mkdir -p ~/src/github/redhat-nfvpe/ && cd $_
-    git clone https://github.com/redhat-nfvpe/telemetry-framework
-    cd telemetry-framework/rhv
+    mkdir -p ~/src/github/redhat-service-assurance/ && cd $_
+    git clone https://github.com/redhat-service-assurance/telemetry-framework
+    cd telemetry-framework/rhhi-v
     ansible-galaxy install -r requirements.yml
 
 ### Setup `telemetry-framework RHV` configuration
@@ -230,29 +235,34 @@ different then remove `--skip-tags=backup` as necessary.
 
 Connect to the host server at this point for this section.
 
-You're downloading the image and _running the following commands on the **host** itself_.
-In the next section we'll swap over to our bastion host to automate the rest.
+You're downloading the image and _running the following commands on the
+**host** itself_. In the next section we'll swap over to our bastion host to
+automate the rest.
 
-Get the download link for your RHEL 7.5 cloud image from https://access.redhat.com/downloads/content/69/ver=/rhel---7/7.5/x86_64/product-software
+Get the download link for your RHEL 7.5 cloud image from
+https://access.redhat.com/downloads/content/69/ver=/rhel---7/7.5/x86_64/product-software
 
-You're looking for the latest _Red Hat Enterprise Linux 7.5 Update KVM Guest Image (20180925)_ (or newer).
+You're looking for the latest _Red Hat Enterprise Linux 7.5 Update KVM Guest
+Image (20180925)_ (or newer).
 
 Create a directory for the image to live.
 
     mkdir -p /home/images/engine/
 
-Once you've done that, download it onto the host machine with `curl`. The image should live
-in `/home/images/engine/`. We'll use this to spin up our initial `engine` virtual machine.
+Once you've done that, download it onto the host machine with `curl`. The image
+should live in `/home/images/engine/`. We'll use this to spin up our initial
+`engine` virtual machine.
 
     curl "https://access.cdn.redhat.com//content/origin/files/sha256/<unique_string>/rhel-server-7.5-update-4-x86_64-kvm.qcow2?_auth_=<unique_auth_from_link>" \
       --output /home/images/engine/rhel-server-7.5-update-4-x86_64-kvm.qcow2
-      
+
 > **Invalid `resolv.conf` in guest image**
 >
-> By default, the guest image has `nameserver 192.168.122.1` in the `/etc/resolv.conf` file.
-> Unfortunately this will cause us issues later on when we build the virtual machines for OpenShift
-> because the DNS will need to time out each time we run, resulting in a very long installation
-> process, and likely failure. To resolve this, we can use `virt-edit` to inline delete the
+> By default, the guest image has `nameserver 192.168.122.1` in the
+> `/etc/resolv.conf` file. Unfortunately this will cause us issues later on
+> when we build the virtual machines for OpenShift because the DNS will need to
+> time out each time we run, resulting in a very long installation process, and
+> likely failure. To resolve this, we can use `virt-edit` to inline delete the
 > invalid nameserver.
 >
 >     yum install guestfish -y
@@ -344,20 +354,20 @@ Engine configuration will be dealt with in the following sections.
 
 ## Load SSH key into ssh-agent
 
-Before running the next set of commands you'll need to load the generated `halabdot7`
-key (or `id_vm_rsa` by default from `base-infra-bootstrap`) as defined by the
-`vm_ssh_key_path` variable in the inventory previously used.
+Before running the next set of commands you'll need to load the generated
+`halabdot7` key (or `id_vm_rsa` by default from `base-infra-bootstrap`) as
+defined by the `vm_ssh_key_path` variable in the inventory previously used.
 
     ssh-add /home/lmadsen/.ssh/halabdot7
 
-If you have issues running the following commands due to failed login, this is the
-most likely culprit.
+If you have issues running the following commands due to failed login, this is
+the most likely culprit.
 
 ## Subscribe and setup repositories
 
-As done previously, we setup our `vars` file so that we can register the node and install
-the repositories that we need to get RHV engine setup on the virtual machine. Run the
-following commands to make this so.
+As done previously, we setup our `vars` file so that we can register the node
+and install the repositories that we need to get RHV engine setup on the
+virtual machine. Run the following commands to make this so.
 
     cd ~/src/github/redhat-nfvpe/telemetry-framework/rhv
     ansible-playbook -i inventory/hosts.yml \
@@ -368,10 +378,11 @@ following commands to make this so.
 
 ## Install RHV engine
 
-Installation of RHV engine should be as simple as running the following commands:
+Installation of RHV engine should be as simple as running the following
+commands:
 
-    cd ~/src/github/redhat-nfvpe/telemetry-framework/rhv
-    ansible-playbook -i inventory/hosts.yml --ask-vault-pass playbooks/engine-setup.yml
+    cd ~/src/github/redhat-nfvpe/telemetry-framework/rhv ansible-playbook -i
+    inventory/hosts.yml --ask-vault-pass playbooks/engine-setup.yml
 
 After that, you should be able to access the web console at
 https://engine.dev.nfvpe.site/ovirt-engine/sso/login.html
@@ -380,8 +391,9 @@ Login by default (per above) is `admin / admin`.
 
 # Post-Install Setup
 
-The following steps will require some interaction with the GUI available at the link provided
-in [Install RHV Engine](#install-rhv-engine) for the web interface.
+The following steps will require some interaction with the GUI available at the
+link provided in [Install RHV Engine](#install-rhv-engine) for the web
+interface.
 
 ## Set Data Center to Local Storage
 
@@ -412,16 +424,17 @@ else then you just add one or more hosts the same as we're doing here).
 ![Add host](imgs/data-center-add-host.png)
 
 You should now have a host that says it is _Non-Operational_ because we need to
-setup networking and storage for the node. If you received a failure then you'll
-need to ebug why this is happening through the logs on the host and the engine VM.
-The ogs should be mostly available in `/var/log/` under some `ovirt-` directories.
+setup networking and storage for the node. If you received a failure then
+you'll need to ebug why this is happening through the logs on the host and the
+engine VM. The logs should be mostly available in `/var/log/` under some
+`ovirt-` directories.
 
 ## Setup Networking
 
-Before we setup the storage for the node, we need to add the `ovirtmgmt` virtual
-interface to the node so that we can communicate with it properly.
+Before we setup the storage for the node, we need to add the `ovirtmgmt`
+virtual interface to the node so that we can communicate with it properly.
 
-This will move your networking around a bit, and setup your existing interface 
+This will move your networking around a bit, and setup your existing interface
 on `eno1` to be on a bridged network `br1`.
 
 We'll be attaching `ovirtmgmt` to the `eno2` interface since we'll be setting
@@ -436,19 +449,22 @@ Then click on the _Network Interfaces_ tab within the `dot7` host itself.
 
 ![Host networking screen](imgs/data-center-host-network-interfaces.png)
 
-Click on _Setup Host Networks_ then drag the `ovirtmgmt` networking interface over
-to the `eno2` physical interface. Before we make these changes, let's setup the
-interface to have a static IP address of `10.19.111.100` since our `eno2` network
-is designed to use `10.19.111.0/24` subnet.
+Click on _Setup Host Networks_ then drag the `ovirtmgmt` networking interface
+over to the `eno2` physical interface. Before we make these changes, let's
+setup the interface to have a static IP address of `10.19.111.100` since our
+`eno2` network is designed to use `10.19.111.0/24` subnet.
 
-![ovirtmgmt interface static address](imgs/data-center-ovirtmgmt-static-address.png)
+![ovirtmgmt interface static
+address](imgs/data-center-ovirtmgmt-static-address.png)
 
-And with everything configured we can now click on the _OK_ button in the network
-configuration screen, and then in the _Setup Host dot7 Networks_ screen as well.
+And with everything configured we can now click on the _OK_ button in the
+network configuration screen, and then in the _Setup Host dot7 Networks_ screen
+as well.
 
-If you had an existing SSH connection running on `10.19.110.7` then your connection
-may have been dropped. You should be able to connect back to the `10.19.111.100`
-address we just asssigned to the `ovirtmgmt` interface on `eno2`.
+If you had an existing SSH connection running on `10.19.110.7` then your
+connection may have been dropped. You should be able to connect back to the
+`10.19.111.100` address we just asssigned to the `ovirtmgmt` interface on
+`eno2`.
 
 ## Setup Storage
 
@@ -478,9 +494,9 @@ Go to _Storage > Domains_ from the left menu.
 ![Storage domain configuration](imgs/data-center-storage-domains.png)
 
 Then we're going to create the new data domain by clicking on _New Domain_. We
-need to configure the local storage to point at the directory we just created above.
-The default drop down for _Storage Type_ is _NFS_ and we're going to change it
-to _Local on Host_.
+need to configure the local storage to point at the directory we just created
+above. The default drop down for _Storage Type_ is _NFS_ and we're going to
+change it to _Local on Host_.
 
 > **Future Storage**
 > 
