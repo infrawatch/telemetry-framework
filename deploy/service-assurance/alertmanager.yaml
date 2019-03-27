@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: sa
+  namespace: sa-telemetry
+spec:
+  nodeSelector:
+    application: sa-telemetry
+  podAntiAffinity: hard
+  podMetadata:
+    labels:
+      sa-app: alertmanager
+  replicas: 3
+  securityContext:
+    nonroot: true
+  version: v0.15.1

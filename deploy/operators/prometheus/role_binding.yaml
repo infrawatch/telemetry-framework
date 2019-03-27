@@ -1,0 +1,19 @@
+apiVersion: authorization.openshift.io/v1
+groupNames: null
+kind: RoleBinding
+metadata:
+  creationTimestamp: 2019-03-27T21:48:36Z
+  name: prometheus-sa-telemetry
+  namespace: sa-telemetry
+  resourceVersion: "5095498"
+  selfLink: /apis/authorization.openshift.io/v1/namespaces/sa-telemetry/rolebindings/prometheus-sa-telemetry
+  uid: 12f5fb33-50da-11e9-b068-566fc8c20003
+roleRef:
+  name: prometheus-sa-telemetry
+  namespace: sa-telemetry
+subjects:
+- kind: ServiceAccount
+  name: prometheus-sa
+  namespace: sa-telemetry
+userNames:
+- system:serviceaccount:sa-telemetry:prometheus-sa

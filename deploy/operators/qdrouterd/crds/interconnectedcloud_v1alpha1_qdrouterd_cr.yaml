@@ -1,0 +1,16 @@
+apiVersion: interconnectedcloud.github.io/v1alpha1
+kind: Qdrouterd
+metadata:
+  name: amq-interconnect
+spec:
+  # Add fields here
+  count: 3
+  image: quay.io/interconnectedcloud/qdrouterd:1.5.0
+  deploymentMode: lbfrontend
+  addresses:
+    - prefix: balanced
+      distribution: balanced
+    - prefix: closest
+      distribution: closest
+    - prefix: multicast
+      distribution: multicast

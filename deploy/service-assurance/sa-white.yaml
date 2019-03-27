@@ -1,0 +1,40 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  creationTimestamp: 2019-03-27T19:02:16Z
+  generation: 1
+  labels:
+    sa-telemetry-app: white-smartgateway
+  name: white-smartgateway
+  namespace: sa-telemetry
+  ownerReferences:
+  - apiVersion: smartgateway.infra.watch/v1alpha1
+    kind: SmartGateway
+    name: white
+    uid: ccdfeddb-50c2-11e9-a68b-566fc8c20002
+  resourceVersion: "5063489"
+  selfLink: /apis/monitoring.coreos.com/v1/namespaces/sa-telemetry/servicemonitors/white-smartgateway
+  uid: d64fcb22-50c2-11e9-a68b-566fc8c20002
+spec:
+  endpoints:
+  - interval: 1s
+    metricRelabelings:
+    - action: labeldrop
+      regex: pod
+      sourcelabels: []
+    - action: labeldrop
+      regex: namespace
+      sourcelabels: []
+    - action: labeldrop
+      regex: instance
+      sourcelabels: []
+    - action: labeldrop
+      regex: job
+      sourcelabels: []
+    port: metrics
+  namespaceSelector:
+    matchNames:
+    - sa-telemetry
+  selector:
+    matchLabels:
+      sa-telemetry-app: white-smartgateway

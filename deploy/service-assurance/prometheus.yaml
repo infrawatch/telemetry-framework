@@ -1,0 +1,49 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    prometheus: prometheus-sa-telemetry
+  name: white
+  namespace: sa-telemetry
+spec:
+  alerting:
+    alert_relabel_configs:
+    - regex: (.+)\d+
+      source_labels: dc
+      target_label: dc
+    alertmanagers:
+    - name: alertmanager
+      namespace: sa-telemetry
+      port: web
+  nodeSelector:
+    application: sa-telemetry
+    node: white
+  podAntiAffinity: hard
+  podMetadata:
+    labels:
+      sa-app: prometheus-blue
+  replicas: 1
+  resources:
+    requests:
+      memory: 400Mi
+  ruleSelector:
+    matchLabels:
+      prometheus: prometheus-sa-telemetry
+      role: prometheus-rulefiles
+  securityContext:
+    nonroot: true
+  serviceAccountName: prometheus-sa
+  serviceMonitorSelector:
+    matchExpressions:
+    - key: sa-telemetry-app-white
+      operator: Exists
+  storage:
+    class: ""
+    resources: {}
+    selector: {}
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 5G
+  version: v2.3.2

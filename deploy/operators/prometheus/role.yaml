@@ -1,0 +1,29 @@
+apiVersion: authorization.openshift.io/v1
+kind: Role
+metadata:
+  creationTimestamp: 2019-03-27T21:24:59Z
+  name: prometheus-sa-telemetry
+  namespace: sa-telemetry
+  resourceVersion: "5090023"
+  selfLink: /apis/authorization.openshift.io/v1/namespaces/sa-telemetry/roles/prometheus-sa-telemetry
+  uid: c69a1b71-50d6-11e9-b068-566fc8c20003
+rules:
+- apiGroups:
+  - ""
+  attributeRestrictions: null
+  resources:
+  - endpoints
+  - nodes
+  - pods
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  attributeRestrictions: null
+  resources:
+  - configmaps
+  verbs:
+  - get
