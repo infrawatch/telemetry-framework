@@ -1,0 +1,14 @@
+apiVersion: authorization.openshift.io/v1
+groupNames: null
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-operator
+  uid: 15c20379-50e4-11e9-b068-566fc8c20003
+roleRef:
+  name: prometheus-operator
+subjects:
+- kind: ServiceAccount
+  name: prometheus-operator
+  namespace: sa-telemetry
+userNames:
+- system:serviceaccount:sa-telemetry:prometheus-operator

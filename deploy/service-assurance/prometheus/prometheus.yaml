@@ -21,7 +21,7 @@ spec:
   podAntiAffinity: hard
   podMetadata:
     labels:
-      sa-app: prometheus-blue
+      sa-app: prometheus-white
   replicas: 1
   resources:
     requests:
@@ -45,5 +45,5 @@ spec:
       spec:
         resources:
           requests:
-            storage: 5G
+            storage: 20G
   version: v2.3.2

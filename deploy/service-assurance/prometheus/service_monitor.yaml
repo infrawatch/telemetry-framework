@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-white
+  labels:
+    sa-app-white: prometheus-white
+    sa-telemetry-app-white: prometheus-white
+spec:
+  selector:
+    matchLabels:
+      sa-app: prometheus-white
+  namespaceSelector:
+    matchNames:
+    - sa-telemetry
+  endpoints:
+  - port: prometheus
+    interval: 1s
