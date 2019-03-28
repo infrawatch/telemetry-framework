@@ -14,7 +14,7 @@ spec:
     alertmanagers:
     - name: alertmanager
       namespace: sa-telemetry
-      port: web
+      port: metrics
   nodeSelector:
     application: sa-telemetry
     node: white
@@ -34,9 +34,8 @@ spec:
     nonroot: true
   serviceAccountName: prometheus-sa
   serviceMonitorSelector:
-    matchExpressions:
-    - key: sa-telemetry-app-white
-      operator: Exists
+    matchLabels:
+      smartgateway: white
   storage:
     class: ""
     resources: {}
