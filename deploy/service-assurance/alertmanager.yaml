@@ -2,14 +2,14 @@ apiVersion: monitoring.coreos.com/v1
 kind: Alertmanager
 metadata:
   name: sa
-  namespace: sa-telemetry
 spec:
   nodeSelector:
     application: sa-telemetry
+    node-role.kubernetes.io/compute: "true"
   podAntiAffinity: hard
   podMetadata:
     labels:
-      sa-app: alertmanager
+      app: alertmanager
   replicas: 3
   securityContext:
     nonroot: true
