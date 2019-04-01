@@ -1,9 +1,0 @@
----
-sa_telemetry_prometheus_image_version: 2.3.2
-sa_telemetry_prometheus_serviceaccount_name: prometheus-sa
-sa_telemetry_prometheus_service_name: prometheus
-sa_telemetry_prometheus_service_port: 9090
-sa_telemetry_prometheus_service_targetport: web
-sa_telemetry_prometheus_replicas: 1
-sa_telemetry_prometheus_default_interval: 1s
-sa_telemetry_prometheus_storage_size: 5G

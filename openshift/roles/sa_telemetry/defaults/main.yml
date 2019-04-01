@@ -1,8 +1,0 @@
----
-sa_telemetry_namespace: sa-telemetry
-sa_telemetry_via_apb: False
-sa_telemetry_install: False
-sa_telemetry_nodeselector: null
-sa_telemetry_default_address_field_type: InternalIP
-sa_telemetry_node_labels: []
-state: present    # overridden from an APB deployment to allow deprovisioning
