@@ -36,6 +36,9 @@ Contents
    :glob:
 
    architecture
+   installation_platform
+   installation_telemetry_framework
+   installation_client
 
 Indices and tables
 ==================
