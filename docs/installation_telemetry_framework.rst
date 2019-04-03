@@ -49,8 +49,10 @@ deploying, and if it can't find that namespace, will attempt to create it.
 To deploy telemetry framework from the script, simply run the following command
 after cloning the `telemetry-framework` repo into the following directory.
 
-    cd ~/src/github.com/redhat-service-assurance/telemetry-framework/deploy/
-    ./deploy.sh CREATE
+.. code-block:: bash
+
+   cd ~/src/github.com/redhat-service-assurance/telemetry-framework/deploy/
+   ./deploy.sh CREATE
 
 Deploying manually
 ~~~~~~~~~~~~~~~~~~
