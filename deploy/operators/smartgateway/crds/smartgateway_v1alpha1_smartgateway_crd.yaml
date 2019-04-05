@@ -10,6 +10,13 @@ spec:
     plural: smartgateways
     singular: smartgateway
   scope: Namespaced
+  version: v1alpha1
+  subresources:
+    status: {}
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
   validation:
     openAPIV3Schema:
       properties:
@@ -62,8 +69,4 @@ spec:
                 To avoid the round trip for every message, the use of prefetch can be used to allow the receiver to request messages be sent
                 in anticipation of them being sent to us.
               type: integer
-  version: v1alpha1
-  versions:
-  - name: v1alpha1
-    served: true
-    storage: true
+
