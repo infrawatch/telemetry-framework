@@ -6,3 +6,5 @@ openshift/examples/*
 !openshift/examples/nfvpe.site_full
 !openshift/examples/README.md
 docs/_build/
+deploy/qdr-server-certs/*
+!deploy/qdr-server-certs/.KEEPIT

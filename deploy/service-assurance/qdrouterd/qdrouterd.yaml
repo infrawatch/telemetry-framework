@@ -19,12 +19,13 @@ spec:
       distribution: multicast
     - prefix: collectd/telemetry
       distribution: multicast
+  # TODO: once the qdrouterd-operator supports edge roles, we'll move to that
   interRouterListeners:
-    - name: from-openstack
-      host: "0.0.0.0"
-      port: 20001
+    - host: "0.0.0.0"
+      port: 5671
+      sslProfile: default
+      expose: true
   listeners:
-    - port: 5671
     - port: 5672
     - port: 8672
       http: true
