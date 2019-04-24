@@ -3,7 +3,7 @@ Why Telemetry Framework?
 
 In the modern datacenter, things are dynamic. Infrastructure needs to be
 monitored at a high polling interval, and actions taken quickly. Our
-environments are dyanmic, constantly changing in cloud era. An ability to
+environments are dynamic, constantly changing in the cloud era. An ability to
 monitor and react to these changing conditions with a strong degree of
 flexability is why the telemetry framework was created.
 
