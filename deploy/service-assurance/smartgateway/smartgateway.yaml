@@ -5,4 +5,5 @@ metadata:
 spec:
   size: 1
   amqpmetric_url: qdr-white-normal.sa-telemetry.svc.cluster.local:5672/collectd/telemetry
+  debug: "false"
 # vim: set tabstop=2 shiftwidth=2 expandtab smartindent:
