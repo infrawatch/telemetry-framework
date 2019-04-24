@@ -35,6 +35,7 @@ Contents
    :maxdepth: 2
    :glob:
 
+   overview
    architecture
    installation_platform
    installation_telemetry_framework
