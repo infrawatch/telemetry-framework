@@ -29,17 +29,21 @@ rules:
   - create
   - delete
 - apiGroups:
+  - "extensions"
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+- apiGroups:
   - ""
   resources:
   - namespaces
   verbs:
   - get
-- apiGroups:
-  - apps.openshift.io
-  resources:
-  - deploymentconfigs
-  verbs:
-  - list
 - apiGroups:
   - apps
   resources:
@@ -50,13 +54,35 @@ rules:
   verbs:
   - '*'
 - apiGroups:
+  - "certmanager.k8s.io"
+  resources:
+  - issuers
+  - certificates
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+- apiGroups:
   - monitoring.coreos.com
   resources:
   - servicemonitors
   verbs:
   - get
   - create
+- apiGroups:
+  - "route.openshift.io"
+  resources:
+  - routes
+  - routes/custom-host
+  - routes/status
+  verbs:
+  - get
   - list
+  - watch
+  - create
+  - delete
 - apiGroups:
   - interconnectedcloud.github.io
   resources:

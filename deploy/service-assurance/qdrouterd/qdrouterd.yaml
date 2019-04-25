@@ -4,7 +4,7 @@ metadata:
   name: qdr-white
 spec:
   count: 1
-  image: quay.io/interconnectedcloud/qdrouterd:1.5.0
+  image: quay.io/interconnectedcloud/qdrouterd:1.6.0
   deploymentMode: lbfrontend
   addresses:
     - prefix: closest
@@ -19,13 +19,15 @@ spec:
       distribution: multicast
     - prefix: collectd/telemetry
       distribution: multicast
-  # TODO: once the qdrouterd-operator supports edge roles, we'll move to that
-  interRouterListeners:
+  sslProfiles:
+    - name: default
+      credentials: "qdr-white-cert"
+  listeners:
     - host: "0.0.0.0"
       port: 5671
       sslProfile: default
+      edgeIngress: true
       expose: true
-  listeners:
     - port: 5672
     - port: 8672
       http: true

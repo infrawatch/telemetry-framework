@@ -3,7 +3,7 @@ kind: ClusterServiceVersion
 metadata:
   annotations:
     alm-examples: >-
-      [{"apiVersion":"interconnectedcloud.github.io/v1alpha1","kind":"Qdrouterd","metadata":{"name":"amq-interconnect"},"spec":{"count":2,"deploymentMode": "lbfrontend","image":"quay.io/interconnectedcloud/qdrouterd:1.5.0"}}]
+      [{"apiVersion":"interconnectedcloud.github.io/v1alpha1","kind":"Qdrouterd","metadata":{"name":"amq-interconnect"},"spec":{"count":2,"deploymentMode": "lbfrontend","image":"quay.io/interconnectedcloud/qdrouterd:1.6.0"}}]
     capabilities: Basic Install
     categories: Messaging
   name: qdrouterd-operator.v0.1.0
@@ -19,10 +19,24 @@ spec:
       name: qdrouterds.interconnectedcloud.github.io
       resources:
       - kind: Service
-        name: ""
         version: v1
       - kind: Deployment
-        name: ""
+        version: v1
+      - kind: ServiceAccount
+        version: v1
+      - kind: qdrouterds
+        version: v1alpha1
+      - kind: rolebindings
+        version: v1
+      - kind: pods
+        version: v1
+      - kind: configmaps
+        version: v1
+      - kind: roles
+        version: v1
+      - kind: routes
+        version: v1
+      - kind: secrets
         version: v1
       specDescriptors:
       - description: The desired number of member pods for qdrouterd mesh
@@ -111,7 +125,7 @@ spec:
           verbs:
           - '*'
         - apiGroups:
-          - "rbac.authorization.k8s.io"
+          - rbac.authorization.k8s.io
           resources:
           - rolebindings
           - roles
@@ -136,6 +150,17 @@ spec:
           - statefulsets
           verbs:
           - '*'
+        - apiGroups:
+          - "certmanager.k8s.io"
+          resources:
+          - issuers
+          - certificates
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
         - apiGroups:
           - monitoring.coreos.com
           resources:
