@@ -123,9 +123,8 @@ spec:
       annotations:
         description: io busy
         summary: io busy
-      expr: (sum without (cpu) (rate(sa_collectd_cpu_total{type="wait"}[20s]))
-                / ignoring (type) group_left
-             sum without (cpu,type) (rate(sa_collectd_cpu_total{}[20s])))
+      expr: sum without (cpu,type,service) (rate(sa_collectd_cpu_total{type="wait"}[1m]))
+         / sum without (cpu,type,service) (rate(sa_collectd_cpu_total{type!="wait"}[1m]))
             > bool 0.2
       for: 30m
       labels:
