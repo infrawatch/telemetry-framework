@@ -1,0 +1,33 @@
+apiVersion: interconnectedcloud.github.io/v1alpha1
+kind: Qdrouterd
+metadata:
+  name: qdr-white
+spec:
+  count: 1
+  image: quay.io/interconnectedcloud/qdrouterd:1.6.0
+  deploymentMode: lbfrontend
+  addresses:
+    - prefix: closest
+      distribution: closest
+    - prefix: multicast
+      distribution: multicast
+    - prefix: unicast
+      distribution: closest
+    - prefix: exclusive
+      distribution: closest
+    - prefix: broadcast
+      distribution: multicast
+    - prefix: collectd/telemetry
+      distribution: multicast
+  sslProfiles:
+    - name: default
+      credentials: "qdr-white-cert"
+  interRouterListeners:
+    - host: "0.0.0.0"
+      port: 5671
+      sslProfile: default
+      expose: true
+  listeners:
+    - port: 5672
+    - port: 8672
+      http: true

@@ -43,7 +43,7 @@ declare -a operator_list=(
 )
 
 declare -a application_list=(
-    'service-assurance/qdrouterd/qdrouterd.yaml'
+    'service-assurance/qdrouterd/qdrouterd-interior.yaml'
     'service-assurance/smartgateway/smartgateway.yaml'
     'service-assurance/prometheus/service_account.yaml'
     'service-assurance/prometheus/role.yaml'
