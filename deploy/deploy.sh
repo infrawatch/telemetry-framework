@@ -71,11 +71,11 @@ create() {
     # create our objects by building a list
     built_list=""
     object_list=("$@")
-    for spec in ${object_list[@]}; do
+    for spec in "${object_list[@]}"; do
         built_list="$built_list -f $spec"
     done
 
-    oc create --save-config=true $built_list
+    oc create --save-config=true "$built_list"
 }
 
 delete() {
@@ -86,19 +86,19 @@ delete() {
         built_list="$built_list -f ${object_list[idx]}"
     done
 
-    oc delete --wait=true $built_list
+    oc delete --wait=true "$built_list"
 }
 
 # create the objects
-if [ $method == "CREATE" ]; then
-    echo "  * [ii] Creating the operators" ; create ${operator_list[@]} && sleep 5
-    echo "  * [ii] Creating the application" ; create ${application_list[@]}
+if [ "$method" == "CREATE" ]; then
+    echo "  * [ii] Creating the operators" ; create "${operator_list[@]}" && sleep 5
+    echo "  * [ii] Creating the application" ; create "${application_list[@]}"
 fi
 
 # delete the objects
-if [ $method == "DELETE" ]; then
-    echo "  * [ii] Deleteing the application" ; delete ${application_list[@]} && sleep 5
-    echo "  * [ii] Deleteing the operators" ; delete ${operator_list[@]}
+if [ "$method" == "DELETE" ]; then
+    echo "  * [ii] Deleteing the application" ; delete "${application_list[@]}" && sleep 5
+    echo "  * [ii] Deleteing the operators" ; delete "${operator_list[@]}"
 fi
 
 echo "-- Completed."
