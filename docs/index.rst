@@ -1,5 +1,8 @@
+.. _ProjectOverview:
+
+================
 Project Overview
-----------------
+================
 
 The telemetry framework is a system that allows for collection of metrics and
 events using collectd (or other collection methods that support an AMQP 1.x

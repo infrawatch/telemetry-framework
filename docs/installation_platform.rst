@@ -2,6 +2,12 @@
 Platform Installation
 =====================
 
+.. admonition:: Why are you documentating the downstream version?
+
+    As we noted in the :ref:`ProjectOverview` we are documenting the downstream
+    components initially for the deployment of the telemetry framework. We will
+    note the upstream equivalent where possible.
+
 The installation of the telemetry framework simply requires the deployment of
 OpenShift 3.11 or later and a bastion node for executing the supplied `bash`
 script to load the components into the `sa-telemetry` namespace.
