@@ -14,34 +14,33 @@ components within the telemetry deployment. For example, you might add Grafana
 for visualization, or integrate third-party applications to leverage the data
 for automate decision making, or predicting long term trends.
 
-About Documentation and Repository Structure
---------------------------------------------
+.. admonition:: About Documentation and Repository Structure
 
-While the telemetry framework subscribes to an upstream-first mentality, it is
-also developed primarily against products within Red Hat. All of these products
-complimentary upstream projects. Within this documentation, we're going to be
-referencing to documentation sources that are possibly not applicable to you.
+    While the telemetry framework subscribes to an upstream-first mentality, it is
+    also developed primarily against products within Red Hat. All of these products
+    complimentary upstream projects. Within this documentation, we're going to be
+    referencing to documentation sources that are possibly not applicable to you.
 
-For example, the reference deployment currently in development uses the oVirt
-Hyperconverged system which is known as RHHI-V (Red Hat Hyperconverged
-Infrastructure for Virtualization). The telemetry framework has been tested
-against both the upstream and downstream versions of the application [#]_.
-That goes also for the OKD/OpenShift (Kubernetes) platform, RHOSP (OpenStack)
-and the operating system RHEL (CentOS).
+    For example, the reference deployment currently in development uses the oVirt
+    Hyperconverged system which is known as RHHI-V (Red Hat Hyperconverged
+    Infrastructure for Virtualization). The telemetry framework has been tested
+    against both the upstream and downstream versions of the application [#]_.
+    That goes also for the OKD/OpenShift (Kubernetes) platform, RHOSP (OpenStack)
+    and the operating system RHEL (CentOS).
 
-The documentation will be written from the perspective of installing from the
-downstream perspective, but we will do our best to provide sidebars pointing
-back to the equivalent upstream documentation.
+    The documentation will be written from the perspective of installing from the
+    downstream perspective, but we will do our best to provide sidebars pointing
+    back to the equivalent upstream documentation.
 
-Within the repository, we've also done our best to provide an upstream-centric
-deployment as well, but note that our primary focus is on support for the
-downstream products at this time. If you happen to find an area which is
-missing the upstream-first component (documentation, examples, scripts), please
-an issue and we'll get it resolved as quickly as possible.
+    Within the repository, we've also done our best to provide an upstream-centric
+    deployment as well, but note that our primary focus is on support for the
+    downstream products at this time. If you happen to find an area which is
+    missing the upstream-first component (documentation, examples, scripts), please
+    an issue and we'll get it resolved as quickly as possible.
 
-.. [#] The telemetry framework is also known as a micro-service application,
-   meaning that multiple containers are run and connected together using an
-   orchestration platform.
+    .. [#] The telemetry framework is also known as a micro-service application,
+        meaning that multiple containers are run and connected together using an
+        orchestration platform.
 
 Get The Code
 ------------
