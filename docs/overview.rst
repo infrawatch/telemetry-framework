@@ -1,5 +1,5 @@
 Why Telemetry Framework?
-=======================
+========================
 
 In the modern datacenter, things are dynamic. Infrastructure needs to be
 monitored at a high polling interval, and actions taken quickly. Our
