@@ -10,7 +10,7 @@ documentation.
 
 ## Documentation
 
-Documentation is available in the [documentation](docs/README.md) folder.
+Documentation is available at [Telemetry Framework (RTD)](https://telemetry-framework.readthedocs.io).
 
 ## Installation
 
