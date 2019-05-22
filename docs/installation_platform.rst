@@ -56,10 +56,29 @@ The following procedure is how we're installing in the lab.
 
 * Boot the RHVH 4.2.8 (or later) ISO for the node, or somehow automate the
   installation of RHVH with Satellite or other.
-* Copy your local ssh key onto the nodes
+
+Now that you have three nodes with RHVH installed on them, let's continue.
+
+* Set a shell variable for the hostname you're going to work with
   ::
 
-      for i in 1 2 3; do ssh-copy-id -i ~/.ssh/id_rsa.pub root@virthost$i.management.service-assurance.tld; done
+    export SAFTLD=service-assurance.tld
+
+The next steps will setup the SSH connections. We have a trusted environment
+and are not checking the fingerprints of the servers. Your environment may not
+allow for this trust.
+
+* Get host fingerprints and copy local SSH key onto the nodes
+  ::
+
+      for i in 1 2 3; do \
+        ssh-keyscan -H virthost$i.SAFTLD >> ~/.ssh/known_hosts; \
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@virthost$i.$SAFTLD; \
+      done
+
+Next we need to setup SSH connections into the local server and satisfy the
+subscriptions for the servers. If you don't need to subscribe the servers then
+you can skip that step.
 
 * Login to each of the servers via SSH
 * Create an ssh key and make sure you can ssh into localhost without a password
@@ -155,8 +174,9 @@ Get your download link (which is time sensitive and must be obtained each time
 you wish to download a new image) and download it onto your bastian host (or
 any other host where you can install ``guestfish`` which we'll discuss next).
 ::
-cd /tmp
-curl ‘http://access.cdn.redhat.com/…’ -o rhel-server-7.6-x86_64-kvm.qcow2
+
+    cd /tmp
+    curl ‘http://access.cdn.redhat.com/…’ -o rhel-server-7.6-x86_64-kvm.qcow2
 
 Modify RHEL 7.6 KVM Image and Upload To RHV-M Engine
 ----------------------------------------------------
