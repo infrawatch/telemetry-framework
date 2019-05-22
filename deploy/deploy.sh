@@ -71,7 +71,7 @@ create() {
     # create our objects by building a list
     built_list=""
     object_list=("$@")
-    for spec in "${object_list[@]}"; do
+    for spec in ${object_list[@]}; do
         built_list="$built_list -f $spec"
     done
 
@@ -83,7 +83,7 @@ delete() {
     built_list=""
     object_list=("$@")
     for (( idx=${#object_list[@]}-1 ; idx >= 0 ; idx-- )); do
-        built_list="$built_list -f ${object_list[idx]}"
+        built_list=$built_list -f ${object_list[idx]}
     done
 
     oc delete --wait=true "$built_list"
@@ -91,14 +91,14 @@ delete() {
 
 # create the objects
 if [ "$method" == "CREATE" ]; then
-    echo "  * [ii] Creating the operators" ; create "${operator_list[@]}" && sleep 5
-    echo "  * [ii] Creating the application" ; create "${application_list[@]}"
+    echo "  * [ii] Creating the operators" ; create ${operator_list[@]} && sleep 5
+    echo "  * [ii] Creating the application" ; create ${application_list[@]}
 fi
 
 # delete the objects
 if [ "$method" == "DELETE" ]; then
-    echo "  * [ii] Deleteing the application" ; delete "${application_list[@]}" && sleep 5
-    echo "  * [ii] Deleteing the operators" ; delete "${operator_list[@]}"
+    echo "  * [ii] Deleteing the application" ; delete ${application_list[@]} && sleep 5
+    echo "  * [ii] Deleteing the operators" ; delete ${operator_list[@]}
 fi
 
 echo "-- Completed."
