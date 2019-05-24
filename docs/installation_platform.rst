@@ -52,17 +52,30 @@ See the `official Red Hat Virtualization Hosts installation guide
 <https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/red_hat_virtualization_hosts>`__
 for obtaining RHVH and installing it.
 
-The following procedure is how we're installing in the lab.
+The following procedure matches our reference architecture. Your procedure is
+likely to differ in order to match your environment, but the steps to building
+out the environment is likely to follow what we're documenting.
+
+Prepare nodes
+-------------
 
 * Boot the RHVH 4.2.8 (or later) ISO for the node, or somehow automate the
-  installation of RHVH with Satellite or other.
+  installation of RHVH with `Satellite
+  <https://access.redhat.com/documentation/en-us/red_hat_satellite/6.5/>`__ or
+  other.
 
 Now that you have three nodes with RHVH installed on them, let's continue.
+
+Prerequisite setup from bastian host
+------------------------------------
+
+The bastian host is our initial terminal. It is likely your laptop, or some
+other dedicated jump-host in your environment.
 
 * Set a shell variable for the hostname you're going to work with
   ::
 
-    export SAFTLD=service-assurance.tld
+    export SAFTLD=management.service-assurance.tld
 
 The next steps will setup the SSH connections. We have a trusted environment
 and are not checking the fingerprints of the servers. Your environment may not
@@ -72,43 +85,76 @@ allow for this trust.
   ::
 
       for i in 1 2 3; do \
-        ssh-keyscan -H virthost$i.SAFTLD >> ~/.ssh/known_hosts; \
-        ssh-copy-id -i ~/.ssh/id_rsa.pub root@virthost$i.$SAFTLD; \
+        ssh-keyscan -H virthost$i.${SAFTLD} >> ~/.ssh/known_hosts; \
+        ssh-copy-id -i ~/.ssh/id_rsa.pub root@virthost$i.${SAFTLD}; \
       done
+
+
+Prerequisite setup from the control host
+----------------------------------------
 
 Next we need to setup SSH connections into the local server and satisfy the
 subscriptions for the servers. If you don't need to subscribe the servers then
 you can skip that step.
 
-* Login to each of the servers via SSH
+Login to one of the three servers you're going to designate as the *control*
+server. If you pick the first server in your list (e.g. ``virthost1``) then
+make sure when you login to the web interface to complete the installation you
+use that same server.
+
+We're going to create an SSH keypair on the *control* server and then copy that
+into the ``authorized_keys`` file on the remote machines. When we do our
+installation through the cockpit UI, Ansible will be executed against those
+nodes from our *control* server, and if we can't SSH into the machines
+passwordless the Ansible-controlled install will fail.
+
+
+* Login to the control machine
+  ::
+
+    ssh root@virthost1.${SAFTLD}
+
 * Create an ssh key and make sure you can ssh into localhost without a password
   ::
 
-    ssh-keygen -t rsa -b 2048 -q -f ~/.ssh/id_rsa
+    ssh-keygen -N '' -t rsa -b 2048 -q -f ~/.ssh/id_rsa
     ssh-copy-id -i ~/.ssh/id_rsa.pub root@$(hostname -f)
 
-  * EXAMPLE
-    ::
+* Next validate that the control machine can login to all networks that might
+  be utilized during the installation process
+
+  .. tip::
+     ::
 
         # this one is for copying the key to all systems with various subdomains
-        for d in storage management home; do $(for i in 1 2 3; do ssh-copy-id -i ~/.ssh/id_rsa root@virthost$i.$d.service-assurance.tld; done); done
+        export SAFTLD=service-assurance.tld
+        for d in storage management; do
+            $(for i in 1 2 3; do ssh-keyscan -H virthost$i.${SAFTLD} >> ~/.ssh/known_hosts ; ssh-copy-id -i ~/.ssh/id_rsa root@virthost$i.$d.${SAFTLD}; done);
+        done
+
+Prerequisite setup across all RHHI-V nodes
+------------------------------------------
+
+The rest of the commands need to be run on all systems.
 
 * (optional) Possibly setup the ``/etc/resolv.conf`` to point at your local DNS
   server if necessary and ``chattr +i /etc/resolv.conf`` to lock it (needed in
   my lab, no control of the DHCP server)
 
-  * In a proper environment this will not be necessary, but DNS is very
-    important for proper operation of the environment as a whole
+  .. note::
+     In a proper environment this will not be necessary, but DNS is very
+     important for proper operation of the environment as a whole
 
 * Register the nodes
   ::
 
-    subscription-manager register --username="<email>" --password='<password>'
-    subscription-manager list --available --matches="<YOUR_SKU>" --pool-only
+    export SKU_NAME="SKU Name"
+    subscription-manager register --username='<email>' --password='<password>'
+    subscription-manager list --available --matches="${SKU_NAME}" --pool-only
     subscription-manager attach --pool=<pool from list>
 
     # alternatively do in a single command using the first item returned
-    subscription-manager attach --pool=$(subscription-manager list --available --matches="<YOUR_SKU>" --pool-only | head -n1)
+    SKU_NAME="SKU Name" ; subscription-manager attach --pool=$(subscription-manager list --available --matches="${SKU_NAME}" --pool-only | head -n1)
 
 * Enable subscriptions and update systems
   ::
@@ -139,9 +185,12 @@ you can skip that step.
     # or...
     lsblk
 
-* Go to the web interface via
-  ``https://virthost1.management.service-assurance.tld:9090`` to
-  start installation of RHHI-V.
+Load the web interface to start installation
+--------------------------------------------
+
+Go to the web interface on your control host at
+``https://virthost1.management.service-assurance.tld:9090`` to start
+installation of RHHI-V.
 
 Installing Red Hat Hyperconverged Infrastructure for Virtualization (RHHI-V)
 ============================================================================
