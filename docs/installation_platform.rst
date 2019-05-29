@@ -128,9 +128,7 @@ passwordless the Ansible-controlled install will fail.
 
         # this one is for copying the key to all systems with various subdomains
         export SAFTLD=service-assurance.tld
-        for d in storage management; do
-            $(for i in 1 2 3; do ssh-keyscan -H virthost$i.${SAFTLD} >> ~/.ssh/known_hosts ; ssh-copy-id -i ~/.ssh/id_rsa root@virthost$i.$d.${SAFTLD}; done);
-        done
+        for i in 1 2 3; do ssh-keyscan -H virthost$i.${SAFTLD} >> ~/.ssh/known_hosts ; ssh-copy-id -i ~/.ssh/id_rsa root@virthost$i.${SAFTLD}; done
 
 Prerequisite setup across all RHHI-V nodes
 ------------------------------------------
@@ -154,7 +152,7 @@ The rest of the commands need to be run on all systems.
     subscription-manager attach --pool=<pool from list>
 
     # alternatively do in a single command using the first item returned
-    SKU_NAME="SKU Name" ; subscription-manager attach --pool=$(subscription-manager list --available --matches="${SKU_NAME}" --pool-only | head -n1)
+    SKU_NAME="SKU Name" ; subscription-manager register --username='<email>' --password='<password>' subscription-manager attach --pool=$(subscription-manager list --available --matches="${SKU_NAME}" --pool-only | head -n1)
 
 * Enable subscriptions and update systems
   ::
