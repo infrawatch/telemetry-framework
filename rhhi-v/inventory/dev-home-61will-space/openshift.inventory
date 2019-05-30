@@ -1,0 +1,136 @@
+# vim: set ft=dosini shiftwidth=2 tabstop=2 expandtab :
+openshift-lb ansible_host=openshift-lb.dev.home.61will.space
+openshift-master-1 ansible_host=openshift-master-1.dev.home.61will.space
+openshift-master-2 ansible_host=openshift-master-2.dev.home.61will.space
+openshift-master-3 ansible_host=openshift-master-3.dev.home.61will.space
+openshift-compute-1 ansible_host=openshift-compute-1.dev.home.61will.space
+openshift-compute-2 ansible_host=openshift-compute-2.dev.home.61will.space
+openshift-compute-3 ansible_host=openshift-compute-3.dev.home.61will.space
+#openshift-infra-node-1 ansible_host=openshift-infra-node-1.dev.home.61will.space
+#openshift-infra-node-2 ansible_host=openshift-infra-node-2.dev.home.61will.space
+#openshift-infra-node-3 ansible_host=openshift-infra-node-3.dev.home.61will.space
+
+[OSEv3:children]
+masters
+nodes
+etcd
+glusterfs
+lb
+
+[OSEv3:vars]
+ansible_become=yes
+debug_level=4
+
+# openshift general values
+#openshift_version='3.11'
+#openshift_release=v3.11
+openshift_deployment_type=openshift-enterprise
+openshift_install_examples=true
+openshift_disable_check=disk_availability,docker_image_availability,package_version
+#openshift_disable_check=disk_availability,memory_availability,docker_image_availability,package_version
+
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_clock_enabled=true
+os_firewall_use_firewalld=true
+enable_excluders=false
+
+# lb values
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=openshift-lb.dev.home.61will.space
+openshift_master_cluster_public_hostname=openshift-lb.dev.home.61will.space
+
+# hostname setup
+openshift_hostname_check=true
+openshift_master_default_subdomain=apps.dev.home.61will.space
+openshift_master_cluster_hostname=master.dev.home.61will.space
+openshift_master_cluster_public_hostname=console.dev.home.61will.space
+
+# monitoring
+openshift_cluster_monitoring_operator_install=true
+openshift_metrics_install_metrics=true
+
+# OLM
+openshift_enable_olm=true
+#openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'<USERNAME>','password':'<PASSWORD','test_image':'mongodb/enterprise-operator:0.3.2'}]
+
+# install telemetry
+sa_telemetry_install=false
+sa_telemetry_namespace=sa-telemetry
+sa_telemetry_node_labels=[{'name': 'blue', 'host': 'openshift-infra-node-1'},{'name': 'green', 'host': 'openshift-infra-node-2'}]
+
+# storage
+openshift_storage_glusterfs_namespace=glusterfs
+openshift_storage_glusterfs_name=storage
+openshift_storage_glusterfs_storageclass=true
+openshift_storage_glusterfs_storageclass_default=true
+#openshift_storage_glusterfs_block_deploy=true
+#openshift_storage_glusterfs_block_host_vol_size=100
+#openshift_storage_glusterfs_block_storageclass=true
+#openshift_storage_glusterfs_block_storageclass_default=false
+
+# service broker
+openshift_enable_service_catalog=true
+openshift_service_catalog_image_version=v3.11
+
+# logging control
+logrotate_scripts=[{"name": "syslog", "path": "/var/log/cron\n/var/log/maillog\n/var/log/messages\n/var/log/secure\n/var/log/spooler\n", "options": ["daily", "rotate 4", "size 50M", "compress", "sharedscripts", "missingok"], "scripts": {"postrotate": "/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true"}}]
+
+journald_vars_to_replace=[{ "var": "Storage", "val": "persistent" },{ "var": "Compress", "val": "yes" },{ "var": "SyncIntervalSec", "val": "1s" },{ "var": "RateLimitInterval", "val": "1s" },{ "var": "RateLimitBurst", "val": "10000" },{ "var": "SystemMaxUse", "val": "500M" },{ "var": "SystemKeepFree", "val": "20%" },{ "var": "SystemMaxFileSize", "val": "10M" },{ "var": "MaxRetentionSec", "val": "1month" },{ "var": "MaxFileSec", "val": "1day" },{ "var": "ForwardToSyslog", "val": "no" },{ "var": "ForwardToWall", "val": "no" }]
+
+# ansible service broker
+ansible_service_broker_install=false
+#ansible_service_broker_sandbox_role=admin
+#ansible_service_broker_image='docker.io/ansibleplaybookbundle/origin-ansible-service-broker:v3.11'
+#ansible_service_broker_registry_whitelist=[".*-apb$"]
+#ansible_service_broker_local_registry_whitelist=[".*"]
+#ansible_service_broker_registry_type=dockerhub
+#ansible_service_broker_registry_name=nfvpe
+#ansible_service_broker_registry_url="https://registry.hub.docker.com"
+#ansible_service_broker_registry_organization=nfvpe
+#ansible_service_broker_registry_tag=latest
+#ansible_service_broker_registry_user=""
+#ansible_service_broker_registry_pass=""
+#ansible_service_broker_registry_auth_type=""
+#ansible_service_broker_registry_auth_name=""
+
+# setup node groups for 3.11
+openshift_node_groups=[{'name': 'node-config-master', 'labels': ['node-role.kubernetes.io/master=true', 'node-role.kubernetes.io/infra=true']}, {'name': 'node-config-infra-blue', 'labels': ['node-role.kubernetes.io/infra=true', 'node=blue']}, {'name': 'node-config-infra-green', 'labels': ['node-role.kubernetes.io/infra=true', 'node=green']}, {'name': 'node-config-infra-neutral', 'labels': ['node-role.kubernetes.io/infra=true']}, {'name': 'node-config-compute-blue', 'labels': ['node-role.kubernetes.io/compute=true', 'node=blue', 'application=sa-telemetry']}, {'name': 'node-config-compute-green', 'labels': ['node-role.kubernetes.io/compute=true', 'node=green', 'application=sa-telemetry']}, {'name': 'node-config-compute-neutral', 'labels': ['node-role.kubernetes.io/compute=true', 'application=sa-telemetry']}]
+
+[masters]
+openshift-master-1
+openshift-master-2
+openshift-master-3
+
+[lb]
+openshift-lb
+
+[etcd]
+openshift-master-1
+openshift-master-2
+openshift-master-3
+
+[nodes]
+openshift-master-1 openshift_node_group_name='node-config-master'
+openshift-master-2 openshift_node_group_name='node-config-master'
+openshift-master-3 openshift_node_group_name='node-config-master'
+openshift-compute-1 openshift_node_group_name='node-config-compute-blue'
+openshift-compute-2 openshift_node_group_name='node-config-compute-green'
+openshift-compute-3 openshift_node_group_name='node-config-compute-neutral'
+#openshift-infra-node-1 openshift_node_group_name='node-config-infra-blue'
+#openshift-infra-node-2 openshift_node_group_name='node-config-infra-green'
+#openshift-infra-node-3 openshift_node_group_name='node-config-infra-neutral'
+
+[glusterfs]
+openshift-master-1
+openshift-master-2
+openshift-master-3
+
+[glusterfs:vars]
+glusterfs_devices=[ "/dev/vdb" ]
+#r_openshift_storage_glusterfs_use_firewalld=false
+#r_openshift_storage_glusterfs_firewall_enabled=true
+openshift_storage_glusterfs_timeout=900
+openshift_storage_glusterfs_wipe=true
+
+[all:vars]
+ansible_user=root

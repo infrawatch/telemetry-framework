@@ -225,6 +225,10 @@ any other host where you can install ``guestfish`` which we'll discuss next).
     cd /tmp
     curl ‘http://access.cdn.redhat.com/…’ -o rhel-server-7.6-x86_64-kvm.qcow2
 
+.. tip::
+   For an upstream-only deployment, download CentOS 7.6 qcow2 image for your
+   base image.
+
 Modify RHEL 7.6 KVM Image and Upload To RHV-M Engine
 ----------------------------------------------------
 
@@ -245,7 +249,7 @@ RHHI-V will expect the virtual machine image file to be located in the
 ``/root`` directory on the RHV-M engine.
 ::
 
-    scp /tmp/rhel-server-7.6-x86_64-kvm.qcow2 root@engine.rhhi-v.tld
+    scp /tmp/rhel-server-7.6-x86_64-kvm.qcow2 root@engine.rhhi-v.tld:/root
 
 Installing OpenShift
 ====================

@@ -1,14 +1,14 @@
 ---
 - src: oVirt.engine-setup
-  version: 1.1.5
-- src: oVirt.infra
   version: 1.1.9
+- src: oVirt.infra
+  version: 1.1.12
 - src: oVirt.image-template
-  version: 1.1.8
+  version: 1.1.9
 - src: oVirt.repositories
-  version: 1.1.2
+  version: 1.1.5
 - src: oVirt.vm-infra
-  version: master       # use of master only required until upstream tags 1.1.13 (PR #67)
+  version: 1.1.15
 - src: https://github.com/openshift/openshift-ansible
   name: openshift.openshift-ansible
   version: "openshift-ansible-3.11.75-1"

@@ -12,4 +12,4 @@ galaxy_info:
   categories:
   - cloud
 dependencies:
-  - lib_openshift
+  - openshift-ansible-roles/lib_openshift
