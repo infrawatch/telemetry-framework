@@ -15,7 +15,7 @@
     template_memory: 16GiB
     template_cpu: 4
     template_disk_size: 40GiB
-    template_disk_storage: HostedVmStore
+    template_disk_storage: vmstore
 
   roles:
     - oVirt.image-template
