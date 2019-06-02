@@ -83,10 +83,10 @@ delete() {
     built_list=""
     object_list=("$@")
     for (( idx=${#object_list[@]}-1 ; idx >= 0 ; idx-- )); do
-        built_list=$built_list -f ${object_list[idx]}
+        built_list+=" -f ${object_list[idx]}"
     done
 
-    oc delete --wait=true "$built_list"
+    oc delete --wait=true $built_list
 }
 
 # create the objects
