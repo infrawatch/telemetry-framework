@@ -11,4 +11,4 @@
   version: 1.1.15
 - src: https://github.com/openshift/openshift-ansible
   name: openshift.openshift-ansible
-  version: "openshift-ansible-3.11.75-1"
+  version: "openshift-ansible-3.11.114-1"
