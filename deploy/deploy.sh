@@ -72,10 +72,10 @@ create() {
     built_list=""
     object_list=("$@")
     for spec in ${object_list[@]}; do
-        built_list="$built_list -f $spec"
+        built_list+=" -f $spec"
     done
 
-    oc create --save-config=true "$built_list"
+    oc create --save-config=true $built_list
 }
 
 delete() {
