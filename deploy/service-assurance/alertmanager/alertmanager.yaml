@@ -3,6 +3,7 @@ kind: Alertmanager
 metadata:
   name: sa
 spec:
+  version: v0.15.0
   nodeSelector:
     application: sa-telemetry
     node-role.kubernetes.io/compute: "true"
@@ -13,4 +14,3 @@ spec:
   replicas: 3
   securityContext:
     nonroot: true
-  version: v0.15.1

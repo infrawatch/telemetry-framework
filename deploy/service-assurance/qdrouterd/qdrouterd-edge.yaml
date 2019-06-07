@@ -1,11 +1,14 @@
 apiVersion: interconnectedcloud.github.io/v1alpha1
-kind: Qdrouterd
+kind: Qdr
 metadata:
   name: qdr-white
+  namespace: sa-telemetry
 spec:
-  count: 1
-  image: quay.io/interconnectedcloud/qdrouterd:1.6.0
-  deploymentMode: lbfrontend
+  deploymentPlan:
+      image: registry.redhat.io/amq7/amq-interconnect:1.4-6
+      role: interior
+      size: 1
+      placement: Any
   addresses:
     - prefix: closest
       distribution: closest
@@ -22,12 +25,12 @@ spec:
   sslProfiles:
     - name: default
       credentials: "qdr-white-cert"
-  listeners:
+  edgeListeners:
     - host: "0.0.0.0"
       port: 5671
       sslProfile: default
-      edgeIngress: true
       expose: true
+  listeners:
     - port: 5672
     - port: 8672
       http: true

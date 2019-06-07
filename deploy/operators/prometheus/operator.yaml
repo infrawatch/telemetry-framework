@@ -29,8 +29,11 @@ spec:
       containers:
       - args:
         - --kubelet-service=kube-system/kubelet
-        - --config-reloader-image=quay.io/coreos/configmap-reload:v0.0.1
-        image: quay.io/coreos/prometheus-operator:v0.25.0
+        - --config-reloader-image=docker-registry.default.svc:5000/sa-telemetry/prometheus-configmap-reloader:latest
+        - --alertmanager-default-base-image=docker-registry.default.svc:5000/sa-telemetry/prometheus-alertmanager
+        - --prometheus-config-reloader=docker-registry.default.svc:5000/sa-telemetry/prometheus-config-reloader:latest
+        - --prometheus-default-base-image=docker-registry.default.svc:5000/sa-telemetry/prometheus
+        image: docker-registry.default.svc:5000/sa-telemetry/prometheus-operator:latest
         imagePullPolicy: IfNotPresent
         name: prometheus-operator
         ports:
