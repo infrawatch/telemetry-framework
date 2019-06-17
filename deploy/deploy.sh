@@ -85,7 +85,7 @@ delete() {
 
 # create the objects
 if [ "$method" == "CREATE" ]; then
-    echo "  * [ii] Creating the operators" ; create ${operator_list[@]} && sleep 5
+    echo "  * [ii] Creating the operators" ; create ${operator_list[@]} && sleep 30
     echo "  * [ii] Creating the application" ; create ${application_list[@]}
 fi
 
