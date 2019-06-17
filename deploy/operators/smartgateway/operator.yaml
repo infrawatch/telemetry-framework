@@ -15,7 +15,7 @@ spec:
       serviceAccountName: smart-gateway-operator
       containers:
         - name: smart-gateway-operator
-          image: "quay.io/redhat-service-assurance/smart-gateway-operator:latest"
+          image: smart-gateway-operator
           imagePullPolicy: "Always"
           env:
             - name: WATCH_NAMESPACE

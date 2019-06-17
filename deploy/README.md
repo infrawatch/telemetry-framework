@@ -22,3 +22,11 @@ the OpenShift route to Passthrough mode to port 5671.
         -keyout qdr-server-certs/tls.key
 
     oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
+
+# Importing ImageStreams
+
+In order to better separate between upstream and downstream locations of
+images, we've made use of
+[ImageStreams](https://docs.openshift.com/container-platform/3.11/dev_guide/managing_images.html)
+
+

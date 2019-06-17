@@ -6,6 +6,7 @@ metadata:
   name: white
   namespace: sa-telemetry
 spec:
+  version: v2.11.104
   alerting:
     alert_relabel_configs:
     - regex: (.+)\d+
@@ -45,4 +46,3 @@ spec:
         resources:
           requests:
             storage: 20G
-  version: v2.3.2
