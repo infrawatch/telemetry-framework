@@ -17,7 +17,7 @@ route address (DNS address) for the QDR service on port 443. Be sure you set
 the OpenShift route to Passthrough mode to port 5671.
 
     openssl req -new -x509 -batch -nodes -days 11000 \
-        -subj "/O=io.interconnectedcloud/CN=qdr-white-normal.sa-telemetry.svc.cluster.local " \
+        -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
         -out qdr-server-certs/tls.crt \
         -keyout qdr-server-certs/tls.key
 
