@@ -4,7 +4,6 @@ metadata:
   labels:
     app: prometheus-operator
   name: prometheus-operator
-  namespace: sa-telemetry
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -29,11 +28,11 @@ spec:
       containers:
       - args:
         - --kubelet-service=kube-system/kubelet
-        - --config-reloader-image=docker-registry.default.svc:5000/sa-telemetry/prometheus-configmap-reloader:latest
-        - --alertmanager-default-base-image=docker-registry.default.svc:5000/sa-telemetry/prometheus-alertmanager
-        - --prometheus-config-reloader=docker-registry.default.svc:5000/sa-telemetry/prometheus-config-reloader:latest
-        - --prometheus-default-base-image=docker-registry.default.svc:5000/sa-telemetry/prometheus
-        image: docker-registry.default.svc:5000/sa-telemetry/prometheus-operator:latest
+        - --config-reloader-image={{ registry_path }}/{{ imagestream_namespace }}/prometheus-configmap-reloader:latest
+        - --alertmanager-default-base-image={{ registry_path }}/{{ imagestream_namespace }}/prometheus-alertmanager
+        - --prometheus-config-reloader={{ registry_path }}/{{ imagestream_namespace }}/prometheus-config-reloader:latest
+        - --prometheus-default-base-image={{ registry_path }}/{{ imagestream_namespace }}/prometheus
+        image: {{ registry_path }}/{{ imagestream_namespace }}/prometheus-operator
         imagePullPolicy: IfNotPresent
         name: prometheus-operator
         ports:

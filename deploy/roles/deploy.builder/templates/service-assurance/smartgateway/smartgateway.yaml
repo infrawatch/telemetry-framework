@@ -6,5 +6,5 @@ spec:
   size: 1
   amqpmetric_url: qdr-white.sa-telemetry.svc.cluster.local:5672/collectd/telemetry
   debug: "false"
-  container_image_path: smart-gateway
+  container_image_path: {{ registry_path }}/{{ imagestream_namespace }}/smart-gateway
 # vim: set tabstop=2 shiftwidth=2 expandtab smartindent:

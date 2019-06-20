@@ -5,7 +5,7 @@ metadata:
   namespace: sa-telemetry
 spec:
   deploymentPlan:
-      image: registry.redhat.io/amq7/amq-interconnect:1.4-6
+      image: {{ registry_path }}/{{ imagestream_namespace }}/amq-interconnect:1.4-6
       role: interior
       size: 1
       placement: Any

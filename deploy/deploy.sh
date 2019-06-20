@@ -45,7 +45,7 @@ declare -a operator_list=(
 )
 
 declare -a application_list=(
-    'service-assurance/qdrouterd/qdrouterd-edge.yaml'
+    'service-assurance/qdrouterd/qdrouterd.yaml'
     'service-assurance/smartgateway/smartgateway.yaml'
     'service-assurance/prometheus/service_account.yaml'
     'service-assurance/prometheus/role.yaml'
@@ -91,8 +91,8 @@ fi
 
 # delete the objects
 if [ "$method" == "DELETE" ]; then
-    echo "  * [ii] Deleteing the application" ; delete ${application_list[@]} && sleep 5
-    echo "  * [ii] Deleteing the operators" ; delete ${operator_list[@]}
+    echo "  * [ii] Deleting the application" ; delete ${application_list[@]} && sleep 5
+    echo "  * [ii] Deleting the operators" ; delete ${operator_list[@]}
 fi
 
 echo "-- Completed."

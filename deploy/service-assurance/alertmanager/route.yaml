@@ -3,7 +3,6 @@ kind: Route
 metadata:
   name: alertmanager
 spec:
-  host: alertmanager.apps.dev7.nfvpe.site
   to:
     kind: Service
     name: alertmanager

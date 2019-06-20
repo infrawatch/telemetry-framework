@@ -29,4 +29,43 @@ In order to better separate between upstream and downstream locations of
 images, we've made use of
 [ImageStreams](https://docs.openshift.com/container-platform/3.11/dev_guide/managing_images.html)
 
+To import the downstream container images into the local registry, run the
+`./import-downstream.sh` script which will configure the appropriate Image
+Streams for the Service Assurance Framework components.
 
+# Generating Appropriate Manifests
+
+The manifests provided here are used to request the appropriate state within
+Kubernetes to allow for the Service Assurance Framework to exist as intended.
+Part of that is to consume the container images that are made available by the
+local registry.
+
+Some manifests need to be generated with Ansible so that the path to the
+container image in the local registry matches the deployed environment. For
+example, installation with `openshift-ansible` provides a default registry path
+via `docker-registry.default.svc:5000` while a similar installation with
+_minishift_ results in a local registry available at `172.30.1.1:5000`.
+
+You can determine the default registry path by running:
+
+    oc registry info
+
+To dynamically generate the manifests for a default OpenShift Ansible
+installation, simply run:
+
+    ansible-playbook deploy_builder.yaml
+
+This will result in an image pull location of
+`docker-registry.default.svc:5000/sa-telemetry/<container_id>`. If you wish to
+override this (for example, when deploying to _minishift_) then you can pass
+environment variables like so:
+
+    ansible-playbook \
+      -e "registry_path=$(oc registry info)" \
+      -e "imagestream_namespace=$(oc project --short)" \
+      deploy_builder.yml
+
+# Instantiating Service Assurance Framework
+
+After executing the above prerequisite steps, simply run the `deploy.sh`
+script.
