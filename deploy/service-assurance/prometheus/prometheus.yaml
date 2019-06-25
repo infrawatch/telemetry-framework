@@ -16,10 +16,6 @@ spec:
     - name: alertmanager
       namespace: sa-telemetry
       port: metrics
-  nodeSelector:
-    application: sa-telemetry
-    node: white
-  podAntiAffinity: hard
   podMetadata:
     labels:
       sa-app: prometheus-white
