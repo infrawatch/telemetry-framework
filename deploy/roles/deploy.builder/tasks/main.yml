@@ -1,0 +1,11 @@
+- name: Loop through templates
+  template:
+    src: "{{ item }}"
+    dest: "{{ item }}"
+  loop:
+    - operators/prometheus/operator.yaml
+    - operators/qdrouterd/operator.yaml
+    - operators/smartgateway/operator.yaml
+    - service-assurance/alertmanager/alertmanager.yaml
+    - service-assurance/qdrouterd/qdrouterd.yaml
+    - service-assurance/smartgateway/smartgateway.yaml

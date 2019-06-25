@@ -15,7 +15,7 @@ spec:
       serviceAccountName: smart-gateway-operator
       containers:
         - name: smart-gateway-operator
-          image: smart-gateway-operator
+          image: {{ registry_path }}/{{ imagestream_namespace }}/smart-gateway-operator
           imagePullPolicy: "Always"
           env:
             - name: WATCH_NAMESPACE

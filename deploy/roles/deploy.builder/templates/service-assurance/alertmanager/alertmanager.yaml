@@ -4,9 +4,11 @@ metadata:
   name: sa
 spec:
   version: v0.15.0
+  nodeSelector:
+    application: sa-telemetry
   podMetadata:
     labels:
       app: alertmanager
-  replicas: 1
+  replicas: {{ alertmanager_replicas }}
   securityContext:
     nonroot: true

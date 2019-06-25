@@ -8,3 +8,10 @@ openshift/examples/*
 docs/_build/
 deploy/qdr-server-certs/*
 !deploy/qdr-server-certs/.KEEPIT
+deploy/operators/prometheus/operator.yaml
+deploy/operators/qdrouterd/operator.yaml
+deploy/operators/smartgateway/operator.yaml
+deploy/service-assurance/alertmanager/alertmanager.yaml
+deploy/service-assurance/prometheus/prometheus.yaml
+deploy/service-assurance/qdrouterd/qdrouterd.yaml
+deploy/service-assurance/smartgateway/smartgateway.yaml
