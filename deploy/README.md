@@ -6,34 +6,38 @@ currently a work in a progress.
 
 # Quickstart (Minishift)
 
-minishift start
-oc login -u system:admin
-oc new-project sa-telemetry
-oc create -f ~/699000-username-secret.yaml
-openssl req -new -x509 -batch -nodes -days 11000 \
-    -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
-    -out qdr-server-certs/tls.crt \
-    -keyout qdr-server-certs/tls.key
-oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
+The following is a quickstart guide on deploying SAF into a minishift created
+OpenShift environment. It will allow for SAF to be started for development
+purposes, and is not intended for production environments.
 
-ansible-playbook \
-  -e "registry_path=$(oc registry info)" \
-  -e "imagestream_namespace=$(oc project --short)" \
-  deploy_builder.yml
+    minishift start
+    oc login -u system:admin
+    oc new-project sa-telemetry
+    oc create -f ~/699000-username-secret.yaml
+    openssl req -new -x509 -batch -nodes -days 11000 \
+        -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
+        -out qdr-server-certs/tls.crt \
+        -keyout qdr-server-certs/tls.key
+    oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
 
-# need to patch a node in order to allow the current version of the SGO to deploy a SG
-oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry", "node": "white"}}}'
+    ansible-playbook \
+    -e "registry_path=$(oc registry info)" \
+    -e "imagestream_namespace=$(oc project --short)" \
+    deploy_builder.yml
 
-# import downstream container images
-./import-downstream.sh
+    # need to patch a node in order to allow the current version of the SGO to deploy a SG
+    oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry", "node": "white"}}}'
 
-# deploy the environment (requires interaction)
-./deploy.sh
-watch -n5 oc get pods
+    # import downstream container images
+    ./import-downstream.sh
 
-# teardown the environment when done (requires interaction)
-./deploy.sh DELETE
-watch -n10 oc get all
+    # deploy the environment (requires interaction)
+    ./deploy.sh
+    watch -n5 oc get pods
+
+    # teardown the environment when done (requires interaction)
+    ./deploy.sh DELETE
+    watch -n10 oc get all
 
 
 # Routes and Certificates
