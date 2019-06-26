@@ -1,0 +1,4 @@
+---
+registry_path: docker-registry.default.svc:5000
+imagestream_namespace: sa-telemetry
+alertmanager_replicas: 1

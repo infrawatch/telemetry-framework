@@ -7,6 +7,6 @@ spec:
   podMetadata:
     labels:
       app: alertmanager
-  replicas: 1
+  replicas: {{ alertmanager_replicas }}
   securityContext:
     nonroot: true

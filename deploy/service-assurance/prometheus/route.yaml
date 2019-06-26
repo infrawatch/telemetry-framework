@@ -3,7 +3,6 @@ kind: Route
 metadata:
   name: prometheus
 spec:
-  host: prometheus-sa-telemetry.apps.dev7.nfvpe.site
   port:
     targetPort: web
   to:

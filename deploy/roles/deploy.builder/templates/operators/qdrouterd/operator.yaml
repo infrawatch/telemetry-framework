@@ -16,7 +16,7 @@ spec:
       containers:
         - name: qdr-operator
           # Replace this with the built image name
-          image: amq-interconnect-operator
+          image: {{ registry_path }}/{{ imagestream_namespace }}/amq-interconnect-operator
           ports:
           - containerPort: 60000
             name: metrics
