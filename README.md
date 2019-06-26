@@ -14,8 +14,8 @@ Documentation is available at [Telemetry Framework (RTD)](https://telemetry-fram
 
 ## Installation
 
-Telemetry Framework can be deployed anywhere you have OpenShift running. To deploy from stratch on Baremetal,
-You can leverage [RHV (Red Hat Virtualization) on top of RHEL as your Infrastructure
+Telemetry Framework can be deployed anywhere you have OpenShift running. To deploy from scratch on baremetal,
+You can leverage [RHV (Red Hat Virtualization) on top of RHEL as your infrastructure
 layer to run OpenShift](https://telemetry-framework.readthedocs.io/en/master/installation_platform.html).
-Alternately, you can run OpenShift on any public or private cloud. Once the prerequisites are satisfied,
+Alternatively, you can run OpenShift on any public or private cloud. Once the prerequisites are satisfied,
 follow the [Telemetry Deployment Guide](https://telemetry-framework.readthedocs.io/en/master/installation_telemetry_framework.html).
