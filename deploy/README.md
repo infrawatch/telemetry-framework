@@ -4,6 +4,38 @@ This directory contains sample configurations for deployment of the Telemetry
 Framework leverage Operators for the deployment. The contents here are
 currently a work in a progress.
 
+# Quickstart (Minishift)
+
+minishift start
+oc login -u system:admin
+oc new-project sa-telemetry
+oc create -f ~/699000-username-secret.yaml
+openssl req -new -x509 -batch -nodes -days 11000 \
+    -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
+    -out qdr-server-certs/tls.crt \
+    -keyout qdr-server-certs/tls.key
+oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
+
+ansible-playbook \
+  -e "registry_path=$(oc registry info)" \
+  -e "imagestream_namespace=$(oc project --short)" \
+  deploy_builder.yml
+
+# need to patch a node in order to allow the current version of the SGO to deploy a SG
+oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry", "node": "white"}}}'
+
+# import downstream container images
+./import-downstream.sh
+
+# deploy the environment (requires interaction)
+./deploy.sh
+watch -n5 oc get pods
+
+# teardown the environment when done (requires interaction)
+./deploy.sh DELETE
+watch -n10 oc get all
+
+
 # Routes and Certificates
 
 In order to get the remote QDR connections through the OpenShift operator, we
