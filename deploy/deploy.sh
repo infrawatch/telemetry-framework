@@ -100,9 +100,9 @@ fi
 if [ "$method" == "DELETE" ]; then
     echo "  * [ii] Deleting the application" ; delete ${application_list[@]}
     echo ""
-    echo "+-----------------------------------------------------------+"
-    echo "| Press Ctrl+C when only operators are is marked as Running |"
-    echo "+-----------------------------------------------------------+"
+    echo "+--------------------------------------------------------+"
+    echo "| Press Ctrl+C when only operators are marked as Running |"
+    echo "+--------------------------------------------------------+"
     echo ""
     trap ' ' INT
     oc get pods -w
