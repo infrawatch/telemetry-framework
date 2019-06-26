@@ -85,14 +85,28 @@ delete() {
 
 # create the objects
 if [ "$method" == "CREATE" ]; then
-    echo "  * [ii] Creating the operators" ; create ${operator_list[@]} && sleep 30
+    echo "  * [ii] Creating the operators" ; create ${operator_list[@]}
+    echo ""
+    echo "+-----------------------------------------------------------------------+"
+    echo "| Press Ctrl+C when prometheus-operator-1-<unique> is marked as Running |"
+    echo "+-----------------------------------------------------------------------+"
+    echo ""
+    trap ' ' INT
+    oc get pods -w
     echo "  * [ii] Creating the application" ; create ${application_list[@]}
 fi
 
 # delete the objects
 if [ "$method" == "DELETE" ]; then
-    echo "  * [ii] Deleting the application" ; delete ${application_list[@]} && sleep 5
-    echo "  * [ii] Deleting the operators" ; delete ${operator_list[@]}
+    echo "  * [ii] Deleting the application" ; delete ${application_list[@]}
+    echo ""
+    echo "+-----------------------------------------------------------+"
+    echo "| Press Ctrl+C when only operators are is marked as Running |"
+    echo "+-----------------------------------------------------------+"
+    echo ""
+    trap ' ' INT
+    oc get pods -w
+    echo "  * [ii] Deleting the operators" ; delete ${operator_list[@]} ; oc delete service alertmanager-operated prometheus-operated
 fi
 
 echo "-- Completed."
