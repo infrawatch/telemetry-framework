@@ -67,5 +67,12 @@ environment variables like so:
 
 # Instantiating Service Assurance Framework
 
-After executing the above prerequisite steps, simply run the `deploy.sh`
-script.
+After executing the above prerequisite steps, we need to patch a node (or
+nodes) to allow for the scheduling of the Smart Gateway by the Operator. To do
+that, run the following command:
+
+    oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry", "node": "white"}}}'
+
+Then simply run the `deploy.sh` script. You will need to follow the
+instructions during the script as it will pause waiting for the successful
+completion at a couple of steps.
