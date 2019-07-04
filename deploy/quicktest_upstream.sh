@@ -1,4 +1,5 @@
- minishift start
+#!/bin/sh
+minishift start
 oc login -u system:admin
 oc new-project sa-telemetry
 openssl req -new -x509 -batch -nodes -days 11000 \
