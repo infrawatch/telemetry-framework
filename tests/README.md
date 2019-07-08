@@ -2,13 +2,16 @@
 
 Here are some artifacts to assist with testing the SAF after it is deployed.
 
-Currently this is just a "smoke test" that runs internal to the OCP cluster. It delivers collectd data to the SAF amqp node and verifies that it can be seen in prometheus. This is intended to be usable for developers and TravisCI to validate our builds before merging changes to this repo.
+Currently this is just a "smoke test" that runs internal to the OCP cluster. It
+delivers collectd data to the SAF amqp node and verifies that it can be seen in
+prometheus. This is intended to be usable for developers and TravisCI to
+validate our builds before merging changes to this repo.
 
 ## Usage
 
 1. Have `oc` pointing at your sa-telemetry project and run `./smoketest.sh`
 1. Run `oc get jobs` and check the result of the saf-smoketest job
-1. (If necesarry) Check the logs of the saf-smoketest pod
+1. (If necessary) Check the logs of the saf-smoketest pod
 
 ### Example
 
@@ -45,7 +48,9 @@ Initialization complete, entering read-loop.
 
 These are some things that would make this better:
 
-* Would like to actually test via the AMQP+TLS interface as the system boundary instead of directly to the internal AMQP broker
+* Would like to actually test via the AMQP+TLS interface as the system boundary
+  instead of directly to the internal AMQP broker
   * Option to do internal vs. external
 * Looks for just any metrics, so you have to reset prometheus to re-test.
-  * Would be better to check for metrics specifically from the test harness specifically in the testing timeframe
+  * Would be better to check for metrics specifically from the test harness
+    specifically in the testing timeframe
