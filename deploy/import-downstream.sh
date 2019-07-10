@@ -1,5 +1,5 @@
 #!/bin/sh
-oc import-image prometheus:v2.11.104 --from=registry.redhat.io/openshift3/prometheus:v3.11.104-14 --confirm
+oc import-image prometheus:v2.11.0 --from=registry.redhat.io/openshift3/prometheus:v3.11.104-14 --confirm
 oc import-image prometheus-operator --from=registry.redhat.io/openshift3/ose-prometheus-operator --confirm
 oc import-image prometheus-configmap-reloader --from=registry.redhat.io/openshift3/ose-configmap-reloader --confirm
 oc import-image prometheus-config-reloader --from=registry.redhat.io/openshift3/ose-prometheus-config-reloader --confirm

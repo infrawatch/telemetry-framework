@@ -24,5 +24,5 @@ oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry"
 watch -n5 oc get pods
 
 # teardown the environment when done (requires interaction)
-./deploy.sh DELETE
-watch -n10 oc get all
+echo "Your environment should now be ready."
+echo "-- To teardown your environment, run:   ./deploy.sh DELETE"
