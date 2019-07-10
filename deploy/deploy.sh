@@ -62,43 +62,33 @@ declare -a application_list=(
 )
 
 create() {
-    # create our objects by building a list
-    built_list=""
     object_list=("$@")
-    for spec in ${object_list[@]}; do
-        built_list+=" -f $spec"
-    done
-
-    oc create --save-config=true $built_list
+    # shellcheck disable=SC2068
+    oc create --save-config=true ${object_list[@]/#/-f }
 }
 
 delete() {
-    # delete our objects by building a list
-    built_list=""
     object_list=("$@")
-    for (( idx=${#object_list[@]}-1 ; idx >= 0 ; idx-- )); do
-        built_list+=" -f ${object_list[idx]}"
-    done
-
-    oc delete --wait=true $built_list
+    # shellcheck disable=SC2068
+    oc delete --wait=true ${object_list[@]/#/-f }
 }
 
 # create the objects
 if [ "$method" == "CREATE" ]; then
-    echo "  * [ii] Creating the operators" ; create ${operator_list[@]}
+    echo "  * [ii] Creating the operators" ; create "${operator_list[@]}"
     echo ""
-    echo "+-----------------------------------------------------------------------+"
-    echo "| Press Ctrl+C when prometheus-operator-1-<unique> is marked as Running |"
-    echo "+-----------------------------------------------------------------------+"
+    echo "+--------------------------------------------------------+"
+    echo "| Waiting for prometheus-operator deployment to complete |"
+    echo "+--------------------------------------------------------+"
     echo ""
-    trap ' ' INT
-    oc get pods -w
-    echo "  * [ii] Creating the application" ; create ${application_list[@]}
+    oc rollout status dc/prometheus-operator
+    oc get pods
+    echo "  * [ii] Creating the application" ; create "${application_list[@]}"
 fi
 
 # delete the objects
 if [ "$method" == "DELETE" ]; then
-    echo "  * [ii] Deleting the application" ; delete ${application_list[@]}
+    echo "  * [ii] Deleting the application" ; delete "${application_list[@]}"
     echo ""
     echo "+--------------------------------------------------------+"
     echo "| Press Ctrl+C when only operators are marked as Running |"
@@ -106,7 +96,7 @@ if [ "$method" == "DELETE" ]; then
     echo ""
     trap ' ' INT
     oc get pods -w
-    echo "  * [ii] Deleting the operators" ; delete ${operator_list[@]} ; oc delete service alertmanager-operated prometheus-operated
+    echo "  * [ii] Deleting the operators" ; delete "${operator_list[@]}" ; oc delete service alertmanager-operated prometheus-operated
 fi
 
 echo "-- Completed."
