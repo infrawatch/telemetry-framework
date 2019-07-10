@@ -1,2 +1,28 @@
-oc import-image coreos/prometheus-operator:v0.25.0 --from=quay.io/coreos/prometheus-operator:v0.25.0 --confirm
-oc import-image coreos/configmap-reload:v0.0.1 --from=quay.io/coreos/configmap-reload:v0.0.1 --confirm
+#!/bin/sh
+#
+# See the README.md file for an explanation on why some ImageStreams have tags
+# other than 'latest'
+
+# Version v2.11.0 is here because the Prometheus Operator in use requires a
+# major version of '2' and the version format of vMajor.Minor.Patch
+oc import-image prometheus:v2.11.0 --from=quay.io/openshift/origin-prometheus:v3.11 --confirm
+oc import-image prometheus-operator:latest --from=quay.io/openshift/origin-prometheus-operator:v3.11 --confirm
+oc import-image prometheus-configmap-reloader:latest --from=quay.io/openshift/origin-configmap-reload:v3.11 --confirm
+oc import-image prometheus-config-reloader:latest --from=quay.io/openshift/origin-prometheus-config-reloader:v3.11 --confirm
+
+# Deployment of the Prometheus Alertmanager from the Operator also requires a
+# specific version format which effectively assumes a version of 0.15.0.
+oc import-image prometheus-alertmanager:v0.15.0 --from=quay.io/openshift/origin-prometheus-alertmanager:v3.11 --confirm
+
+# Version 1.4-6 here is used to reference the expected downstream version from
+# the template and to provide some additional context for understanding the
+# mapping of upstream to downstream versions of the qdrouterd container image.
+oc import-image amq-interconnect:1.4-6 --from=quay.io/interconnectedcloud/qdrouterd:1.7.0 --confirm
+oc import-image amq-interconnect-operator:latest --from=quay.io/interconnectedcloud/qdr-operator:1.0.0-beta2 --confirm
+
+# Currently we don't have a robust release process for the Smart Gateway or
+# corresponding Operator, so we just pull the latest version down for now.
+oc import-image smart-gateway:latest --from=quay.io/redhat-service-assurance/smart-gateway:latest --confirm
+oc import-image smart-gateway-operator:latest --from=quay.io/redhat-service-assurance/smart-gateway-operator:latest --confirm
+
+oc set image-lookup prometheus prometheus-operator prometheus-configmap-reloader prometheus-config-reloader prometheus-alertmanager amq-interconnect amq-interconnect-operator smart-gateway smart-gateway-operator
