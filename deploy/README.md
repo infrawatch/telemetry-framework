@@ -4,6 +4,21 @@ This directory contains sample configurations for deployment of the Telemetry
 Framework leverage Operators for the deployment. The contents here are
 currently a work in a progress.
 
+> **A word on the versions**
+>
+> In the `import-downstream.sh` and `import-upstream.sh` scripts we attempt to
+> hook into specific versions for deployment from the source registry. When
+> importing those into our ImageStream source for delivery of the images from
+> the internal OpenShift registry, we often use `latest` where possible. In
+> certain instances an Operator or container artifact may require a specific
+> version format, and thus is reflected in the container image tag imported
+> into the internal registry.
+>
+> In the future we hope to better align the versions across the various
+> ImageStreams and to build a more consistent view between the deployment
+> methods. It's possible our issues will be resolved with the migration to the
+> Operator Lifecycle Manager as well.
+
 # Quickstart (Minishift)
 
 The following is a quickstart guide on deploying SAF into a minishift created
