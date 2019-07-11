@@ -1,7 +1,7 @@
 #!/bin/sh
-minishift start
 oc login -u system:admin
 oc new-project sa-telemetry
+
 openssl req -new -x509 -batch -nodes -days 11000 \
         -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
         -out qdr-server-certs/tls.crt \
@@ -21,7 +21,6 @@ oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry"
 
 # deploy the environment (requires interaction)
 ./deploy.sh
-watch -n5 oc get pods
 
 # teardown the environment when done (requires interaction)
 echo "Your environment should now be ready."

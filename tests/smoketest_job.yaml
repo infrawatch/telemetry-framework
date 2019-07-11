@@ -5,13 +5,14 @@ metadata:
 spec:
   parallelism: 1
   completions: 1
+  backoffLimit: 1
 spec:
   template:
     metadata:
       labels:
         name: saf-smoketest
     spec:
-      restartPolicy: OnFailure
+      restartPolicy: Never
       containers:
         - name: smoketest
           image: tripleomaster/centos-binary-collectd:current-tripleo-rdo
