@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # Runs on the dev/CI machine to execute the test harness job in the cluster
 # Requires:

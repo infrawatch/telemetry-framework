@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # Executes inside the test harness container to start collectd and look for resulting metrics in prometheus
 PROMETHEUS=${PROMETHEUS:-"prometheus-operated.sa-telemetry.svc.cluster.local:9090"}

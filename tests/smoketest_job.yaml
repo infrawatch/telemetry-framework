@@ -5,7 +5,6 @@ metadata:
 spec:
   parallelism: 1
   completions: 1
-  backoffLimit: 1
 spec:
   template:
     metadata:

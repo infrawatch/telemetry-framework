@@ -2,7 +2,7 @@ language: minimal
 sudo: required
 
 before_install:
-- tests/travis-ci/install-and-run-ocp.sh
+- tests/install-and-run-ocp.sh
 
 install:
 - sudo add-apt-repository ppa:ansible/ansible-2.8 -y
@@ -13,7 +13,7 @@ script:
 - cd deploy
 - ./quickstart_upstream.sh
 - oc rollout status deployment.apps/qdr-white
-- oc rollout status statefulset.apps/prometheus-white 
+- oc rollout status statefulset.apps/prometheus-white
 - while oc get pods -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}' | grep False; do echo "waiting for pods to be ready"; oc get po; sleep 5; done
 - cd ../tests
 - ./smoketest.sh
