@@ -1,4 +1,4 @@
-# Deployment using Operators
+# SAF Deployment using Operators
 
 This directory contains sample configurations for deployment of the Telemetry
 Framework leverage Operators for the deployment. The contents here are
@@ -19,7 +19,7 @@ currently a work in a progress.
 > methods. It's possible our issues will be resolved with the migration to the
 > Operator Lifecycle Manager as well.
 
-# Quickstart (Minishift)
+## Quickstart (Minishift)
 
 The following is a quickstart guide on deploying SAF into a minishift created
 OpenShift environment. It will allow for SAF to be started for development
@@ -54,8 +54,7 @@ purposes, and is not intended for production environments.
     ./deploy.sh DELETE
     watch -n10 oc get all
 
-
-# Routes and Certificates
+## Routes and Certificates
 
 In order to get the remote QDR connections through the OpenShift operator, we
 need to use TLS/SSL certificates. The following two commands will first create
@@ -74,7 +73,7 @@ the OpenShift route to Passthrough mode to port 5671.
 
     oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
 
-# Importing ImageStreams
+## Importing ImageStreams
 
 In order to better separate between upstream and downstream locations of
 images, we've made use of
@@ -84,7 +83,7 @@ To import the downstream container images into the local registry, run the
 `./import-downstream.sh` script which will configure the appropriate Image
 Streams for the Service Assurance Framework components.
 
-# Generating Appropriate Manifests
+## Generating Appropriate Manifests
 
 The manifests provided here are used to request the appropriate state within
 Kubernetes to allow for the Service Assurance Framework to exist as intended.
@@ -116,7 +115,7 @@ environment variables like so:
       -e "imagestream_namespace=$(oc project --short)" \
       deploy_builder.yml
 
-# Instantiating Service Assurance Framework
+## Instantiating Service Assurance Framework
 
 After executing the above prerequisite steps, we need to patch a node (or
 nodes) to allow for the scheduling of the Smart Gateway by the Operator. To do
@@ -127,3 +126,44 @@ that, run the following command:
 Then simply run the `deploy.sh` script. You will need to follow the
 instructions during the script as it will pause waiting for the successful
 completion at a couple of steps.
+
+## Internals
+
+Sections for implementation details that are helpful for developers
+
+### Labels
+
+Here is a data dictionary of our labels; not including auto-generated ones.
+
+Currently we are in the process of refining the label set, so this will
+temporarily document the old vs. the new. This will become canonical when the
+work is complete.
+
+#### BEFORE
+
+| **Label Key**         | **On Types**                   | **Values**     | **Notes**  |
+|-----------------------|--------------------------------|----------------|------------|
+| alertmanager          | Pod                            | sa             | This comes from prometheus-operator |
+| app                   | Pod, Service, DeploymentConfig | alertmanager, prometheus-operator, prometheus, prometheus-white,  sa-telemetry-alertmanager | The prometheus has a label app=prometheus, and the smart-gateway has app=prometheus-white   We should standardize this to name all components by their proper names and not use it for additional metadata (white) |
+| application           | Pod, Service, ReplicaSet       | qdr-white | This comes from qdr-operator |
+| name                  | Pod, ReplicaSet, Job, SmartGateway, Qdr  | qdr-operator, saf-smoketest, smart-gateway-operator, white, qdr-white | There is already metadata.name We should standardize this to 'app'  |
+| operated-alertmanager | Service                        | true | These come from prometheus-operator |
+| operated-prometheus   | Service                        | true | These come from prometheus-operator |
+| prometheus            | Pod, StatefulSet               | white, prometheus-sa-telemetry  | The 'white' value should move to 'sa-affinity'|
+| qdr_cr                | Pod, Service, ReplicaSet       | qdr-white | We should standardize this to 'app' but remove extra metadata (white) |
+| sa-app                | Pod                            | prometheus-white | We should standardize this to 'app' but remove extra metadata (white) |
+| sa-app-white          | ServiceMonitor                 | prometheus-white | We should standardize this to 'app' but remove extra metadata (white) |
+| sa-telemetry-app-white| ServiceMonitor                 | prometheus-white | We should standardize this to 'app' but remove extra metadata (white) |
+| smartgateway          | Service                        | white     |     |
+
+#### AFTER (Proposed)
+
+| **Label Key**         | **On Types**                   | **Values**     | **Notes**  |
+|-----------------------|--------------------------------|----------------|------------|
+| alertmanager          | Pod                            | sa             | This comes from prometheus-operator |
+| app                   | Pod, Service, DeploymentConfig | alertmanager, prometheus, prometheus-operator, qdr, qdr-operator, smart-gateway, smart-gateway-operator | Primary way to identify a specific component |
+| application           | Pod, Service, ReplicaSet       | qdr-white | This comes from qdr-operator |
+| operated-alertmanager | Service                        | true | These come from prometheus-operator |
+| operated-prometheus   | Service                        | true | These come from prometheus-operator |
+| qdr_cr                | Pod, Service, ReplicaSet       | qdr-white | Where does this come from? |
+| sa-affinity           | Pod, Service                   | white | To identify a component in a specific affinity group |

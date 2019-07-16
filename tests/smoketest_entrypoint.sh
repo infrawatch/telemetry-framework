@@ -10,7 +10,7 @@ PROMETHEUS=${PROMETHEUS:-"prometheus-operated.sa-telemetry.svc.cluster.local:909
 # Wait until collectd appears to be up and running
 retries=3
 until [ $retries -eq 0 ] || grep "Initialization complete, entering read-loop" /tmp/collectd_output; do
-  retries=$[$retries-1]
+  retries=$(($retries-1))
   echo "Sleeping for 3 seconds waiting for collectd to enter read-loop"
   sleep 3
 done

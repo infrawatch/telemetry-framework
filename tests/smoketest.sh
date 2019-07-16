@@ -40,6 +40,10 @@ echo "*** [INFO] Logs from smart gateway..."
 oc logs "$(oc get pod -l deploymentconfig=white-smartgateway -o jsonpath='{.items[0].metadata.name}')"
 echo
 
+echo "*** [INFO] Logs from smart gateway operator..."
+oc logs "$(oc get pod -l app=smart-gateway-operator -o jsonpath='{.items[0].metadata.name}')"
+echo
+
 echo "*** [INFO] Logs from prometheus..."
 oc logs "$(oc get pod -l prometheus=white -o jsonpath='{.items[0].metadata.name}')" -c prometheus
 
