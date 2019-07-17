@@ -1,4 +1,4 @@
-# SAF Deployment using Operators
+# Service Assurance Framework Deployment using Operators
 
 This directory contains sample configurations for deployment of the Telemetry
 Framework leverage Operators for the deployment. The contents here are
@@ -166,4 +166,3 @@ work is complete.
 | operated-alertmanager | Service                        | true | These come from prometheus-operator |
 | operated-prometheus   | Service                        | true | These come from prometheus-operator |
 | qdr_cr                | Pod, Service, ReplicaSet       | qdr-white | Where does this come from? |
-| sa-affinity           | Pod, Service                   | white | To identify a component in a specific affinity group |

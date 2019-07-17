@@ -17,7 +17,6 @@ spec:
   podMetadata:
     labels:
       app: prometheus
-      sa-affinity: white
   replicas: 1
   resources:
     requests:
