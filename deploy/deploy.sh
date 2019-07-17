@@ -134,6 +134,8 @@ EOSM
 # create the objects
 if [ "$method" == "CREATE" ]; then
     echo "  * [ii] Creating the operators" ; create "${operator_list[@]}"
+    echo "  * [ii] Waiting for prometheus-operator deployment to complete"
+    until oc rollout status dc/prometheus-operator; do sleep 3; done
     echo ""
     echo "+---------------------------------------------------+"
     echo "| Waiting for CRDs to become established in the API |"

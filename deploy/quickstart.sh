@@ -1,6 +1,24 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
+# Usage:
+#
+#  Upstream containers: ./quickstart.sh
+#  Downstream containers: ./quickstart.sh --downstream-secret=~/6340056-cloudops-pull-secret.yaml
 oc login -u system:admin
 oc new-project sa-telemetry
+
+
+# import container images
+if [[ "$*" =~ --downstream-secret=(.*) ]]; then
+    echo "Importing containers from downstream"
+    eval secret_file="${BASH_REMATCH[1]}"  # eval is for ~ expansion
+    # shellcheck disable=SC2154
+    oc create -f "${secret_file}"
+    ./import-downstream.sh
+else
+    echo "Importing containers from upstream"
+    ./import-upstream.sh
+fi
 
 openssl req -new -x509 -batch -nodes -days 11000 \
         -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
@@ -16,8 +34,15 @@ ansible-playbook \
 # need to patch a node in order to allow the current version of the SGO to deploy a SG
 oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry", "node": "white"}}}'
 
-# import downstream container images
-./import-upstream.sh
+# import container images
+if [[ "$*" =~ --downstream-secret=(.*) ]]; then
+    echo "Importing containers from downstream"
+    oc create -f ${BASH_REMATCH[1]}
+    ./import-downstream.sh
+else
+    echo "Importing containers from upstream"
+    ./import-upstream.sh
+fi
 
 # deploy the environment (requires interaction)
 ./deploy.sh
