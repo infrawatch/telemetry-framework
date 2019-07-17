@@ -9,7 +9,7 @@ spec:
   template:
     metadata:
       labels:
-        name: saf-smoketest
+        app: saf-smoketest
     spec:
       restartPolicy: Never
       containers:

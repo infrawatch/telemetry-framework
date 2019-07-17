@@ -4,8 +4,7 @@ metadata:
   creationTimestamp: null
   name: sa-telemetry-rules
   labels:
-      prometheus: prometheus-sa-telemetry
-      role: prometheus-rulefiles
+    role: sa-telemetry
 spec:
   groups:
   - interval: 30s
