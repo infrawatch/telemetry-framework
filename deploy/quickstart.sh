@@ -7,19 +7,6 @@
 oc login -u system:admin
 oc new-project sa-telemetry
 
-
-# import container images
-if [[ "$*" =~ --downstream-secret=(.*) ]]; then
-    echo "Importing containers from downstream"
-    eval secret_file="${BASH_REMATCH[1]}"  # eval is for ~ expansion
-    # shellcheck disable=SC2154
-    oc create -f "${secret_file}"
-    ./import-downstream.sh
-else
-    echo "Importing containers from upstream"
-    ./import-upstream.sh
-fi
-
 openssl req -new -x509 -batch -nodes -days 11000 \
         -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
         -out qdr-server-certs/tls.crt \
@@ -37,7 +24,9 @@ oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry"
 # import container images
 if [[ "$*" =~ --downstream-secret=(.*) ]]; then
     echo "Importing containers from downstream"
-    oc create -f ${BASH_REMATCH[1]}
+    eval secret_file="${BASH_REMATCH[1]}"  # eval is for ~ expansion
+    # shellcheck disable=SC2154
+    oc create -f "${secret_file}"
     ./import-downstream.sh
 else
     echo "Importing containers from upstream"
