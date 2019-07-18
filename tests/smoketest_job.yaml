@@ -9,9 +9,9 @@ spec:
   template:
     metadata:
       labels:
-        name: saf-smoketest
+        app: saf-smoketest
     spec:
-      restartPolicy: OnFailure
+      restartPolicy: Never
       containers:
         - name: smoketest
           image: tripleomaster/centos-binary-collectd:current-tripleo-rdo

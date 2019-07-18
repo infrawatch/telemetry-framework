@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: qdr-operator
+      app: qdr-operator
   template:
     metadata:
       labels:
-        name: qdr-operator
+        app: qdr-operator
     spec:
       serviceAccountName: qdr-operator
       containers:

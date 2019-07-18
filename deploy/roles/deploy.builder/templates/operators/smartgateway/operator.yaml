@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: smart-gateway-operator
+      app: smart-gateway-operator
   template:
     metadata:
       labels:
-        name: smart-gateway-operator
+        app: smart-gateway-operator
     spec:
       serviceAccountName: smart-gateway-operator
       containers:

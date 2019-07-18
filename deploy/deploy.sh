@@ -13,7 +13,6 @@ echo "  * [OK] Switched to sa-telemetry project"
 # setup our default method
 method="CREATE"
 
-
 # checking if we're deleting or creating
 if [[ "$1" != "" ]]; then
     if [[ "$1" != "CREATE" && "$1" != "DELETE" ]]; then
@@ -50,15 +49,22 @@ declare -a application_list=(
     'service-assurance/prometheus/service_account.yaml'
     'service-assurance/prometheus/role.yaml'
     'service-assurance/prometheus/rolebinding.yaml'
-    'service-assurance/prometheus/service_monitor.yaml'
     'service-assurance/prometheus/prometheus.yaml'
     'service-assurance/prometheus/route.yaml'
     'service-assurance/prometheusrules/prometheusrules.yaml'
     'service-assurance/alertmanager/service_account.yaml'
     'service-assurance/alertmanager/secret.yaml'
     'service-assurance/alertmanager/alertmanager.yaml'
-    'service-assurance/alertmanager/service.yaml'
     'service-assurance/alertmanager/route.yaml'
+)
+
+declare -a crds_to_wait_for=(
+    'alertmanagers.monitoring.coreos.com'
+    'prometheuses.monitoring.coreos.com'
+    'prometheusrules.monitoring.coreos.com'
+    'qdrs.interconnectedcloud.github.io'
+    'servicemonitors.monitoring.coreos.com'
+    'smartgateways.smartgateway.infra.watch'
 )
 
 create() {
@@ -73,17 +79,79 @@ delete() {
     oc delete --wait=true ${object_list[@]/#/-f }
 }
 
+wait_for_crds(){
+    while true; do
+        not_ready=0
+        # shellcheck disable=SC2068
+        for crd in ${crds_to_wait_for[@]}; do
+            echo -n "Checking if '${crd}' is Established..."
+            estab=$(oc get crd "${crd}" -o jsonpath='{.status.conditions[?(@.type=="Established")].status}')
+            if [ "${estab}" != "True" ]; then
+                echo "Not Established"
+                not_ready=1
+                break
+            fi
+            echo "Established"
+        done
+        if [ ${not_ready} -eq 0 ]; then
+            break
+        fi
+        echo "Still waiting on CRDs..."
+        sleep 3;
+    done
+
+    # "there is a race in Kubernetes that the CRD creation finished but the API
+    # is not actually available"
+    # https://github.com/coreos/prometheus-operator/issues/1866#issuecomment-419191907
+    #
+    # This code (ideally this whole function) should go away when we add better
+    # failure handling in the operator
+    # https://github.com/redhat-service-assurance/smart-gateway-operator/issues/6
+    echo 'Confirming we can instantiate a ServiceMonitor'
+    until oc create -f - <<EOSM
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dummy-race-condition-checker
+spec:
+  endpoints:
+    - port: "11111"
+  selector:
+    matchLabels:
+     dummy-race-condition-checker: true
+EOSM
+    do
+        sleep 3;
+    done
+    oc delete servicemonitor/dummy-race-condition-checker
+
+    # Nothing above actually works to solve the problem, so instead of sleep 300
+    # we force the SGO to restart, which DOES solve the problem
+    echo 'Restarting SGO to clear API condition'
+    oc delete pod -l app=smart-gateway-operator
+}
+
 # create the objects
 if [ "$method" == "CREATE" ]; then
     echo "  * [ii] Creating the operators" ; create "${operator_list[@]}"
     echo ""
-    echo "+--------------------------------------------------------+"
-    echo "| Waiting for prometheus-operator deployment to complete |"
-    echo "+--------------------------------------------------------+"
+    echo "+---------------------------------------------------+"
+    echo "| Waiting for CRDs to become established in the API |"
+    echo "+---------------------------------------------------+"
     echo ""
-    oc rollout status dc/prometheus-operator
-    oc get pods
+    wait_for_crds
     echo "  * [ii] Creating the application" ; create "${application_list[@]}"
+    echo "  * [ii] Waiting for QDR deployment to complete"
+    until oc rollout status deployment.apps/qdr-white; do sleep 3; done
+    echo "  * [ii] Waiting for prometheus deployment to complete"
+    until oc rollout status statefulset.apps/prometheus-white; do sleep 3; done
+    echo "  * [ii] Waiting for smart-gateway deployment to complete"
+    until oc rollout status deploymentconfig.apps.openshift.io/white-smartgateway; do sleep 3; done
+    echo "  * [ii] Waiting for all pods to show Ready"
+    while oc get pods -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}' | grep False; do
+        oc get pods
+        sleep 3
+    done
 fi
 
 # delete the objects

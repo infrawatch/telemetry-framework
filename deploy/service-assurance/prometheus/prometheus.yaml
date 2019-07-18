@@ -1,8 +1,6 @@
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
-  labels:
-    prometheus: prometheus-sa-telemetry
   name: white
   namespace: sa-telemetry
 spec:
@@ -18,15 +16,14 @@ spec:
       port: metrics
   podMetadata:
     labels:
-      sa-app: prometheus-white
+      app: prometheus
   replicas: 1
   resources:
     requests:
       memory: 400Mi
   ruleSelector:
     matchLabels:
-      prometheus: prometheus-sa-telemetry
-      role: prometheus-rulefiles
+      role: sa-telemetry
   securityContext:
     nonroot: true
   serviceAccountName: prometheus-sa

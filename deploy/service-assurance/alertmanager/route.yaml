@@ -5,6 +5,6 @@ metadata:
 spec:
   to:
     kind: Service
-    name: alertmanager
+    name: alertmanager-operated
     weight: 100
   wildcardPolicy: None

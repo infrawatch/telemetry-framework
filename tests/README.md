@@ -51,6 +51,3 @@ These are some things that would make this better:
 * Would like to actually test via the AMQP+TLS interface as the system boundary
   instead of directly to the internal AMQP broker
   * Option to do internal vs. external
-* Looks for just any metrics, so you have to reset prometheus to re-test.
-  * Would be better to check for metrics specifically from the test harness
-    specifically in the testing timeframe

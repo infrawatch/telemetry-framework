@@ -1,0 +1,16 @@
+language: minimal
+sudo: required
+
+before_install:
+- tests/install-and-run-ocp.sh
+
+install:
+- sudo add-apt-repository ppa:ansible/ansible-2.8 -y
+- sudo apt-get update
+- sudo apt-get install -y ansible openssl wget
+
+script:
+- cd deploy
+- ./quickstart_upstream.sh
+- cd ../tests
+- ./smoketest.sh
