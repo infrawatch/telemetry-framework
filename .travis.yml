@@ -11,6 +11,6 @@ install:
 
 script:
 - cd deploy
-- ./quickstart_upstream.sh
+- ./quickstart.sh
 - cd ../tests
 - ./smoketest.sh
