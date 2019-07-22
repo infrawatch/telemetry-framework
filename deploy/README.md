@@ -25,6 +25,8 @@ The following is a quickstart guide on deploying SAF into a minishift created
 OpenShift environment. It will allow for SAF to be started for development
 purposes, and is not intended for production environments.
 
+**NOTE:** The canonical version of this script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
+
     minishift start
     oc login -u system:admin
     oc new-project sa-telemetry
