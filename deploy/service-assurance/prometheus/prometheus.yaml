@@ -29,7 +29,7 @@ spec:
   serviceAccountName: prometheus-sa
   serviceMonitorSelector:
     matchLabels:
-      smartgateway: white
+      app: smart-gateway
   storage:
     class: ""
     resources: {}
