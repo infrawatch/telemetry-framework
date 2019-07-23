@@ -12,13 +12,8 @@ oc create -f smoketest_job.yaml
 
 # Trying to find a less brittle test than a timeout, but this is a reasonable starting point
 TIMEOUT=300s
-if oc wait --for=condition=complete --timeout=${TIMEOUT} job/saf-smoketest; then
-    echo "*** [SUCCESS] Smoke test job completed successfully"
-    RET=0
-else
-    echo "*** [FAILURE] Smoke test job still not succeeded after ${TIMEOUT}"
-    RET=1
-fi
+oc wait --for=condition=complete --timeout=${TIMEOUT} job/saf-smoketest
+RET=$?
 
 echo "*** [INFO] Showing oc get all..."
 oc get all
@@ -46,5 +41,13 @@ echo
 
 echo "*** [INFO] Logs from prometheus..."
 oc logs "$(oc get pod -l prometheus=white -o jsonpath='{.items[0].metadata.name}')" -c prometheus
+echo
+
+if [ $RET -eq 0 ]; then
+    echo "*** [SUCCESS] Smoke test job completed successfully"
+else
+    echo "*** [FAILURE] Smoke test job still not succeeded after ${TIMEOUT}"
+fi
+echo
 
 exit $RET
