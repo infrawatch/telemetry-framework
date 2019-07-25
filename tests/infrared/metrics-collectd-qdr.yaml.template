@@ -1,0 +1,36 @@
+---
+tripleo_heat_templates:
+    - /usr/share/openstack-tripleo-heat-templates/environments/metrics-collectd-qdr.yaml
+
+custom_templates:
+    parameter_defaults:
+        CollectdAmqpInterval: 1
+        CollectdDefaultPollingInterval: 1
+        CollectdExtraPlugins:
+            - cpu
+            - df
+            - hugepages
+            - ovs_events
+            - ovs_stats
+            - load
+            - uptime
+        DnsServers: ["10.19.42.41","10.11.5.19","10.5.30.160"]
+        ExtraConfig:
+            collectd::plugin::cpu::valuespercentage: true
+            collectd::plugin::cpu::reportbycpu: true
+            collectd::plugin::cpu::reportbystate: true
+            collectd::plugin::cpu::reportnumcpu: false
+            collectd::plugin::df::ignoreselected: true
+            collectd::plugin::load::reportrelative: true
+            collectd::plugin::interface::ignoreselected: true
+            collectd::plugin::virt::connection: "qemu:///system"
+            collectd::plugin::virt::hostname_format: "hostname uuid"
+            collectd::plugin::virt::extra_stats: "cpu_util disk disk_err domain_state pcpu fs_info job_stats_background perf vcpupin"
+        MetricsQdrConnectors:
+            - host: <<AMQP_HOST>>
+              port: 443
+              role: edge
+              verifyHostname: false
+              sslProfile: sslProfile
+        MetricsQdrSSLProfiles:
+            - name: sslProfile
