@@ -24,8 +24,8 @@ echo; echo
 
 # Checks that the metrics actually appear in prometheus
 echo "[INFO] Checking for recent CPU metrics..."
-curl -g "${PROMETHEUS}/api/v1/query?" --data-urlencode 'query=sa_collectd_cpu_total{cpu="0",type="user"}[3s]' 2>&2 | tee /tmp/query_output
+curl -g "${PROMETHEUS}/api/v1/query?" --data-urlencode 'query=sa_collectd_cpu_total{cpu="0",type="user"}[3m]' 2>&2 | tee /tmp/query_output
 echo; echo
 
 # The egrep exit code is the result of the test and becomes the container/pod/job exit code
-egrep '"result":\[{"metric":{"__name__":"sa_collectd_cpu_total","cpu":"0","endpoint":"metrics","exported_instance":"saf-smoketest-.*","service":"white-smartgateway","type":"user"},"values":\[\[.+,".+"\]' /tmp/query_output
+egrep '"result":\[{"metric":{"__name__":"sa_collectd_cpu_total","cpu":"0","endpoint":"prom-http","exported_instance":"saf-smoketest-.*","service":"white-smartgateway","type":"user"},"values":\[\[.+,".+"\]' /tmp/query_output

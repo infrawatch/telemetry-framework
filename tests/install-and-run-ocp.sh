@@ -9,8 +9,14 @@ wget https://github.com/openshift/origin/releases/download/${OC_VER}/${OC_NAME}.
 tar -xvzf ${OC_NAME}.tar.gz
 sudo mv ${OC_NAME}/oc /usr/local/bin/
 
+sudo bash -c 'cat > /etc/docker/daemon.json <<EOF
+{
+    "registry-mirrors": ["https://mirror.gcr.io"],
+    "mtu": 1460,
+    "insecure-registries": ["172.30.0.0/16"]
+}
+EOF'
+
 # Start the containerized openshift
-sudo sed -i "s/\DOCKER_OPTS=\"/DOCKER_OPTS=\"--insecure-registry=172.30.0.0\/16 /g" /etc/default/docker
-sudo cat /etc/default/docker
-sudo service docker restart
+sudo systemctl restart docker.service
 oc cluster up --public-hostname=$(hostname) #--base-dir /var/lib/minishift
