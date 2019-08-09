@@ -5,7 +5,7 @@
 
 # Version v2.11.0 is here because the Prometheus Operator in use requires a
 # major version of '2' and the version format of vMajor.Minor.Patch
-oc import-image prometheus:v2.11.0 --from=quay.io/openshift/origin-prometheus:v3.11 --confirm
+oc import-image prometheus:latest --from=quay.io/openshift/origin-prometheus:v3.11 --confirm
 oc import-image prometheus-operator:latest --from=quay.io/openshift/origin-prometheus-operator:v3.11 --confirm
 oc import-image prometheus-configmap-reloader:latest --from=quay.io/openshift/origin-configmap-reload:v3.11 --confirm
 oc import-image prometheus-config-reloader:latest --from=quay.io/openshift/origin-prometheus-config-reloader:v3.11 --confirm

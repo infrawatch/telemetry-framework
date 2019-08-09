@@ -4,7 +4,9 @@ metadata:
   name: white
   namespace: sa-telemetry
 spec:
-  version: v2.11.0
+  version: v2.3.2
+  tag: latest
+  baseImage: {{ registry_path }}/{{ imagestream_namespace }}/prometheus
   alerting:
     alert_relabel_configs:
     - regex: (.+)\d+
@@ -38,4 +40,4 @@ spec:
       spec:
         resources:
           requests:
-            storage: 20G
+            storage: {{ prometheus_pvc_storage_request }}

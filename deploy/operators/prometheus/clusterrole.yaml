@@ -1,7 +1,7 @@
 apiVersion: authorization.openshift.io/v1
 kind: ClusterRole
 metadata:
-  name: prometheus-operator
+  name: prometheus-operator-sa-telemetry
 rules:
 - apiGroups:
   - extensions

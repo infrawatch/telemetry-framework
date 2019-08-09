@@ -32,6 +32,7 @@ spec:
         - --alertmanager-default-base-image={{ registry_path }}/{{ imagestream_namespace }}/prometheus-alertmanager
         - --prometheus-config-reloader={{ registry_path }}/{{ imagestream_namespace }}/prometheus-config-reloader:latest
         - --prometheus-default-base-image={{ registry_path }}/{{ imagestream_namespace }}/prometheus
+        - --namespace=sa-telemetry
         image: {{ registry_path }}/{{ imagestream_namespace }}/prometheus-operator
         imagePullPolicy: IfNotPresent
         name: prometheus-operator
