@@ -5,6 +5,7 @@
 OC_VER=v3.11.0
 OC_HASH=0cbc58b
 OC_NAME="openshift-origin-client-tools-${OC_VER}-${OC_HASH}-linux-64bit"
+
 wget https://github.com/openshift/origin/releases/download/${OC_VER}/${OC_NAME}.tar.gz
 tar -xvzf ${OC_NAME}.tar.gz
 sudo mv ${OC_NAME}/oc /usr/local/bin/
