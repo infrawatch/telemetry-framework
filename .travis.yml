@@ -13,4 +13,4 @@ script:
 - cd deploy
 - ./quickstart.sh
 - cd ../tests
-- ./smoketest.sh
+- ./smoketest/smoketest.sh
