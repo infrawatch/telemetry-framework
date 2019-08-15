@@ -17,7 +17,7 @@ oc import-image prometheus-alertmanager:v0.15.0 --from=quay.io/openshift/origin-
 # Version 1.4-6 here is used to reference the expected downstream version from
 # the template and to provide some additional context for understanding the
 # mapping of upstream to downstream versions of the qdrouterd container image.
-oc import-image amq-interconnect:1.4-6 --from=quay.io/interconnectedcloud/qdrouterd:1.7.0 --confirm
+oc import-image amq-interconnect:1.4-7 --from=quay.io/interconnectedcloud/qdrouterd:1.7.0 --confirm
 oc import-image amq-interconnect-operator:latest --from=quay.io/interconnectedcloud/qdr-operator:1.0.0-beta2 --confirm
 
 # Currently we don't have a robust release process for the Smart Gateway or
