@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: saf-performance-test
+spec:
+  parallelism: 1
+  completions: 1
+spec:
+  template:
+    metadata:
+      label:
+        name: saf-performance-test
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: performance-test
+          image: 172.30.1.1:5000/sa-telemetry/performance-test:dev
+          command:
+            - /performance-test/exec/performance-test-entrypoint.sh
+          volumeMounts:
+          - name: test-configs
+            mountPath: /performance-test/config/test-configs.yml
+            subPath: test-configs.yml
+          - name: entrypoint-script
+            mountPath: /performance-test/exec/performance-test-entrypoint.sh
+            subPath: performance-test-entrypoint.sh
+          - name: collectd-config
+            mountPath: /etc/collectd.conf
+            subPath: collectd.conf
+          - name: graph-template
+            mountPath: /performance-test/grafana/graph-template.json
+            subPath: graph-template.json
+          - name: hosts
+            mountPath: /performance-test/config/hosts.json
+            subPath: hosts.json
+      volumes:
+      - name: collectd-config
+        configMap:
+          name: saf-performance-test-collectd-config
+      - name: entrypoint-script
+        configMap:
+          name: saf-performance-test-entrypoint-script
+          defaultMode: 0555
+      - name: test-configs
+        configMap:
+          name: saf-performance-test-configs
+      - name: graph-template
+        configMap:
+          name: grafana-graph-template
+      - name: hosts
+        configMap:
+          name: saf-performance-test-hosts
