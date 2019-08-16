@@ -12,5 +12,5 @@ install:
 script:
 - cd deploy
 - ./quickstart.sh
-- cd ../tests
-- ./smoketest/smoketest.sh
+- cd ../tests/smoketest
+- ./smoketest.sh
