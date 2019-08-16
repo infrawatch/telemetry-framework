@@ -8,7 +8,8 @@
     length: 20
     queries:
       - rate(sa_collectd_total_amqp_processed_message_count[10s])
-      - sa_collectd_cpu_total
+      - rate(sa_collectd_cpu_total[10s])
+      - scrape_samples_scraped
 
 - metadata:
     name: SAF Performance Test 2
@@ -17,9 +18,8 @@
     hosts: 5000
     plugins: 100
     interval: 1
-    length: 30
+    length: 500
     queries:
       - rate(sa_collectd_total_amqp_processed_message_count[10s])
-      - sa_collectd_cpu_total
-
-      
+      - rate(sa_collectd_cpu_total[10s])
+      - scrape_samples_scraped
