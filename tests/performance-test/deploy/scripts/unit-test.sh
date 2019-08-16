@@ -4,7 +4,7 @@
 set -x
 ARGS=()
 
-while getopts l:n:H:p:i:d:h option
+while getopts l:n:H:p:i:d option
 do
     case "${option}"
     in
@@ -14,6 +14,7 @@ do
         p) ARGS+=('-p');ARGS+=("${OPTARG}");;
         i) ARGS+=('-i');ARGS+=("${OPTARG}");;
         d) ARGS+=('-d');ARGS+=("${OPTARG}");;
+        *) ;;
     esac
 done
 

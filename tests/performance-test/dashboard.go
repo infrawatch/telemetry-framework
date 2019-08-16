@@ -26,7 +26,7 @@ func findDsWithUrl(matchURL string, dsList []sdk.Datasource) (*sdk.Datasource, e
 	return nil, errors.New("Data source url not found")
 }
 
-// Setup configures a dashboard object to talk to a grafana instance within a time period
+// Setup configures a dashboard object to talk to a grafana instance within a specified time period
 func (d *Dashboard) Setup(title string, apiKey string, grafUrl string, start time.Time, end time.Time) {
 	log.Print("Setting up grafana client\n")
 
@@ -75,7 +75,7 @@ func (d *Dashboard) NewPrometheusDs(url string) error {
 	return err
 }
 
-// LoadPanelTemplate loads a pre-defined grafana panel template from a file name fn
+// LoadPanelTemplate loads a pre-defined grafana panel template from a file named fn
 func (d *Dashboard) LoadPanelTemplate(fn string) error {
 	var err error
 	d.panelTemplate, err = ioutil.ReadFile(fn)
