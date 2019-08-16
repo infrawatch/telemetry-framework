@@ -14,7 +14,7 @@ $ minishift start
 $ eval $(minishift oc-env)                 # get minishift oc environment into terminal instance
 $ cd $WORKDIR/telemetry-framework/deploy/; ./quickstart.sh
 ```
-More details about deploying SAF on Minishift can be found in the [SAF deployment docs](https://github.com/redhat-service-assurance/telemetry-framework/tree/performance-test/deploy)
+More details about deploying SAF on Minishift can be found in the [SAF deployment docs](../../../deploy/)
 
 The Minishift registry needs to be configured such that a local docker image can be pushed to it. To do this, a new account must be created on Minishift that has admin privledges. The default admin account cannot be used because it does not provide a token with which to login to the registry with docker.
 

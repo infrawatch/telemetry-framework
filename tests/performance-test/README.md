@@ -5,7 +5,7 @@ The performance test provides an automated environment in which to to run stress
 
 Two additional pods are deployed by the performance test: one that hosts a grafana instance and one that executes the testing logic. 
 
-![A Performance Test Dashboard](https://github.com/redhat-service-assurance/telemetry-framework/blob/performance-test/tests/performance-test/images/dashboard.png)
+![A Performance Test Dashboard](images/dashboard.png)
 
 ## Configuring Tests
 
@@ -53,6 +53,6 @@ More information about collectd-tg options can be found  in the [collectd-tg doc
       - rate(sa_collectd_total_amqp_processed_message_count[10s])
       - sa_collectd_cpu_total
 ```
-View the [performance test deployment instructions](https://github.com/redhat-service-assurance/telemetry-framework/tree/performance-test/tests/performance-test/deploy) to launch the performance test on Minishift.
+View the [performance test deployment instructions](deploy/README.md) to launch the performance test on Minishift.
 
 Once each test is completed, a new dashboard will be written to grafana at which all of the queries will be graphed. This can be seen by navigating to `http://<grafana route URL>/dashboards` in a local browser. 
