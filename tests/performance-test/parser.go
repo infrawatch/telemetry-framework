@@ -15,6 +15,7 @@ import (
 var ipaddr string = "127.0.0.1"
 var args []string = []string{}
 
+// test type holds test configuration data
 type test struct {
 	Metadata struct {
 		Name string `yaml:"name"`
@@ -33,6 +34,7 @@ type Parser struct {
 	tests []test
 }
 
+//LoadTests loads in a test onfiguration file for parsing
 func (p *Parser) LoadTests(fn string) error {
 	yamlFile, err := ioutil.ReadFile(fn)
 	if err != nil {
@@ -47,6 +49,7 @@ func (p *Parser) LoadTests(fn string) error {
 	return nil
 }
 
+// ArgStrings generates the correct parameters for a unit test from the test configuration
 func (p Parser) ArgStrings(t test) []string {
 	retArgs := []string{}
 
@@ -76,9 +79,8 @@ func (p Parser) ArgStrings(t test) []string {
 	return retArgs
 }
 
-// Returns time duration for test as time objects. Calculates times relative to now
-// so be careful to call this function right before running a test
-// Additionally, uses local time. BUT, everything else uses UTC standard
+// GetTimes returns time duration for test as time objects in UTC.
+// Calculates times relative to now
 func (p Parser) GetTimes(testIndex int) (time.Time, time.Time) {
 	test := p.tests[testIndex]
 	start := time.Now()
@@ -87,6 +89,7 @@ func (p Parser) GetTimes(testIndex int) (time.Time, time.Time) {
 	return start, end
 }
 
+// Tests provides access to a list of test configuration objects
 func (p Parser) Tests() []test {
 	return p.tests
 }

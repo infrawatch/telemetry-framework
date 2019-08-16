@@ -16,15 +16,17 @@ type Dashboard struct {
 	panelTemplate []byte
 }
 
+//findDsWithUrl searches for a datasource within a grafana instance based on URL
 func findDsWithUrl(matchURL string, dsList []sdk.Datasource) (*sdk.Datasource, error) {
 	for _, dsB := range dsList {
 		if matchURL == dsB.URL {
 			return &dsB, nil
 		}
 	}
-	return nil, errors.New("Url not found")
+	return nil, errors.New("Data source url not found")
 }
 
+// Setup configures a dashboard object to talk to a grafana instance within a time period
 func (d *Dashboard) Setup(title string, apiKey string, grafUrl string, start time.Time, end time.Time) {
 	log.Print("Setting up grafana client\n")
 
@@ -40,6 +42,8 @@ func (d *Dashboard) Setup(title string, apiKey string, grafUrl string, start tim
 	}
 }
 
+// NewPrometheusDs configures a prometheus data source within grafana that is compatable with
+// the dashboard object
 func (d *Dashboard) NewPrometheusDs(url string) error {
 	d.promUrl = url
 	existingDS, err := d.client.GetAllDatasources()
@@ -71,12 +75,14 @@ func (d *Dashboard) NewPrometheusDs(url string) error {
 	return err
 }
 
+// LoadPanelTemplate loads a pre-defined grafana panel template from a file name fn
 func (d *Dashboard) LoadPanelTemplate(fn string) error {
 	var err error
 	d.panelTemplate, err = ioutil.ReadFile(fn)
 	return err
 }
 
+// AddGraph generates a new graph within a grafana dashboard
 func (d *Dashboard) AddGraph(title string, query string) error {
 	log.Printf("Adding graph '%s'", title)
 	row := d.board.AddRow(title)
@@ -97,7 +103,7 @@ func (d *Dashboard) AddGraph(title string, query string) error {
 	return err
 }
 
-//Update dashboard if it alread exists in Grafana. Otherwise, create a new one.
+//Update updates the dashboard if it alread exists in Grafana. Otherwise, create a new one.
 //If the current dashboard is found to already exist, it is deleted and a new
 //board of the same name is written. This is necessary because the API
 //overwrite function cannot dynamically update number of graphs

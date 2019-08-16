@@ -18,10 +18,14 @@ type PerformanceTest struct {
 	end   time.Time
 }
 
+// Err allows for better error handling by blocking class functionality if
+// an error occurs within a performance test. This minimizes the amount
+// of error checks necessary in code
 func (pt *PerformanceTest) Err() error {
 	return pt.err
 }
 
+// InitDashboard generates a new dashboard in grafana with a pre-loaded graph panel template
 func (pt *PerformanceTest) InitDashboard(title string) {
 	if pt.err != nil {
 		return
@@ -59,6 +63,7 @@ func (pt *PerformanceTest) InitDashboard(title string) {
 	pt.err = pt.db.LoadPanelTemplate("/performance-test/grafana/graph-template.json")
 }
 
+//InitParser creates a parser object with the test config file loaded into it
 func (pt *PerformanceTest) InitParser() {
 	if pt.err != nil {
 		return
@@ -67,6 +72,7 @@ func (pt *PerformanceTest) InitParser() {
 	pt.err = pt.p.LoadTests("/performance-test/config/test-configs.yml")
 }
 
+//ExecTest runs a performance test configuration
 func (pt *PerformanceTest) ExecTest(index int) error {
 	var out []byte
 	test := pt.p.Tests()[index]
@@ -89,6 +95,7 @@ func (pt *PerformanceTest) ExecTest(index int) error {
 	return err
 }
 
+//Run executes a sequence of performance tests and generates dashboards and graphs for each in grafana
 func (pt *PerformanceTest) Run() {
 	if pt.err != nil {
 		return
