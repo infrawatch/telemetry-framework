@@ -100,4 +100,4 @@ sequence.
 Monitor the performance test status by watching the job with 
 `oc get job performance-test-job -w`. The job will run for the sum of the lengths
 of all of the tests in the test-config file. Logs can be viewed with 
-`oc logs -f <performance-test-<unique-pod-id>` 
+`oc logs -f performance-test-<unique-pod-id>` 

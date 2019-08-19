@@ -43,14 +43,11 @@ value-lists | collectd-tg option
 hosts | collectd-tg option
 plugins | collectd-tg option
 interval | collectd-tg option
-length | number of seconds the test should run, expressed as an unsigned 
-integer
-queries | list of PromQL queries that will be graphed within the Grafana 
-dashboard
+length | number of seconds the test should run, expressed as an unsigned integer
+queries | list of PromQL queries that will be graphed within the Grafana dashboard
 
 More information about collectd-tg options can be found  in the 
-[collectd-tg docs][1]
-[1]:https://collectd.org/documentation/manpages/collectd-tg.1.shtml
+[collectd-tg docs](https://collectd.org/documentation/manpages/collectd-tg.1.shtml)
 
 # Example Test
 ```yaml
@@ -66,7 +63,7 @@ More information about collectd-tg options can be found  in the
       - rate(sa_collectd_total_amqp_processed_message_count[10s])
       - sa_collectd_cpu_total
 ```
-View the [performance test deployment instructions](deploy/README.md) to launch 
+View the [performance test deployment instructions](deploy/) to launch 
 the performance test on Minishift.
 
 Once each test is completed, a new dashboard will be written to grafana at which

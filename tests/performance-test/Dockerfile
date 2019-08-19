@@ -2,9 +2,7 @@
 FROM golang:1.12.7
 WORKDIR /go/src/performance-test/
 
-COPY ./dashboard.go .
-COPY ./main.go .
-COPY ./parser.go .
+COPY ./dashboard.go ./main.go ./parser.go .
 
 RUN go get gopkg.in/yaml.v2 && \
     go get github.com/grafana-tools/sdk && \
