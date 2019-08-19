@@ -1,7 +1,0 @@
-roles/*
-!roles/.keepit
-!roles/openshift-ansible-roles
-!roles/sa_telemetry_postinstall
-vars/*
-!vars/.keepit
-base-infra-bootstrap/
