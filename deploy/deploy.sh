@@ -29,6 +29,11 @@ declare -a operator_list=(
     'operators/prometheus/clusterrole.yaml'
     'operators/prometheus/clusterrolebinding.yaml'
     'operators/prometheus/operator.yaml'
+    'operators/elasticsearch/01-service-account.yaml'
+    'operators/elasticsearch/02-role.yaml'
+    'operators/elasticsearch/03-role-bindings.yaml'
+    'operators/elasticsearch/04-crd.yaml'
+    'operators/elasticsearch/05-deployment.yaml'
     'operators/qdrouterd/crds/interconnectedcloud_v1alpha1_qdr_crd.yaml'
     'operators/qdrouterd/service_account.yaml'
     'operators/qdrouterd/role.yaml'
@@ -44,8 +49,7 @@ declare -a operator_list=(
 )
 
 declare -a application_list=(
-    'service-assurance/qdrouterd/qdrouterd.yaml'
-    'service-assurance/smartgateway/smartgateway.yaml'
+    'service-assurance/elasticsearch/elasticsearch.yaml'
     'service-assurance/prometheus/service_account.yaml'
     'service-assurance/prometheus/role.yaml'
     'service-assurance/prometheus/rolebinding.yaml'
@@ -56,6 +60,9 @@ declare -a application_list=(
     'service-assurance/alertmanager/secret.yaml'
     'service-assurance/alertmanager/alertmanager.yaml'
     'service-assurance/alertmanager/route.yaml'
+    'service-assurance/qdrouterd/qdrouterd.yaml'
+    'service-assurance/smartgateway/metrics-smartgateway.yaml'
+    'service-assurance/smartgateway/events-smartgateway.yaml'
 )
 
 declare -a crds_to_wait_for=(
@@ -65,6 +72,7 @@ declare -a crds_to_wait_for=(
     'qdrs.interconnectedcloud.github.io'
     'servicemonitors.monitoring.coreos.com'
     'smartgateways.smartgateway.infra.watch'
+    'elasticsearches.logging.openshift.io'
 )
 
 create() {
@@ -136,6 +144,8 @@ if [ "$method" == "CREATE" ]; then
     echo "  * [ii] Creating the operators" ; create "${operator_list[@]}"
     echo "  * [ii] Waiting for prometheus-operator deployment to complete"
     until oc rollout status dc/prometheus-operator; do sleep 3; done
+    echo "  * [ii] Waiting for elasticsearch-operator deployment to complete"
+    until oc rollout status deploy/elasticsearch-operator; do sleep 3; done
     echo ""
     echo "+---------------------------------------------------+"
     echo "| Waiting for CRDs to become established in the API |"
@@ -148,7 +158,11 @@ if [ "$method" == "CREATE" ]; then
     echo "  * [ii] Waiting for prometheus deployment to complete"
     until oc rollout status statefulset.apps/prometheus-white; do sleep 3; done
     echo "  * [ii] Waiting for smart-gateway deployment to complete"
-    until oc rollout status deploymentconfig.apps.openshift.io/cloud1-smartgateway; do sleep 3; done
+    until oc rollout status deploymentconfig.apps.openshift.io/cloud1-notify-smartgateway; do sleep 3; done
+    until oc rollout status deploymentconfig.apps.openshift.io/cloud1-telemetry-smartgateway; do sleep 3; done
+    echo "  * [ii] Waiting for elasticsearch deployment to complete"
+    ES=$(oc get deployment.apps -l cluster-name=elasticsearch --template='{{range .items}}{{.metadata.name}}{{end}}')
+    until oc rollout status deployment.apps/${ES}; do sleep 3; done
     echo "  * [ii] Waiting for all pods to show Ready"
     while oc get pods -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}' | grep False; do
         oc get pods

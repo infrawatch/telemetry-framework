@@ -1,0 +1,17 @@
+apiVersion: smartgateway.infra.watch/v1alpha1
+kind: SmartGateway
+metadata:
+  name: cloud1-notify
+spec:
+  size: 1
+  amqp_url: "qdr-white.sa-telemetry.svc.cluster.local:5672/collectd/notify"
+  service_type: events
+  debug: "false"
+  elastic_url: "https://elasticsearch.sa-telemetry.svc:9200"
+  container_image_path: 172.30.1.1:5000/sa-telemetry/smart-gateway:latest
+  use_tls: "true"
+  tls_client_cert: /config/certs/admin-cert
+  tls_client_key: /config/certs/admin-key
+  tls_ca_cert: /config/certs/admin-ca
+  reset_index: "true"
+# vim: set tabstop=2 shiftwidth=2 expandtab smartindent:

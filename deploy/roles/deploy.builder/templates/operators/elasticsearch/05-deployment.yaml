@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: elasticsearch-operator
+  template:
+    metadata:
+      labels:
+        name: elasticsearch-operator
+    spec:
+      serviceAccountName: elasticsearch-operator
+      containers:
+        - name: elasticsearch-operator
+          image: {{ registry_path }}/{{ imagestream_namespace }}/ose-elasticsearch-operator:latest
+          imagePullPolicy: IfNotPresent
+          command:
+          - elasticsearch-operator
+          ports:
+          - containerPort: 60000
+            name: metrics
+          env:
+            - name: WATCH_NAMESPACE
+              value: ""
+            - name: OPERATOR_NAME
+              value: "elasticsearch-operator"
+            - name: PROXY_IMAGE
+              value: "{{ registry_path }}/{{ imagestream_namespace }}/ose-oauth-proxy:latest"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name

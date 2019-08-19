@@ -7,20 +7,38 @@
 oc login -u system:admin
 oc new-project sa-telemetry
 
+# make sure ElasticSearch is scheduled on a node
+oc patch node localhost -p '{"metadata":{"labels":{"kubernetes.io/os": "linux"}}}'
+
+# generate certificates for AMQ Interconnect
 openssl req -new -x509 -batch -nodes -days 11000 \
         -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
         -out qdr-server-certs/tls.crt \
         -keyout qdr-server-certs/tls.key
 oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
 
+# generate certificates for ElasticSearch
+WORKING_DIR=./es-certs NAMESPACE="sa-telemetry" ./cert_generation.sh
+cd es-certs
+
+# ref: https://github.com/openshift/cluster-logging-operator/blob/master/pkg/k8shandler/logstore.go#L76-L90
+oc create secret generic elasticsearch \
+    --from-file=elasticsearch.key \
+    --from-file=elasticsearch.crt \
+    --from-file=logging-es.key \
+    --from-file=logging-es.crt \
+    --from-file=admin-key=system.admin.key \
+    --from-file=admin-cert=system.admin.crt \
+    --from-file=admin-ca=ca.crt
+
+cd ..
+
+# build out manifests
 ansible-playbook \
     -e "registry_path=$(oc registry info)" \
     -e "imagestream_namespace=$(oc project --short)" \
     -e "prometheus_pvc_storage_request=2G" \
     deploy_builder.yml
-
-# need to patch a node in order to allow the current version of the SGO to deploy a SG
-oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry", "node": "white"}}}'
 
 # import container images
 if [[ "$*" =~ --downstream-secret=(.*) ]]; then
