@@ -1,0 +1,25 @@
+- metadata:
+    name: SAF Performance Test 1
+  spec:
+    value-lists: 10000
+    hosts: 5000
+    plugins: 100
+    interval: 1
+    length: 20
+    queries:
+      - rate(sa_collectd_total_amqp_processed_message_count[10s])
+      - rate(sa_collectd_cpu_total[10s])
+      - scrape_samples_scraped
+
+- metadata:
+    name: SAF Performance Test 2
+  spec:
+    value-lists: 10000
+    hosts: 5000
+    plugins: 100
+    interval: 1
+    length: 500
+    queries:
+      - rate(sa_collectd_total_amqp_processed_message_count[10s])
+      - rate(sa_collectd_cpu_total[10s])
+      - scrape_samples_scraped
