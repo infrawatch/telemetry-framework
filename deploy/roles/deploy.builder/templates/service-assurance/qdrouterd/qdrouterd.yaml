@@ -20,7 +20,7 @@ spec:
       distribution: closest
     - prefix: broadcast
       distribution: multicast
-    - prefix: collectd/telemetry
+    - prefix: collectd
       distribution: multicast
   sslProfiles:
     - name: default

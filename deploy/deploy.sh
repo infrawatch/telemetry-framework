@@ -148,7 +148,7 @@ if [ "$method" == "CREATE" ]; then
     echo "  * [ii] Waiting for prometheus deployment to complete"
     until oc rollout status statefulset.apps/prometheus-white; do sleep 3; done
     echo "  * [ii] Waiting for smart-gateway deployment to complete"
-    until oc rollout status deploymentconfig.apps.openshift.io/white-smartgateway; do sleep 3; done
+    until oc rollout status deploymentconfig.apps.openshift.io/cloud1-smartgateway; do sleep 3; done
     echo "  * [ii] Waiting for all pods to show Ready"
     while oc get pods -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}' | grep False; do
         oc get pods
