@@ -16,6 +16,7 @@ oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-se
 ansible-playbook \
     -e "registry_path=$(oc registry info)" \
     -e "imagestream_namespace=$(oc project --short)" \
+    -e "prometheus_pvc_storage_request=2G" \
     deploy_builder.yml
 
 # need to patch a node in order to allow the current version of the SGO to deploy a SG
