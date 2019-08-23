@@ -34,14 +34,14 @@ infrared tripleo-undercloud \
     -o outputs/undercloud-install.yml \
     --mirror rdu2 \
     --version 13 \
-    --OSP_BUILD "${OSP_BUILD}" \
+    --build "${OSP_BUILD}" \
     --registry-mirror docker-registry.engineering.redhat.com \
     --registry-undercloud-skip no
 
 infrared tripleo-undercloud -vv \
    -o outputs/images_settings.yml \
    --images-task rpm \
-   --OSP_BUILD "${OSP_BUILD}" \
+   --build "${OSP_BUILD}" \
    --images-update no
 
 sed -e "s/<<AMQP_HOST>>/${AMQP_HOST}/" metrics-collectd-qdr.yaml.template > outputs/metrics-collectd-qdr.yaml
