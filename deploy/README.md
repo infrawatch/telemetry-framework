@@ -26,7 +26,7 @@ OpenShift environment. It will allow for SAF to be started for development
 purposes, and is not intended for production environments. It takes care of all
 of the steps documented below for a single-cloud setup.
 
-This script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
+The script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
 
 ## Routes and Certificates
 

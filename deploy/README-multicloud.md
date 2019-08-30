@@ -1,12 +1,12 @@
 # Configuring Service Assurance Framework for Multiple Clouds
 
-Multiple Openstack clouds can be configured to target a single instance of SAF.
-There are a few steps to get this set up:
+Multiple Openstack clouds can be configured to target a single instance of
+Service Assurance Framework (SAF). There are a few steps to get this set up:
 
 1. Plan the AMQP address prefixes to use for each cloud
-1. Deploy metrics and notification SmartGateways for each cloud to listen on the
-  corresponding address prefixes
-1. Configure each cloud to send it's metrics and notifications to SAF on the
+1. Deploy metrics and events consumer Smart Gateways for each cloud to listen on
+  the corresponding address prefixes
+1. Configure each cloud to send it's metrics and events to SAF on the
   correct address
 
 ## AMQP addresses
@@ -14,7 +14,7 @@ There are a few steps to get this set up:
 By default, OSP nodes are configured to send data to the `collectd/telemetry`
 and `collectd/notify` addresses on the AMQP bus; and SAF is configured to
 listen on those addresses for monitoring data. In order to support multiple
-clouds and have the ability to easily identify which cloud genereated which
+clouds and have the ability to easily identify which cloud generated which
 monitoring data, each cloud should be configured to send to a unique address.
 
 It is recommended to prefix a cloud identifier to the second part of the
@@ -28,9 +28,9 @@ address. For example:
 * collectd/us-west-3-telemetry
 * ...etc
 
-## Deploying SmartGateways
+## Deploying Smart Gateways
 
-Two SmartGateways (one for metrics, one for events) need to be deployed
+Two Smart Gateways (one for metrics, one for events) need to be deployed
 for each cloud, configured to listen on the correct AMQP address. For example:
 
 ```yaml
@@ -74,8 +74,8 @@ spec:
 
 In order to label traffic according to it's cloud of origin, the collectd
 configuration has to be updated to have cloud-specific instance names. This is
-usually accomplished by editting your triple-o configuration to have the
-following CollectdAmqpInstances.
+usually accomplished by editing your TripleO configuration to have the
+following `CollectdAmqpInstances`.
 
 ```yaml
 parameter_defaults:
