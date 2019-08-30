@@ -101,7 +101,7 @@ Then simply run the `deploy.sh` script. You will need to follow the
 instructions during the script as it will pause waiting for the successful
 completion at a couple of steps.
 
-## Multi-cloud support
+## Multicloud support
 
 It is possible to deploy one intance of SAF and attach multiple openstack clouds
 to it. See the [Multicloud README](README-multicloud.md) for details.
