@@ -21,40 +21,12 @@ currently a work in a progress.
 
 ## Quickstart (Minishift)
 
-The following is a quickstart guide on deploying SAF into a minishift created
+A script is provided to deploy SAF into a minishift created
 OpenShift environment. It will allow for SAF to be started for development
-purposes, and is not intended for production environments.
+purposes, and is not intended for production environments. It takes care of all
+of the steps documented below for a single-cloud setup.
 
-**NOTE:** The canonical version of this script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
-
-    minishift start
-    oc login -u system:admin
-    oc new-project sa-telemetry
-    oc create -f ~/699000-username-secret.yaml
-    openssl req -new -x509 -batch -nodes -days 11000 \
-        -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
-        -out qdr-server-certs/tls.crt \
-        -keyout qdr-server-certs/tls.key
-    oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
-
-    ansible-playbook \
-    -e "registry_path=$(oc registry info)" \
-    -e "imagestream_namespace=$(oc project --short)" \
-    deploy_builder.yml
-
-    # need to patch a node in order to allow the current version of the SGO to deploy a SG
-    oc patch node localhost -p '{"metadata":{"labels":{"application": "sa-telemetry", "node": "white"}}}'
-
-    # import downstream container images
-    ./import-downstream.sh
-
-    # deploy the environment (requires interaction)
-    ./deploy.sh
-    watch -n5 oc get pods
-
-    # teardown the environment when done (requires interaction)
-    ./deploy.sh DELETE
-    watch -n10 oc get all
+This script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
 
 ## Routes and Certificates
 
@@ -128,6 +100,11 @@ that, run the following command:
 Then simply run the `deploy.sh` script. You will need to follow the
 instructions during the script as it will pause waiting for the successful
 completion at a couple of steps.
+
+## Multi-cloud support
+
+It is possible to deploy one intance of SAF and attach multiple openstack clouds
+to it. See the [Multicloud README](README-multicloud.md) for details.
 
 ## Internals
 
