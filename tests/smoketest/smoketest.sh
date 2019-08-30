@@ -38,6 +38,14 @@ for NAME in "${CLOUDNAMES[@]}"; do
     )
 done
 
+
+echo "*** [INFO] Waiting for smart gateways to appear before starting jobs..."
+# NOTE: For a 100-cloud test, this is over 8hrs max if no SGs ever spin up
+SG_TIMEOUT=300
+for NAME in "${CLOUDNAMES[@]}"; do
+    timeout ${SG_TIMEOUT} bash -c "until oc rollout status deploymentconfig.apps.openshift.io/${NAME}-smartgateway; do sleep 3; done"
+done
+
 echo "*** [INFO] Creating smoketest jobs..."
 oc delete job -l app=saf-smoketest
 for NAME in "${CLOUDNAMES[@]}"; do
@@ -45,10 +53,10 @@ for NAME in "${CLOUDNAMES[@]}"; do
 done
 
 # Trying to find a less brittle test than a timeout
-TIMEOUT=300s
+JOB_TIMEOUT=300s
 for NAME in "${CLOUDNAMES[@]}"; do
     echo "*** [INFO] Waiting on job/saf-smoketest-${NAME}..."
-    oc wait --for=condition=complete --timeout=${TIMEOUT} "job/saf-smoketest-${NAME}"
+    oc wait --for=condition=complete --timeout=${JOB_TIMEOUT} "job/saf-smoketest-${NAME}"
     RET=$((RET || $?)) # Accumulate exit codes
 done
 
@@ -87,7 +95,7 @@ echo
 if [ $RET -eq 0 ]; then
     echo "*** [SUCCESS] Smoke test job completed successfully"
 else
-    echo "*** [FAILURE] Smoke test job still not succeeded after ${TIMEOUT}"
+    echo "*** [FAILURE] Smoke test job still not succeeded after ${JOB_TIMEOUT}"
 fi
 echo
 
