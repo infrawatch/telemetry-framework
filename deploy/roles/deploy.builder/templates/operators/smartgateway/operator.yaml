@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: smart-gateway-operator
+        name: smart-gateway-operator
     spec:
       serviceAccountName: smart-gateway-operator
       containers:
