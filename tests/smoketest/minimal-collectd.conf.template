@@ -15,7 +15,7 @@ LoadPlugin amqp1
     Host "qdr-white.sa-telemetry.svc.cluster.local"
     Port "5672"
     Address "collectd"
-    <Instance "telemetry">
+    <Instance "<<CLOUDNAME>>-telemetry">
         Format JSON
         PreSettle true
     </Instance>

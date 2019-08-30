@@ -1,7 +1,7 @@
 apiVersion: smartgateway.infra.watch/v1alpha1
 kind: SmartGateway
 metadata:
-  name: white
+  name: cloud1
 spec:
   size: 1
   amqp_url: qdr-white.sa-telemetry.svc.cluster.local:5672/collectd/telemetry
