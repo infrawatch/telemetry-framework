@@ -114,34 +114,13 @@ Sections for implementation details that are helpful for developers
 
 Here is a data dictionary of our labels; not including auto-generated ones.
 
-Currently we are in the process of refining the label set, so this will
-temporarily document the old vs. the new. This will become canonical when the
-work is complete.
-
-#### BEFORE
-
 | **Label Key**         | **On Types**                   | **Values**     | **Notes**  |
 |-----------------------|--------------------------------|----------------|------------|
 | alertmanager          | Pod                            | sa             | This comes from prometheus-operator |
-| app                   | Pod, Service, DeploymentConfig | alertmanager, prometheus-operator, prometheus, prometheus-white,  sa-telemetry-alertmanager | The prometheus has a label app=prometheus, and the smart-gateway has app=prometheus-white   We should standardize this to name all components by their proper names and not use it for additional metadata (white) |
+| app                   | Pod, Service, DeploymentConfig | alertmanager, prometheus, prometheus-operator, qdr, qdr-operator, saf-smoketest, smart-gateway, smart-gateway-operator | Primary way to identify a specific component |
 | application           | Pod, Service, ReplicaSet       | qdr-white | This comes from qdr-operator |
-| name                  | Pod, ReplicaSet, Job, SmartGateway, Qdr  | qdr-operator, saf-smoketest, smart-gateway-operator, white, qdr-white | There is already metadata.name We should standardize this to 'app'  |
-| operated-alertmanager | Service                        | true | These come from prometheus-operator |
-| operated-prometheus   | Service                        | true | These come from prometheus-operator |
-| prometheus            | Pod, StatefulSet               | white, prometheus-sa-telemetry  | The 'white' value should move to 'sa-affinity'|
-| qdr_cr                | Pod, Service, ReplicaSet       | qdr-white | We should standardize this to 'app' but remove extra metadata (white) |
-| sa-app                | Pod                            | prometheus-white | We should standardize this to 'app' but remove extra metadata (white) |
-| sa-app-white          | ServiceMonitor                 | prometheus-white | We should standardize this to 'app' but remove extra metadata (white) |
-| sa-telemetry-app-white| ServiceMonitor                 | prometheus-white | We should standardize this to 'app' but remove extra metadata (white) |
-| smartgateway          | Service                        | white     |     |
-
-#### AFTER (Proposed)
-
-| **Label Key**         | **On Types**                   | **Values**     | **Notes**  |
-|-----------------------|--------------------------------|----------------|------------|
-| alertmanager          | Pod                            | sa             | This comes from prometheus-operator |
-| app                   | Pod, Service, DeploymentConfig | alertmanager, prometheus, prometheus-operator, qdr, qdr-operator, smart-gateway, smart-gateway-operator | Primary way to identify a specific component |
-| application           | Pod, Service, ReplicaSet       | qdr-white | This comes from qdr-operator |
-| operated-alertmanager | Service                        | true | These come from prometheus-operator |
-| operated-prometheus   | Service                        | true | These come from prometheus-operator |
+| name                  | Service                        | smart-gateway-operator | This is required for operator-sdk framework metrics |
+| operated-alertmanager | Service                        | true | This comes from prometheus-operator |
+| operated-prometheus   | Service                        | true | This comes from prometheus-operator |
+| prometheus            | Pod                            | white | This comes from prometheus-operator |
 | qdr_cr                | Pod, Service, ReplicaSet       | qdr-white | Where does this come from? |
