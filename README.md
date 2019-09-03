@@ -10,7 +10,7 @@ documentation.
 
 ## Documentation
 
-Documentation is available at [Telemetry Framework (RTD)](https://telemetry-framework.readthedocs.io).
+Asciidoc documentation is available in the [docs directory](./docs/README.adoc)
 
 ## Installation
 
