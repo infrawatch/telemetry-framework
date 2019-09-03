@@ -15,7 +15,7 @@ echo "Launching collectd"
 /usr/sbin/collectd -f 2>&1 &
 sleep 1
 echo "Retrieving API token for Grafana"
-curl -X POST -H "Content-Type: application/json" -d '{"name":"apikeycurl", "role": "Admin"}' "$GRAFANA_URL/api/auth/keys" > /performance-test/grafana/apikey
+curl -X POST -H "Content-Type: application/json" -d '{"name":"apikeycurl", "role": "Admin"}' "$GRAFANA_URL/api/auth/keys" > /tmp/grafana_apikey
 
 echo "Launching performance tests"
 /performance-test/exec/main
