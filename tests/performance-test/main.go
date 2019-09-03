@@ -33,7 +33,7 @@ func (pt *PerformanceTest) InitDashboard(title string) {
 	pt.db = new(Dashboard)
 
 	var data []byte
-	data, pt.err = ioutil.ReadFile("/performance-test/grafana/apikey")
+	data, pt.err = ioutil.ReadFile("/tmp/grafana_apikey")
 	if pt.err != nil {
 		return
 	}
