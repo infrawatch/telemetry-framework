@@ -1,5 +1,6 @@
 //The following content is currently being converted to asciidoc format so it can be seamlessly incorporated into the RHOSP docs. It is targeting OSP 13 docs.
 :target-upstream:
+:imagesdir: images/
 
 [id=`overview-of-service-assurance-framework_{context}`]
 == Overview of Service Assurance Framework
@@ -19,7 +20,10 @@ SAF uses the following components:
 * An AMQP 1.x compatible messaging bus to shuttle the metrics to SAF for storage in Prometheus
 * Smart Gateway
 
-The following diagram is an overview of SAF architecture: 			
+The following diagram is an overview of SAF architecture:
+
+image::SAF_Overview_37_0819_arch.png[SAF Architecture Diagram]
+
 On the client side, collectd collects high-resolution metrics. The data is delivered to Prometheus using the AMQP1 plugin, which places the data onto the message bus. On the server side, a Golang application called the Smart Gateway takes the data stream from the bus and exposes it as a local scrape endpoint for Prometheus. 
 
 Server-side SAF monitoring infrastructure consists of the following layers:
@@ -28,7 +32,7 @@ Server-side SAF monitoring infrastructure consists of the following layers:
 * Red Hat OpenShift Container Platform 3.11 (OCP)
 * Infrastructure platform 
 
-
+image::SAF_Overview_37_0819_deployment_prereq.png[SAF Server-side Infrastructure Diagram]
 
 [id="installation-size_{context}"]
 == Sizing your installation
@@ -209,6 +213,8 @@ By default a persistent volume claim (PVC) of 20G is requested for Prometheus. T
 [id=`installing-saf-components-using-a-script_{context}`]
 === Installing SAF components using a script
 
+image::SAF_Overview_37_0819_deployment_manually.png[SAF Deployment Diagram]
+
 Use the `deploy.sh` script in the `deploy/` directory of the telemetry-framework release file that you previously extracted. Run the script with no arguments (or the `CREATE` argument) to start the various components in your OCP deployment. To remove the components, supply the `DELETE` argument to the script.
 Before you run the provided script, ensure that you meet the following prerequisites: 
 
@@ -307,9 +313,6 @@ The SSL certificates for the `MetricsQdr` service is configured to generate only
 == Completion of the server-side installation
 The Service Assurance Framework provides a high-resolution, low latency framework for streaming metrics back to a centralized data store. In the future, you can add additional data components such as events and logging.
 
-ifdef::target-downstream[]
-SAF is currently in technical preview for the Red Hat OpenStack Platform 13 and requires a support exception to allow for deployments to be supported. If SAF looks useful for your environment, contact your Technical Account Manager.
-endif::[]
 
 = Configuring SAF data collection
 
@@ -353,7 +356,7 @@ To view the collectd plugins and configurations, see Appendix A: collectd plugin
 
 = Configuring SAF for multi-cloud
 
-Multiple Openstack clouds can be configured to target a single instance of SAF. 
+Multiple OpenStack clouds can be configured to target a single instance of SAF. 
 There are a few steps to get this set up:
 
 . Plan the AMQP address prefixes to use for each cloud
@@ -361,6 +364,8 @@ There are a few steps to get this set up:
   the corresponding address prefixes
 . Configure each cloud to send it's metrics and events to SAF on the
   correct address
+
+image::OpenStack SAF Multi-Cloud.png[SAF Multi-Cloud Architecture Diagram]
 
 == AMQP addresses
 
@@ -425,11 +430,11 @@ spec:
 ----
 
 
-== Openstack configuration
+== OpenStack configuration
 
 In order to label traffic according to it's cloud of origin, the collectd
 configuration has to be updated to have cloud-specific instance names. This is
-usually accomplished by editing your Openstack director configuration to have 
+usually accomplished by editing your OpenStack director configuration to have 
 the following `CollectdAmqpInstances`.
 
 metrics-collectd-qdr.yaml
@@ -457,4 +462,11 @@ specific cloud; for example: `sa_collectd_uptime{service="cloud1-smartgateway"}`
 == Conclusion
 The Service Assurance Framework provides a high-resolution, low latency framework for streaming metrics back to a centralized data store. In the future, you can add additional data components such as events and logging.
 
+ifdef::target-downstream[]
 SAF is currently in technical preview for the Red Hat OpenStack Platform 13 and requires a support exception to allow for deployments to be supported. If SAF looks useful for your environment, contact your Technical Account Manager.
+endif::[]
+
+ifdef::target-upstream[]
+= Legal Notice
+The text of and illustrations in this document are licensed by Red Hat under a Creative Commons Attribution–Share Alike 3.0 Unported license ("CC-BY-SA"). An explanation of CC-BY-SA is available at http://creativecommons.org/licenses/by-sa/3.0/. In accordance with CC-BY-SA, if you distribute this document or an adaptation of it, you must provide the URL for the original version. (https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html/service_assurance_framework/index)
+endif::[]
