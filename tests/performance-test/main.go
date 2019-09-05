@@ -79,7 +79,7 @@ func (pt *PerformanceTest) ExecTest(index int) error {
 	log.Print("Running test of length " + strconv.FormatUint(test.Spec.Length, 10) + "s")
 
 	args := pt.p.ArgStrings(test)
-	out, err := exec.Command("/performance-test/exec/unit-test.sh", args...).Output()
+	out, err := exec.Command("/performance-test/exec/launch-test.sh", args...).Output()
 	if err != nil {
 		return err
 	}
