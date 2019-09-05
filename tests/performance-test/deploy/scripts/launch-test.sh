@@ -4,7 +4,7 @@
 set -x
 ARGS=()
 
-while getopts l:n:H:p:i:d option
+while getopts l:n:H:p:i:d: option
 do
     case "${option}"
     in
