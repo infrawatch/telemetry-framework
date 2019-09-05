@@ -2,15 +2,15 @@
 
 ## Environment
 
-minishift v1.34.1
+openshift v3.11.135
 docker v17.05+
 
 ### Setup
 
-SAF must already be deployed on a local minishift with the registry-route addon
-enabled. A quick way to do this is using the `quickstart.sh` script in
-`telemetry-framework/deploy/` directory to run SAF upstream version (quickstart
- can also be used to deploy the downstream):
+SAF must already be deployed, and your openshift must have an external route
+for the registry. A quick way to do this is using the `quickstart.sh` script in
+`telemetry-framework/deploy/` directory to run SAF. Here is an example of how
+to do that in minishift:
 
 ```shell
 minishift addons enable registry-route   # Run BEFORE starting minishift
@@ -19,11 +19,11 @@ eval $(minishift oc-env)
 cd $WORKDIR/telemetry-framework/deploy/; ./quickstart.sh
 ```
 
-More details about deploying SAF on Minishift can be found in the
+More details about deploying SAF can be found in the
 [SAF deployment docs](../../../deploy/)
 
-The Minishift registry needs to be configured such that a local docker image can
-be pushed to it. To do this, a new account must be created on Minishift that has
+The registry needs to be configured such that a local docker image can
+be pushed to it. To do this, a new account must be created on that has
 admin privledges. The default admin account cannot be used because it does not
 provide a token with which to login to the registry with docker.
 
@@ -37,19 +37,19 @@ oc project sa-telemetry          # must use same project as SAF
 
 ## Build
 
-Minishift does not have an up-to-date version of docker and cannot execute
+Openshift does not have a recent enough docker engine to execute
 multistage builds. As a result, the performance test image must be built locally
-with docker v17.05 or higher and pushed to the minshift internal docker registry.
+with docker v17.05 or higher and pushed to the openshift internal docker registry.
 
-The Minishift registry must be registered as an insecure registry for the local
+The openshift registry must be registered as an insecure registry for the local
 docker daemon to be able to push to it. On Fedora 30, this can be done like so:
 
 ```shell
-$ echo { \"insecure-registries\" : [\"$(minishift openshift registry)\"] } \
+$ echo { \"insecure-registries\" : [\"$(oc get route docker-registry -n default -o jsonpath='{.spec.host}')\"] } \
 | sudo tee  /etc/docker/daemon.json # add -a if you wish to preserve other insecure registry configurations
 $ sudo systemctl daemon-reload
 $ sudo systemctl restart docker
-$ docker login -u developer -p $(oc whoami -t) $(minishift openshift registry) # log in to registry
+$ docker login -u developer -p $(oc whoami -t) $(oc get route docker-registry -n default -o jsonpath='{.spec.host}') # log in to registry
 ```
 
 Check that docker is using the new registry - the address should match that
@@ -62,17 +62,17 @@ Insecure Registries:
  docker-registry-default.192.168.42.121.nip.io
 ```
 
-Create and push the image to the Minishift registry
+Create and push the image to the openshift registry
 
 ```shell
 cd $WORKDIR/telemetry-framework/tests/performance-test/
-DOCKER_IMAGE="$(minishift openshift registry)/$(oc project -q)/performance-test:dev"
+DOCKER_IMAGE="$(oc get route docker-registry -n default -o jsonpath='{.spec.host}')/$(oc project -q)/performance-test:dev"
 docker build -t $DOCKER_IMAGE .
 docker push $DOCKER_IMAGE   #sometimes this needs to be run more than once
 ```
 
 Note: if an earlier version of the performance test image has been previously
-uploaded to the Minishift registry, the previous image stream and associated
+uploaded to the openshift registry, the previous image stream and associated
 containers must be deleted before pushing up the new version else it will not
 be properly updated. Refer to the `performance-test/docker-push.sh` steps to
 do that.

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Launches a grafana pod with a pre-determined graph format and exposes routes minishift
+# Launches a grafana pod with a pre-determined graph format and exposes routes
 # Important: this grafana instance is initialized with Admin permissions on the anonymous user
 # That is, authentication is disabled 
 
