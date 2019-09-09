@@ -23,7 +23,7 @@ More details about deploying SAF can be found in the
 [SAF deployment docs](../../../deploy/)
 
 The registry needs to be configured such that a local docker image can
-be pushed to it. To do this, a new account must be created on that has
+be pushed to it. To do this, a new openshift user must be created that has
 admin privledges. The default admin account cannot be used because it does not
 provide a token with which to login to the registry with docker.
 
