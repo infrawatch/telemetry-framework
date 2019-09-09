@@ -37,7 +37,7 @@ oc project sa-telemetry          # must use same project as SAF
 
 ## Build
 
-Openshift does not have a recent enough docker engine to execute
+OpenShift does not have a recent enough Docker engine to execute
 multistage builds. As a result, the performance test image must be built locally
 with docker v17.05 or higher and pushed to the openshift internal docker registry.
 
