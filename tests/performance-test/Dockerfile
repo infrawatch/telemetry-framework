@@ -18,4 +18,4 @@ RUN yum install golang -y && \
     yum clean all
 
 COPY --from=0 /tmp/main /performance-test/exec/main
-COPY deploy/scripts/unit-test.sh /performance-test/exec/unit-test.sh
+COPY deploy/scripts/launch-test.sh /performance-test/exec/launch-test.sh

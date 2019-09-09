@@ -4,7 +4,7 @@
 set -x
 ARGS=()
 
-while getopts l:n:H:p:i:d option
+while getopts l:n:H:p:i:d: option
 do
     case "${option}"
     in
@@ -20,15 +20,15 @@ done
 
 if [ ! -v LENGTH ];
 then
-    echo "[unit-test.sh] Length of test unspecfied. Running for default time of 900s (15min)"
+    echo "[launch-test.sh] Length of test unspecfied. Running for default time of 900s (15min)"
     LENGTH=900
 fi
 
-echo "[unit-test.sh] Running collectd-tg with arguments:" "${ARGS[@]}"
+echo "[launch-test.sh] Running collectd-tg with arguments:" "${ARGS[@]}"
 collectd-tg "${ARGS[@]}" > /dev/null &
 sleep $LENGTH
 pkill collectd-tg
-echo "[unit-test.sh] Exiting test sequence"
+echo "[launch-test.sh] Exiting test sequence"
 exit
 
 

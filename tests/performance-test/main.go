@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -74,21 +76,26 @@ func (pt *PerformanceTest) InitParser() {
 
 //ExecTest runs a performance test configuration
 func (pt *PerformanceTest) ExecTest(index int) error {
-	var out []byte
 	test := pt.p.Tests()[index]
 	log.Print("Running test of length " + strconv.FormatUint(test.Spec.Length, 10) + "s")
 
 	args := pt.p.ArgStrings(test)
-	out, err := exec.Command("/performance-test/exec/unit-test.sh", args...).Output()
+	cmd := exec.Command("/performance-test/exec/launch-test.sh", args...)
+	cmd.Stderr = cmd.Stdout
+	cmdReader, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
 	}
+	cmd.Start()
 
-	for _, output := range strings.Split(string(out), "\n") {
-		if output != "" {
-			log.Print(output)
-		}
+	scanner := bufio.NewScanner(cmdReader)
+	for scanner.Scan() {
+		log.Print(scanner.Text())
 	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "reading standard input:", err)
+	}
+
 	log.Print("Cooling down for 30 seconds")
 	time.Sleep(time.Second * time.Duration(30))
 
@@ -104,8 +111,9 @@ func (pt *PerformanceTest) Run() {
 	for i, test := range pt.p.Tests() {
 
 		pt.start, pt.end = pt.p.GetTimes(i)
-		pt.start = pt.start.Add(time.Second * -10)
-		pt.end = pt.end.Add(time.Second * 30)
+		// BUG? These values depend on test pod startup time
+		pt.start = pt.start.Add(time.Second * -60) // Add lead time to the dashboard
+		pt.end = pt.end.Add(time.Second * 60)      // Add cool-down time to the dashboard
 
 		log.Printf("Generating dashboard '%s' from %s to %s", test.Metadata.Name, pt.start, pt.end)
 
