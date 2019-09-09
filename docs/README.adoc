@@ -14,7 +14,8 @@ Service Assurance Framework (SAF) is an application running on the Red Hat OpenS
 [id=`architecture_{context}`]
 == Architecture
 
-SAF uses the following components: 
+SAF uses the following components:
+
 * collectd to collect metrics
 * Prometheus as time-series data storage
 * An AMQP 1.x compatible messaging bus to shuttle the metrics to SAF for storage in Prometheus
@@ -38,6 +39,7 @@ image::SAF_Overview_37_0819_deployment_prereq.png[SAF Server-side Infrastructure
 == Sizing your installation
 
 The size of your installation depends on the following factors:
+
 * The number of nodes being monitored
 * The number of metrics being collected
 * The resolution of metrics
