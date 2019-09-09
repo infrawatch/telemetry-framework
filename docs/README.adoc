@@ -211,7 +211,7 @@ ifdef::target-upstream[]
 ==== Container Versions
 
 When deploying SAF you can choose to use container images from either upstream
-(public open source), or downstream (published to the RedHat Container Catalog).
+(public open source), or downstream (published to the Red Hat Container Catalog).
 Two scripts,`import-downstream.sh` and `import-upstream.sh` are provided to help
 with this. In the scripts we attempt to hook into specific versions for
 deployment from the source registry. When importing those into our ImageStream
