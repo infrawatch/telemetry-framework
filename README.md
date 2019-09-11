@@ -11,7 +11,3 @@ documentation.
 ## Documentation
 
 Asciidoc documentation is available in the [docs directory](./docs/README.adoc)
-
-## Installation
-
-See the [deploy README](deploy/README.md)
