@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# The script is taken from https://github.com/openshift/cluster-logging-operator
+
 WORKING_DIR=${WORKING_DIR:-/tmp/_working_dir}
 NAMESPACE=${NAMESPACE:-openshift-logging}
 CA_PATH=${CA_PATH:-$WORKING_DIR/ca.crt}
@@ -258,7 +260,7 @@ generate_certs 'system.logging.fluentd'
 generate_certs 'system.logging.rsyslog'
 generate_certs 'system.logging.kibana'
 generate_certs 'system.logging.curator'
-generate_certs 'system.admin'
+generate_certs 'system.admin' "$(generate_extensions true true elasticsearch{,-cluster}{,.${NAMESPACE}.svc}{,.cluster.local})"
 
 # TODO: get es SAN DNS, IP values from es service names
 generate_certs 'kibana-internal' "$(generate_extensions false false kibana)"
