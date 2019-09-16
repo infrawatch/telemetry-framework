@@ -34,7 +34,7 @@ for NAME in "${CLOUDNAMES[@]}"; do
     oc create -f <(
       sed -e "s/name: cloud1/name: ${NAME}/"\
           -e "s/\(amqp_url: .*\)telemetry/\\1${NAME}-telemetry/"\
-          ../../deploy/service-assurance/smartgateway/smartgateway.yaml
+          ../../deploy/service-assurance/smartgateway/metrics-smartgateway.yaml
     )
 done
 
@@ -43,7 +43,7 @@ echo "*** [INFO] Waiting for smart gateways to appear before starting jobs..."
 # NOTE: For a 100-cloud test, this is over 8hrs max if no SGs ever spin up
 SG_TIMEOUT=300
 for NAME in "${CLOUDNAMES[@]}"; do
-    timeout ${SG_TIMEOUT} bash -c "until oc rollout status deploymentconfig.apps.openshift.io/${NAME}-smartgateway; do sleep 3; done"
+    timeout ${SG_TIMEOUT} bash -c "until oc rollout status deploymentconfig.apps.openshift.io/${NAME}-telemetry-smartgateway; do sleep 3; done"
 done
 
 echo "*** [INFO] Creating smoketest jobs..."
