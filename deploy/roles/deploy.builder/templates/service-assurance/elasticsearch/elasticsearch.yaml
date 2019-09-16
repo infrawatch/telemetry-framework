@@ -9,16 +9,18 @@ spec:
     image: {{ registry_path }}/{{ imagestream_namespace }}/ose-elasticsearch5:latest
     resources:
       limits:
-        cpu: 500m
-        memory: 1Gi
+        cpu: {{ elasticsearch_resources_limits_cpu }}
+        memory: {{ elasticsearch_resources_limits_memory }}
       requests:
-        cpu: 500m
-        memory: 1Gi
+        cpu: {{ elasticsearch_resources_requests_cpu }}
+        memory: {{ elasticsearch_resources_requests_memory }}
   nodes:
-  - nodeCount: 1
+  - nodeCount: {{ elasticsearch_node_count }}
     roles:
     - client
     - data
     - master
-    storage: {}
-  redundancyPolicy: ZeroRedundancy
+    storage:
+      storageClassName: "{{ elasticsearch_storage_storage_class_name }}"
+      size: {{ elasticsearch_storage_size }}
+  redundancyPolicy: {{ elasticsearch_redundancy_policy }}

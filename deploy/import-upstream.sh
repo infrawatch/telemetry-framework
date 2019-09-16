@@ -22,7 +22,7 @@ oc import-image amq-interconnect-operator:latest --from=quay.io/interconnectedcl
 
 # Currently we don't have a robust release process for the Smart Gateway or
 # corresponding Operator, so we just pull the latest version down for now.
-oc import-image smart-gateway:latest --from=quay.io/redhat-service-assurance/smart-gateway:mmagr-627-sg-es --confirm
+oc import-image smart-gateway:latest --from=quay.io/redhat-service-assurance/smart-gateway:latest --confirm
 oc import-image smart-gateway-operator:latest --from=quay.io/redhat-service-assurance/smart-gateway-operator:latest --confirm
 
 oc import-image ose-elasticsearch-operator:latest --from=quay.io/openshift/origin-elasticsearch-operator:latest --confirm

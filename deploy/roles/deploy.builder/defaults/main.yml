@@ -22,3 +22,13 @@ sg_events_tls_client_cert: /config/certs/admin-cert
 sg_events_tls_client_key: /config/certs/admin-key
 sg_events_tls_ca_cert: /config/certs/admin-ca
 sg_events_reset_index: "true"
+
+# elasticsearch
+elasticsearch_resources_limits_cpu: 500m
+elasticsearch_resources_limits_memory: 1Gi
+elasticsearch_resources_requests_cpu: 500m
+elasticsearch_resources_requests_memory: 1Gi
+elasticsearch_node_count: 1
+elasticsearch_storage_storage_class_name: ""
+elasticsearch_storage_size: 2Gi
+elasticsearch_redundancy_policy: ZeroRedundancy
