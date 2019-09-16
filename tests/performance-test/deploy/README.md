@@ -95,7 +95,7 @@ the test scripts must be modified. Once the Grafana instance is running, launch
 the performance test OpenShift job:
 
 ```shell
-./performance-test.sh
+./performance-test-tg.sh
 ```
 
 This will run all of the tests specified in the test-configs.yaml file in
