@@ -30,11 +30,17 @@ for NAME in "${CLOUDNAMES[@]}"; do
     # deploy from this same directory, which may not be ideal for a smoke test.
     # Carrying around a second copy of this resource manifest is also not ideal,
     # though.
-    oc delete smartgateway "${NAME}"
+    oc delete smartgateway "${NAME}-telemetry"
+    oc delete smartgateway "${NAME}-notify"
     oc create -f <(
       sed -e "s/name: cloud1/name: ${NAME}/"\
           -e "s/\(amqp_url: .*\)telemetry/\\1${NAME}-telemetry/"\
           ../../deploy/service-assurance/smartgateway/metrics-smartgateway.yaml
+    )
+    oc create -f <(
+      sed -e "s/name: cloud1/name: ${NAME}/"\
+          -e "s/\(amqp_url: .*\)notify/\\1${NAME}-notify/"\
+          ../../deploy/service-assurance/smartgateway/events-smartgateway.yaml
     )
 done
 
@@ -44,6 +50,7 @@ echo "*** [INFO] Waiting for smart gateways to appear before starting jobs..."
 SG_TIMEOUT=300
 for NAME in "${CLOUDNAMES[@]}"; do
     timeout ${SG_TIMEOUT} bash -c "until oc rollout status deploymentconfig.apps.openshift.io/${NAME}-telemetry-smartgateway; do sleep 3; done"
+    timeout ${SG_TIMEOUT} bash -c "until oc rollout status deploymentconfig.apps.openshift.io/${NAME}-notify-smartgateway; do sleep 3; done"
 done
 
 echo "*** [INFO] Creating smoketest jobs..."
@@ -90,6 +97,10 @@ echo
 
 echo "*** [INFO] Logs from prometheus..."
 oc logs "$(oc get pod -l prometheus=white -o jsonpath='{.items[0].metadata.name}')" -c prometheus
+echo
+
+echo "*** [INFO] Logs from elasticsearch..."
+oc logs "$(oc get pod -l component=elasticsearch -o jsonpath='{.items[0].metadata.name}')" -c elasticsearch
 echo
 
 if [ $RET -eq 0 ]; then

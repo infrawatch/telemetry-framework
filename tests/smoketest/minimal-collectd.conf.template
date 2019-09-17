@@ -8,6 +8,7 @@ LoadPlugin "logfile"
 </Plugin>
 
 LoadPlugin cpu
+LoadPlugin interface
 LoadPlugin amqp1
 
 <Plugin "amqp1">
@@ -19,5 +20,27 @@ LoadPlugin amqp1
         Format JSON
         PreSettle true
     </Instance>
+    <Instance "<<CLOUDNAME>>-notify">
+        Format JSON
+        PreSettle false
+        Notify true
+    </Instance>
   </Transport>
+</Plugin>
+
+<Plugin interface>
+  IgnoreSelected true
+  ReportInactive true
+</Plugin>
+
+<Plugin threshold>
+  <Plugin "interface">
+    Instance "lo"
+    <Type "if_octets">
+      FailureMax 0
+      DataSource "rx"
+      Persist true
+      PersistOK true
+    </Type>
+  </Plugin>
 </Plugin>
