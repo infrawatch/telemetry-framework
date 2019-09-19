@@ -343,6 +343,20 @@ openstack overcloud deploy \
 [NOTE:] 
 The SSL certificates for the `MetricsQdr` service is configured to generate only for the `InternalApi` network but the default Ceph role does not use the `InternalApi` network. To deploy SAF client when InternalTLS is enabled, use this workaround: pass the custom Ceph role, which has `InternalApi` network, to `openstack overcloud deploy` when InternalTLS is enabled in the deployment.
 
+[id=`configuration-for-distributed-compute-nodes_{context}`]
+=== Configuration for distributed compute nodes
+If you are deploying with compute nodes on different networks to the controller, some additional changes are need so that the metrics sent over AMQ can reach the SAF.
+The following needs to be added under the `ExtraConfig` section for each compute node.
+
+----
+ComputeNExtraConfig:
+	tripleo::profile::base::metrics::collectd::amqp_host: "%{hiera('internal_apiN')}"
+	tripleo::profile::base::metrics::qdr::listener_addr: "%{hiera('internal_apiN')}"
+----
+
+In the above example, `internal_apiN` is the network that the compute node is connected to.
+For more information on this configuration, see: https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html-single/spine_leaf_networking/
+
 [id=`completion of the server-side installation_{context}`]
 == Completion of the server-side installation
 The Service Assurance Framework provides a high-resolution, low latency framework for streaming metrics back to a centralized data store. In the future, you can add additional data components such as events and logging.
