@@ -345,9 +345,10 @@ The SSL certificates for the `MetricsQdr` service is configured to generate only
 
 [id=`configuration-for-distributed-compute-nodes_{context}`]
 === Configuration for distributed compute nodes
-If you are deploying compute nodes on networks different from the controllers, some additional changes are required to allow data transported via AMQ INterconnect to reach the SAF server instance.
+If you are deploying compute nodes on networks different from the controllers, such as in the case of distributed compute nodes (DCN),
+some additional changes are required to allow data transported via AMQ Interconnect to reach the SAF server instance.
 
-The following configuration exambple needs to be added under the `ExtraConfig` section for each compute node.
+The following configuration example needs to be added under the `ExtraConfig` section for each compute node.
 In the example, `internal_apiN` is the network that the compute node N is connected to, where N represents a value different from the default internal API network name.
 
 [source,yaml]
@@ -357,7 +358,7 @@ ComputeNExtraConfig:
 	tripleo::profile::base::metrics::qdr::listener_addr: "%{hiera('internal_apiN')}"
 ----
 
-For more information on this configuration, see: https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html-single/spine_leaf_networking/
+For more information on DCN configuration, see: https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html-single/spine_leaf_networking/
 
 [id=`completion of the server-side installation_{context}`]
 == Completion of the server-side installation
@@ -370,7 +371,7 @@ Now that the SAF server-side components have been implemented and are ready for 
 
 In the next sections we will configure the collectd (metrics and events data collector) and the AMQ Interconnect (message bus) so that data collection from your OpenStack cloud can be stored into the SAF application.
 
-== Data Collecting agent 
+== Data Collecting agent
 
 Performance monitoring collects system information periodically and provides a mechanism to store and monitor the values in a variety of ways using a data collecting agent. Red Hat supports the collectd daemon as a collection agent. This daemon stores the data in a time-series database. One of the Red Hat supported databases is called Prometheus. You can use this stored data to monitor systems, find performance bottlenecks, and predict future system load.
 
