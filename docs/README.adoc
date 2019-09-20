@@ -345,16 +345,18 @@ The SSL certificates for the `MetricsQdr` service is configured to generate only
 
 [id=`configuration-for-distributed-compute-nodes_{context}`]
 === Configuration for distributed compute nodes
-If you are deploying with compute nodes on different networks to the controller, some additional changes are need so that the metrics sent over AMQ can reach the SAF.
-The following needs to be added under the `ExtraConfig` section for each compute node.
+If you are deploying compute nodes on networks different from the controllers, some additional changes are required to allow data transported via AMQ INterconnect to reach the SAF server instance.
 
+The following configuration exambple needs to be added under the `ExtraConfig` section for each compute node.
+In the example, `internal_apiN` is the network that the compute node N is connected to, where N represents a value different from the default internal API network name.
+
+[source,yaml]
 ----
 ComputeNExtraConfig:
 	tripleo::profile::base::metrics::collectd::amqp_host: "%{hiera('internal_apiN')}"
 	tripleo::profile::base::metrics::qdr::listener_addr: "%{hiera('internal_apiN')}"
 ----
 
-In the above example, `internal_apiN` is the network that the compute node is connected to.
 For more information on this configuration, see: https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html-single/spine_leaf_networking/
 
 [id=`completion of the server-side installation_{context}`]
