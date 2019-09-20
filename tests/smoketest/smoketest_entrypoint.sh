@@ -46,4 +46,6 @@ echo; echo
 egrep '"result":\[{"metric":{"__name__":"sa_collectd_cpu_total","cpu":"0","endpoint":"prom-http","exported_instance":"'"${POD}"'","service":"'"${CLOUDNAME}"'-telemetry-smartgateway","type":"user"},"values":\[\[.+,".+"\]' /tmp/query_output
 metrics_result=$?
 
-egrep ''
+# add events results
+
+exit $metrics_result
