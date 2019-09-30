@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Sets up the encirovnment for performance testing
 
@@ -18,4 +18,4 @@ oc create configmap saf-performance-test-entrypoint-script --from-file ./scripts
 oc create configmap saf-performance-test-configs --from-file ./config/test-configs.yml
 oc create configmap saf-performance-test-hosts --from-file ./config/hosts.json
 
-oc create -f performance-test-job.yml
+oc create -f <(sed -e "s/<<REGISTRY_INFO>>/$(oc registry info)/" performance-test-job.yml.template)
