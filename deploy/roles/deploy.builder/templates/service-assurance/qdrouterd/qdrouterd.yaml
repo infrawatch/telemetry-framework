@@ -22,6 +22,8 @@ spec:
       distribution: multicast
     - prefix: collectd
       distribution: multicast
+    - prefix: collectd/notify
+      distribution: multicast
   sslProfiles:
     - name: default
       credentials: "qdr-white-cert"

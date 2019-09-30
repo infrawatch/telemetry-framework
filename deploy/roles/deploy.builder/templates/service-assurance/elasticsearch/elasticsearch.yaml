@@ -1,0 +1,26 @@
+---
+apiVersion: "logging.openshift.io/v1"
+kind: "Elasticsearch"
+metadata:
+  name: "elasticsearch"
+spec:
+  managementState: "Managed"
+  nodeSpec:
+    image: {{ registry_path }}/{{ imagestream_namespace }}/ose-elasticsearch5:latest
+    resources:
+      limits:
+        cpu: {{ elasticsearch_resources_limits_cpu }}
+        memory: {{ elasticsearch_resources_limits_memory }}
+      requests:
+        cpu: {{ elasticsearch_resources_requests_cpu }}
+        memory: {{ elasticsearch_resources_requests_memory }}
+  nodes:
+  - nodeCount: {{ elasticsearch_node_count }}
+    roles:
+    - client
+    - data
+    - master
+    storage:
+      storageClassName: "{{ elasticsearch_storage_storage_class_name }}"
+      size: {{ elasticsearch_storage_size }}
+  redundancyPolicy: {{ elasticsearch_redundancy_policy }}

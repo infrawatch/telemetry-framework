@@ -27,6 +27,8 @@ spec:
         - name: entrypoint-script
           mountPath: /smoketest_entrypoint.sh
           subPath: smoketest_entrypoint.sh
+        - mountPath: /certificates
+          name: certificates
       volumes:
       - name: collectd-config
         configMap:
@@ -35,3 +37,7 @@ spec:
         configMap:
           name: saf-smoketest-entrypoint-script
           defaultMode: 0555
+      - name: certificates
+        secret:
+          secretName: elasticsearch
+          defaultMode: 420

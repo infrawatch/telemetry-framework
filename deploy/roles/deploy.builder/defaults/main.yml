@@ -3,3 +3,32 @@ registry_path: docker-registry.default.svc:5000
 imagestream_namespace: sa-telemetry
 alertmanager_replicas: 1
 prometheus_pvc_storage_request: 20G
+
+# smart gateway metrics
+sg_metrics_size: 1
+sg_metrics_amqp_url: qdr-white.sa-telemetry.svc.cluster.local:5672/collectd/telemetry
+sg_metrics_debug: "false"
+sg_metrics_smart_gateway_tag: latest
+sg_metrics_container_image_path: "{{ registry_path }}/{{ imagestream_namespace }}/smart-gateway:{{ sg_metrics_smart_gateway_tag }}"
+
+# smart gateway events
+sg_events_amqp_url: "qdr-white.sa-telemetry.svc.cluster.local:5672/collectd/notify"
+sg_events_debug: "false"
+sg_events_elastic_url: "https://elasticsearch.sa-telemetry.svc:9200"
+sg_events_smart_gateway_tag: latest
+sg_events_container_image_path: "{{ registry_path }}/{{ imagestream_namespace }}/smart-gateway:{{ sg_events_smart_gateway_tag }}"
+sg_events_use_tls: "true"
+sg_events_tls_client_cert: /config/certs/admin-cert
+sg_events_tls_client_key: /config/certs/admin-key
+sg_events_tls_ca_cert: /config/certs/admin-ca
+sg_events_reset_index: "true"
+
+# elasticsearch
+elasticsearch_resources_limits_cpu: 500m
+elasticsearch_resources_limits_memory: 1Gi
+elasticsearch_resources_requests_cpu: 500m
+elasticsearch_resources_requests_memory: 1Gi
+elasticsearch_node_count: 1
+elasticsearch_storage_storage_class_name: ""
+elasticsearch_storage_size: 2Gi
+elasticsearch_redundancy_policy: ZeroRedundancy

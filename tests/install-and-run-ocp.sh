@@ -20,4 +20,6 @@ EOF'
 
 # Start the containerized openshift
 sudo systemctl restart docker.service
+sudo sysctl -w vm.max_map_count=262144
 oc cluster up --public-hostname=$(hostname) #--base-dir /var/lib/minishift
+
