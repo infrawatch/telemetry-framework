@@ -1,10 +1,3 @@
-openshift/working
-openshift/examples/*
-!openshift/examples/61will.space_dev
-!openshift/examples/61will.space_dev
-!openshift/examples/61will.space_full
-!openshift/examples/nfvpe.site_full
-!openshift/examples/README.md
 docs/_build/
 deploy/qdr-server-certs/*
 !deploy/qdr-server-certs/.KEEPIT

@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: grafana
 spec:
-  host: grafana.apps.dev7.nfvpe.site
+  host: grafana.apps.infra.watch
   to:
     kind: Service
     name: grafana
