@@ -134,6 +134,7 @@ https://github.com/redhat-service-assurance/telemetry-framework/archive/<release
 the host level of each node in your cluster prior to instantiating an SAF
 instance if ElasticSearch is intended to be deployed.
 
+
 ifdef::target-upstream[]
 [id="quickstart-script-for-development-usage_{context}"]
 == Quickstart Script for Development Usage
@@ -141,7 +142,12 @@ ifdef::target-upstream[]
 A script is provided to deploy SAF into an existing
 OpenShift environment. It allows for SAF to be started for development
 purposes, and is not intended for production environments. It takes care of all
-of the required steps for a single-cloud setup.
+of the required steps for a single-cloud setup. Ensure the following tools are 
+installed before execution:
+
+* Ansible 2.7+
+* OpenShift CLI (oc from https://github.com/openshift/origin/releases/tag/v3.11.0)
+* openssl
 
 The script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
 endif::[]
@@ -227,9 +233,16 @@ certificate, CA, and key files.
 [id=`deploying-saf-to-the-openshift-environment_{context}`]
 == Deploying SAF to the OpenShift environment
 
-To install SAF in an OpenShift environment, complete the following tasks: 
+To install SAF in an OpenShift environment, complete the following tasks:
 
+
+ifdef::target-upstream[]
+. Import the upstream container images into the `sa-telemetry` namespace using the `import-upstream.sh` script. For more information, see <<importing-the-container-images-for-saf_installing-the-core-components-of-saf>>.
+endif::target-upstream[]
+
+ifdef::target-downstream[]
 . Import the downstream container images into the `sa-telemetry` namespace using the `import-downstream.sh` script. For more information, see <<importing-the-container-images-for-saf_installing-the-core-components-of-saf>>.
+endif::target-downstream[]
 
 . Generate the custom manifests using the Ansible playbook `deploy_builder.yaml` via the `ansible-playbook` command. For more information, see <<generating-the-manifests-for-saf_installing-the-core-components-of-saf>>.
 
