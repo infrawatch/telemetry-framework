@@ -134,6 +134,20 @@ https://github.com/redhat-service-assurance/telemetry-framework/archive/<release
 the host level of each node in your cluster prior to instantiating an SAF
 instance if ElasticSearch is intended to be deployed.
 
+
+ifdef::target-upstream[]
+[id="quickstart-script-for-development-usage_{context}"]
+== Quickstart Script for Development Usage
+
+A script is provided to deploy SAF into an existing
+OpenShift environment. It allows for SAF to be started for development
+purposes, and is not intended for production environments. It takes care of all
+of the required steps for a single-cloud setup. Ensure that Ansible is installed
+before running it.
+
+The script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
+endif::[]
+
 ifdef::target-downstream[]
 [id="creating-an-rhcc-secret_{context}"]
 == Creating an RHCC Secret
