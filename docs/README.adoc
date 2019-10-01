@@ -142,8 +142,12 @@ ifdef::target-upstream[]
 A script is provided to deploy SAF into an existing
 OpenShift environment. It allows for SAF to be started for development
 purposes, and is not intended for production environments. It takes care of all
-of the required steps for a single-cloud setup. Ensure that Ansible is installed
-before running it.
+of the required steps for a single-cloud setup. Ensure the following tools are 
+installed before execution:
+
+* Ansible 2.7+
+* OpenShift CLI (oc from https://github.com/openshift/origin/releases/tag/v3.11.0)
+* openssl
 
 The script can be found here: https://github.com/redhat-service-assurance/telemetry-framework/blob/master/deploy/quickstart.sh
 endif::[]
