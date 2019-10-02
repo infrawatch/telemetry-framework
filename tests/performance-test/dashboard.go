@@ -118,10 +118,10 @@ func (d *Dashboard) Update() error {
 		if err != nil {
 			return err
 		}
-		err = d.client.SetDashboard(*d.board, false)
+		_, err = d.client.SetDashboard(*d.board, false)
 	} else {
 		log.Print("Creating new dashboard")
-		err = d.client.SetDashboard(*d.board, false)
+		_, err = d.client.SetDashboard(*d.board, false)
 	}
 	return err
 }
