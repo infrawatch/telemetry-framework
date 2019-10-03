@@ -14,7 +14,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: performance-test
-          image: <<REGISTRY_INFO>>/sa-telemetry/performance-test:dev
+          image: quay.io/plmr/performance-test:dev
           imagePullPolicy: Always
           command:
             - /performance-test/exec/performance-test-entrypoint.sh
