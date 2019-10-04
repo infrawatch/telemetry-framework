@@ -10,11 +10,11 @@ RUN go get gopkg.in/yaml.v2 && \
     mv main /tmp/
 
 #--- Create performance test layer ---
-FROM tripleomaster/centos-binary-collectd:current-tripleo-rdo
+FROM quay.io/tripleomaster/centos-binary-collectd:current-tripleo
 USER root
 
 RUN yum install golang -y && \
-    yum update -y && \
+#    yum update -y && \
     yum clean all
 
 COPY --from=0 /tmp/main /performance-test/exec/main

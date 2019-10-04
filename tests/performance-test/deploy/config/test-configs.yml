@@ -5,4 +5,4 @@
     hosts: 20
     plugins: 1000
     interval: 1
-    length: 180
+    length: 10

@@ -57,12 +57,22 @@ func (pt *PerformanceTest) InitDashboard(title string) {
 
 	pt.db.Setup(title, string(apiKeyMap["key"]), "http://"+hosts["grafana-host"], pt.start, pt.end)
 
-	pt.err = pt.db.NewPrometheusDs("http://" + hosts["prometheus-host"])
+	log.Print("Creating SAF prometheus datasource")
+	pt.err = pt.db.NewPrometheusDs("http://"+hosts["prometheus-host"], "SAFPrometheus")
+	if pt.err != nil {
+		return
+	}
+	log.Print("Creating OCP prometheus datasource")
+	pt.err = pt.db.NewPrometheusDs("http://"+hosts["ocp-prometheus-host"], "OCPPrometheus")
 	if pt.err != nil {
 		return
 	}
 
-	pt.err = pt.db.LoadPanelTemplate("/performance-test/grafana/graph-template.json")
+	//TODO: delete this
+	//pt.err = pt.db.LoadPanelTemplate("/performance-test/grafana/graph-template.json")
+
+	log.Print("Loading dashboard template...")
+	pt.err = pt.db.LoadDashboardTemplate("/performance-test/grafana/perftest-dashboard.json")
 }
 
 //InitParser creates a parser object with the test config file loaded into it
@@ -123,12 +133,12 @@ func (pt *PerformanceTest) Run() {
 		}
 		pt.err = pt.ExecTest(i)
 
-		for _, query := range test.Spec.Queries {
+		/*for _, query := range test.Spec.Queries {
 			pt.err = pt.db.AddGraph(string(query), string(query))
 			if pt.err != nil {
 				return
 			}
-		}
+		}*/
 
 		pt.err = pt.db.Update()
 		if pt.err != nil {

@@ -2,18 +2,20 @@ package main
 
 import (
 	"errors"
-	"github.com/grafana-tools/sdk"
 	"io/ioutil"
 	"log"
 	"time"
+
+	"github.com/grafana-tools/sdk"
 )
 
 type Dashboard struct {
-	client        *sdk.Client
-	board         *sdk.Board
-	grafUrl       string
-	promUrl       string
-	panelTemplate []byte
+	client            *sdk.Client
+	board             *sdk.Board
+	grafUrl           string
+	promUrl           string
+	panelTemplate     []byte
+	dashboardTemplate []byte
 }
 
 //findDsWithUrl searches for a datasource within a grafana instance based on URL
@@ -44,7 +46,7 @@ func (d *Dashboard) Setup(title string, apiKey string, grafUrl string, start tim
 
 // NewPrometheusDs configures a prometheus data source within grafana that is compatable with
 // the dashboard object
-func (d *Dashboard) NewPrometheusDs(url string) error {
+func (d *Dashboard) NewPrometheusDs(url string, name string) error {
 	d.promUrl = url
 	existingDS, err := d.client.GetAllDatasources()
 	if err != nil {
@@ -55,7 +57,7 @@ func (d *Dashboard) NewPrometheusDs(url string) error {
 	if err != nil {
 		log.Print("Building new Prometheus datasource")
 		newDs := sdk.Datasource{
-			Name:      "Prometheus",
+			Name:      name,
 			Type:      "prometheus",
 			URL:       url,
 			Access:    "direct",
@@ -79,6 +81,13 @@ func (d *Dashboard) NewPrometheusDs(url string) error {
 func (d *Dashboard) LoadPanelTemplate(fn string) error {
 	var err error
 	d.panelTemplate, err = ioutil.ReadFile(fn)
+	return err
+}
+
+// LoadDashboardTemplate loads a pre-defines grafana dashboard from file
+func (d *Dashboard) LoadDashboardTemplate(fn string) error {
+	var err error
+	d.dashboardTemplate, err = ioutil.ReadFile(fn)
 	return err
 }
 
@@ -118,7 +127,8 @@ func (d *Dashboard) Update() error {
 		if err != nil {
 			return err
 		}
-		_, err = d.client.SetDashboard(*d.board, false)
+		//_, err = d.client.SetDashboard(*d.board, false)
+		_, err = d.client.SetRawDashboard(d.dashboardTemplate)
 	} else {
 		log.Print("Creating new dashboard")
 		_, err = d.client.SetDashboard(*d.board, false)

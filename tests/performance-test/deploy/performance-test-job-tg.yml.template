@@ -28,9 +28,9 @@ spec:
           - name: collectd-config
             mountPath: /etc/collectd.conf
             subPath: collectd.conf
-          - name: graph-template
-            mountPath: /performance-test/grafana/graph-template.json
-            subPath: graph-template.json
+          - name: dashboard-template
+            mountPath: /performance-test/grafana/perftest-dashboard.json
+            subPath: perftest-dashboard.json
           - name: hosts
             mountPath: /performance-test/config/hosts.json
             subPath: hosts.json
@@ -45,9 +45,9 @@ spec:
       - name: test-configs
         configMap:
           name: saf-performance-test-configs
-      - name: graph-template
+      - name: dashboard-template
         configMap:
-          name: grafana-graph-template
+          name: grafana-dashboard-template
       - name: hosts
         configMap:
           name: saf-performance-test-hosts
