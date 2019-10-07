@@ -2,7 +2,7 @@
 FROM golang:1.13
 WORKDIR /go/src/performance-test/
 
-COPY ./dashboard.go ./main.go ./parser.go ./
+COPY ./main.go ./parser.go ./
 
 RUN go get gopkg.in/yaml.v2 && \
     go get github.com/grafana-tools/sdk && \
@@ -10,11 +10,13 @@ RUN go get gopkg.in/yaml.v2 && \
     mv main /tmp/
 
 #--- Create performance test layer ---
-FROM quay.io/tripleomaster/centos-binary-collectd:current-tripleo
+FROM tripleomaster/centos-binary-collectd:current-tripleo-rdo
 USER root
 
 RUN yum install golang -y && \
-#    yum update -y && \
+    yum update-minimal --security -y && \ 
+                                          #issue with full update:
+                                          #https://github.com/redhat-service-assurance/telemetry-framework/issues/81
     yum clean all
 
 COPY --from=0 /tmp/main /performance-test/exec/main

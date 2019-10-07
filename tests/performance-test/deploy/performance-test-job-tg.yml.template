@@ -47,7 +47,7 @@ spec:
           name: saf-performance-test-configs
       - name: dashboard-template
         configMap:
-          name: grafana-dashboard-template
+          name: perftest-dashboard-template
       - name: hosts
         configMap:
           name: saf-performance-test-hosts

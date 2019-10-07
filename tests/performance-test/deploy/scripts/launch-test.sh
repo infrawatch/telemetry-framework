@@ -18,8 +18,7 @@ do
     esac
 done
 
-if [ ! -v LENGTH ];
-then
+if [ ! -v LENGTH ]; then
     echo "[launch-test.sh] Length of test unspecfied. Running for default time of 900s (15min)"
     LENGTH=900
 fi
