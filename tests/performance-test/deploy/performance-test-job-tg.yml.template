@@ -2,14 +2,14 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: saf-performance-test
+  labels:
+    app: saf-performance-test
 spec:
   parallelism: 1
   completions: 1
-spec:
   template:
-    metadata:
-      label:
-        name: saf-performance-test
+    labels:
+      app: saf-performance-test
     spec:
       restartPolicy: Never
       containers:
