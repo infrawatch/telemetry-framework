@@ -143,9 +143,9 @@ EOSM
 if [ "$method" == "CREATE" ]; then
     echo "  * [ii] Creating the operators" ; create "${operator_list[@]}"
     echo "  * [ii] Waiting for prometheus-operator deployment to complete"
-    until oc rollout status dc/prometheus-operator; do sleep 3; done
+    until timeout 300 oc rollout status dc/prometheus-operator; do oc delete po -l app=prometheus-operator; sleep 3; done
     echo "  * [ii] Waiting for elasticsearch-operator deployment to complete"
-    until oc rollout status deploy/elasticsearch-operator; do sleep 3; done
+    until timeout 300 oc rollout status deploy/elasticsearch-operator; do oc delete po -l name=elasticsearch-operator; sleep 3; done
     echo ""
     echo "+---------------------------------------------------+"
     echo "| Waiting for CRDs to become established in the API |"
@@ -154,15 +154,15 @@ if [ "$method" == "CREATE" ]; then
     wait_for_crds
     echo "  * [ii] Creating the application" ; create "${application_list[@]}"
     echo "  * [ii] Waiting for QDR deployment to complete"
-    until oc rollout status deployment.apps/qdr-white; do sleep 3; done
+    until timeout 300 oc rollout status deployment.apps/qdr-white; do oc delete po -l application=qdr-white; sleep 3; done
     echo "  * [ii] Waiting for prometheus deployment to complete"
-    until oc rollout status statefulset.apps/prometheus-white; do sleep 3; done
+    until timeout 300 oc rollout status statefulset.apps/prometheus-white; do oc delete po -l app=prometheus; sleep 3; done
     echo "  * [ii] Waiting for elasticsearch deployment to complete"
     ES=$(oc get deployment.apps -l cluster-name=elasticsearch --template='{{range .items}}{{.metadata.name}}{{end}}')
-    until oc rollout status deployment.apps/${ES}; do sleep 3; done
+    until timeout 300 oc rollout status deployment.apps/${ES}; do oc delete po -l component=elasticsearch; sleep 3; done
     echo "  * [ii] Waiting for smart-gateway deployment to complete"
-    until oc rollout status deploymentconfig.apps.openshift.io/cloud1-notify-smartgateway; do sleep 3; done
-    until oc rollout status deploymentconfig.apps.openshift.io/cloud1-telemetry-smartgateway; do sleep 3; done
+    until timeout 300 oc rollout status deploymentconfig.apps.openshift.io/cloud1-notify-smartgateway; do oc delete po -l app=smartgateway; sleep 3; done
+    until timeout 300 oc rollout status deploymentconfig.apps.openshift.io/cloud1-telemetry-smartgateway; do oc delete po -l app=smartgateway; sleep 3; done
     echo "  * [ii] Waiting for all pods to show Ready"
     while oc get pods -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}' | grep False; do
         oc get pods
