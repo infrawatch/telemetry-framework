@@ -19,7 +19,7 @@ grafana instance and one that executes the testing logic.
 
 ## Setup
 
-SAF must already be deployed, a quick way to do this is using the
+SAF must already be deployed. A quick way to do this is using the
 `quickstart.sh` script in `telemetry-framework/deploy/` directory to run SAF.
 Here is an example of how to do that in minishift:
 
@@ -68,13 +68,13 @@ Monitor the performance test status by watching the job with
 
 Currently we favor telemetry-bench because it:
 
-* Makes predictable instead of random metrics
+* Results in predictable metrics
 * Can generate exactly the number of metrics we ask for
 * Can scale up to multiple instances by varying the hostname prefix
 * Has a codebase we control directly
 
 Collectd-tg has it's place in some collectd->QDR related testing, so we are
-preserving these artifacts for now
+preserving these artifacts for now.
 
 ### [DEPRECATED] Building the collectd-tg test container
 
@@ -84,12 +84,12 @@ preserving these artifacts for now
 
 OpenShift does not have a recent enough Docker engine to execute multistage
 builds. As a result, the performance test image must be built locally with
-docker v17.05 or higher and pushed to the openshift internal docker registry.
+Docker v17.05 or higher and pushed to the OpenShift internal Docker registry.
 
 The registry needs to be configured such that a local docker image can
-be pushed to it. To do this, a new openshift user must be created that has
-admin privledges. The default admin account cannot be used because it does not
-provide a token with which to login to the registry with docker.
+be pushed to it. To do this, a new OpenShift user must be created that has
+admin privileges. The default admin account cannot be used because it does not
+provide a token with which to login to the registry via docker.
 
 ```shell
 oc login -u developer -p passwd   # create new user if it does not already exist
