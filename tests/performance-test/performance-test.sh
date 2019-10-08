@@ -24,7 +24,7 @@ NOTES:
   * The best way to run this at scale is with batches of 5k or 10k and a concurrency setting to acheive the desired
     throughput
   * telemetry-bench is recommended since there are problems getting collectd-tg to scale concurrently
-  * telemetry-bench somewhat underperforms it's config (runs too slow), but every single message does get sent
+  * telemetry-bench somewhat underperforms (runs too slow), but every message does get sent
   * A plugin setting of 1000 reasonably matches the plugins/host we expect to see from OSP
 
 EXAMPLES:
