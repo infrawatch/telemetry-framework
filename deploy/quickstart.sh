@@ -9,7 +9,7 @@ set -e
 oc login -u system:admin
 oc new-project sa-telemetry
 
-# make sure thre is a node that matches ElasticSearch's node selector
+# make sure there is a node that matches ElasticSearch's node selector
 oc patch node $(oc get node | tail -1 | awk '{print $1}') -p '{"metadata":{"labels":{"kubernetes.io/os": "linux"}}}'
 
 # generate certificates for AMQ Interconnect
