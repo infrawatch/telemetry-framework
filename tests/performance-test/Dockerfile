@@ -1,5 +1,5 @@
 #--- Build SAF performance test ---
-FROM golang:1.12.7
+FROM golang:1.13
 WORKDIR /go/src/performance-test/
 
 COPY ./dashboard.go ./main.go ./parser.go ./
