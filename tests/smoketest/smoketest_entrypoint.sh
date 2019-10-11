@@ -39,7 +39,7 @@ curl -g "${PROMETHEUS}/api/v1/query?" --data-urlencode 'query=sa_collectd_cpu_to
 echo; echo
 
 # The egrep exit code is the result of the test and becomes the container/pod/job exit code
-egrep '"result":\[{"metric":{"__name__":"sa_collectd_cpu_total","cpu":"0","endpoint":"prom-http","exported_instance":"'"${POD}"'","service":"'"${CLOUDNAME}"'-telemetry-smartgateway","type":"user"},"values":\[\[.+,".+"\]' /tmp/query_output
+grep -E '"result":\[{"metric":{"__name__":"sa_collectd_cpu_total","cpu":"0","endpoint":"prom-http","exported_instance":"'"${POD}"'","service":"'"${CLOUDNAME}"'-telemetry-smartgateway","type":"user"},"values":\[\[.+,".+"\]' /tmp/query_output
 metrics_result=$?
 
 echo "Get documents for this test from ElasticSearch..."
@@ -50,7 +50,7 @@ DOCUMENT_HITS=$(curl -sk --cacert /certificates/admin-ca --cert /certificates/ad
   "query": {
     "match_phrase": {
       "labels.instance": {
-        "query": "saf-smoketest-'${CLOUDNAME}'*"
+        "query": "saf-smoketest-'"${CLOUDNAME}"'*"
       }
     }
   }
@@ -59,11 +59,11 @@ echo; echo
 
 # check if we got documents back for this test
 events_result=1
-if [ $DOCUMENT_HITS > 0 ]; then
+if [ "$DOCUMENT_HITS" -gt "0" ]; then
     events_result=0
 fi
 
-if [[ $metrics_result == 0 && $events_result == 0 ]]; then
+if [ "$metrics_result" = "0" ] && [ "$events_result" = "0" ]; then
     exit 0
 else
     exit 1
