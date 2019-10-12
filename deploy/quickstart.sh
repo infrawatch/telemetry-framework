@@ -9,8 +9,8 @@ set -e
 oc login -u system:admin
 oc new-project sa-telemetry
 
-# make sure ElasticSearch is scheduled on a node
-oc patch node localhost -p '{"metadata":{"labels":{"kubernetes.io/os": "linux"}}}'
+# make sure there is a node that matches ElasticSearch's node selector
+oc patch node $(oc get node | tail -1 | awk '{print $1}') -p '{"metadata":{"labels":{"kubernetes.io/os": "linux"}}}'
 
 # generate certificates for AMQ Interconnect
 openssl req -new -x509 -batch -nodes -days 11000 \
