@@ -48,9 +48,21 @@ DOCUMENT_HITS=$(curl -sk --cacert /certificates/admin-ca --cert /certificates/ad
   "size": 0,
   "terminate_after": 1,
   "query": {
-    "match_phrase": {
-      "labels.instance": {
-        "query": "saf-smoketest-'"${CLOUDNAME}"'*"
+    "bool": {
+      "must": {
+        "match_phrase": {
+          "labels.instance": {
+            "query": "saf-smoketest-'"${CLOUDNAME}"'*"
+          }
+        }
+      },
+      "filter": {
+        "range" : {
+          "startsAt" : {
+            "gte" : "now-1m",
+            "lt" :  "now"
+           }
+         }
       }
     }
   }
