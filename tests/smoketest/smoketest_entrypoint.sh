@@ -29,10 +29,6 @@ done
 # Sleeping to collect 1m of actual metrics
 sleep 60
 
-echo "Get indices from ElasticSearch..."
-curl -k --cacert /certificates/admin-ca --cert /certificates/admin-cert --key /certificates/admin-key "https://${ELASTICSEARCH}/_cat/indices?v" | tee /tmp/index_results
-echo; echo
-
 echo "List of metric names for debugging..."
 curl -g "${PROMETHEUS}/api/v1/label/__name__/values" 2>&2 | tee /tmp/label_names
 echo; echo
@@ -43,9 +39,44 @@ curl -g "${PROMETHEUS}/api/v1/query?" --data-urlencode 'query=sa_collectd_cpu_to
 echo; echo
 
 # The egrep exit code is the result of the test and becomes the container/pod/job exit code
-egrep '"result":\[{"metric":{"__name__":"sa_collectd_cpu_total","cpu":"0","endpoint":"prom-http","exported_instance":"'"${POD}"'","service":"'"${CLOUDNAME}"'-telemetry-smartgateway","type":"user"},"values":\[\[.+,".+"\]' /tmp/query_output
+grep -E '"result":\[{"metric":{"__name__":"sa_collectd_cpu_total","cpu":"0","endpoint":"prom-http","exported_instance":"'"${POD}"'","service":"'"${CLOUDNAME}"'-telemetry-smartgateway","type":"user"},"values":\[\[.+,".+"\]' /tmp/query_output
 metrics_result=$?
 
-# add events results
+echo "Get documents for this test from ElasticSearch..."
+DOCUMENT_HITS=$(curl -sk --cacert /certificates/admin-ca --cert /certificates/admin-cert --key /certificates/admin-key -X GET "https://${ELASTICSEARCH}/_search" -H 'Content-Type: application/json' -d'
+{
+  "size": 0,
+  "terminate_after": 1,
+  "query": {
+    "bool": {
+      "must": {
+        "match_phrase": {
+          "labels.instance": {
+            "query": "saf-smoketest-'"${CLOUDNAME}"'*"
+          }
+        }
+      },
+      "filter": {
+        "range" : {
+          "startsAt" : {
+            "gte" : "now-1m",
+            "lt" :  "now"
+           }
+         }
+      }
+    }
+  }
+}' | python -c "import sys, json; print json.load(sys.stdin)['hits']['total']")
+echo; echo
 
-exit $metrics_result
+# check if we got documents back for this test
+events_result=1
+if [ "$DOCUMENT_HITS" -gt "0" ]; then
+    events_result=0
+fi
+
+if [ "$metrics_result" = "0" ] && [ "$events_result" = "0" ]; then
+    exit 0
+else
+    exit 1
+fi
