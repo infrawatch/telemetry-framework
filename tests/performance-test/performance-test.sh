@@ -35,9 +35,24 @@ ENDUSAGE
     exit 1
 }
 
+ELIPSE="."
+elipses(){
+    case $ELIPSE in
+    ".") printf "%s" $ELIPSE
+         ELIPSE=".."
+    ;;
+    "..") printf "%s" $ELIPSE
+          ELIPSE="..."
+    ;;
+    "...") printf "%s" $ELIPSE
+           ELIPSE="."
+    ;;
+    esac
+}
+
 create_grafana_datasources(){
     echo "Creating OCP datasource"
-    RESP=$(curl -d "$OCP_DATASOURCE" -H 'Content-Type: application/json' "$GRAF_HOST/api/datasources")
+    RESP=$(curl --silent --output /dev/null -d "$OCP_DATASOURCE" -H 'Content-Type: application/json' "$GRAF_HOST/api/datasources")
     if [ ! -z "$(echo $RESP | grep "RequiredError")" ]; then
         echo "Unable to create OCP datasource with reply: "
         echo $RESP
@@ -45,7 +60,7 @@ create_grafana_datasources(){
     fi
 
     echo "Creating SAF datasource"
-    RESP=$(curl -d "$SAF_DATASOURCE" -H 'Content-Type: application/json' "$GRAF_HOST/api/datasources")
+    RESP=$(curl --silent --output /dev/null -d "$SAF_DATASOURCE" -H 'Content-Type: application/json' "$GRAF_HOST/api/datasources")
     if [ ! -z "$(echo $RESP | grep "RequiredError")" ]; then
         echo "Unable to create SAF datasource with reply: "
         echo $RESP
@@ -56,6 +71,17 @@ create_grafana_datasources(){
 create_service_monitors(){
     oc apply -f ./grafana/prom-servicemonitor.yml 
     oc apply -f ./grafana/qdr-servicemonitor.yml
+}
+
+make_qdr_edge_router(){
+    if ! oc get qdr qdr-test; then
+        echo "Deploying edge router"
+        oc create -f ./deploy/qdrouterd.yaml
+        return
+    fi
+    echo "Utilizing existing edge router"
+
+
 }
 
 get_sources(){
@@ -99,10 +125,10 @@ EOF
 
 post_dashboards(){
     echo "Creating new dashboards in Grafana"
-    curl -d "{\"overwrite\": true, \"dashboard\": $(cat ./grafana/perftest-dashboard.json)}" \
+    curl --silent --output /dev/null -d "{\"overwrite\": true, \"dashboard\": $(cat ./grafana/perftest-dashboard.json)}" \
         -H 'Content-Type: application/json' "$GRAF_HOST/api/dashboards/db"
         
-    curl -d "{\"overwrite\": true, \"dashboard\": $(cat ./grafana/prom2-dashboard.json)}" \
+    curl --silent --output /dev/null -d "{\"overwrite\": true, \"dashboard\": $(cat ./grafana/prom2-dashboard.json)}" \
         -H 'Content-Type: application/json' "$GRAF_HOST/api/dashboards/db"
 }
 
@@ -141,7 +167,6 @@ while true; do
     case $STAGE in
         "TARGET")
             TARGETS=`curl "http://$(oc get route prometheus -o jsonpath='{.spec.host}')/api/v1/targets"`
-            echo $TARGET
             QDR=`echo $TARGETS | grep -o '"__meta_kubernetes_service_name":"qdr-white"'`
             PROM=`echo $TARGETS | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"'`
 
@@ -149,20 +174,33 @@ while true; do
                 echo "Waiting for new targets to be recognized by Prometheus Operator"
                 sleep 10
             else
-                echo "Found new target endpoints. Creating performance test job"
+                echo "Found new target endpoints"
+                STAGE="ROUTER"
+            fi
+        ;;
+        "ROUTER")
+            make_qdr_edge_router
+            estab=$(oc get pod -l qdr_cr=qdr-test -o jsonpath='{.items[0].status.conditions[?(@.type=="ContainersReady")].status}') || true
+            if [ "${estab}" != "True" ]; then
+                printf "%s" "Waiting on qdr edge test pod creation"; elipses
+                printf "\r"
+                sleep 1
+            else
+                echo "Qdr edge test pod established. Creating performance test job"
                 export COUNT HOSTS PLUGINS INTERVAL CONCURRENT
                 cd deploy
                 ./performance-test-tb.sh
                 STAGE="TEST"
             fi
         ;;
-        "TEST")
+        "TEST") 
             estab=$(oc get pod -l job-name=saf-perftest-1-runner -o jsonpath='{.items[0].status.conditions[?(@.type=="ContainersReady")].status}') || true
             if [ "${estab}" != "True" ]; then
-                echo "Waiting on SAF performance test pod creation..."
-                sleep 3
+                printf '%s' "Waiting on SAF performance test pod creation"; elipses
+                printf "\r"
+                sleep 1
             else
-                echo "SAF performance test pod established"
+                printf "\n%s\n" "SAF performance test pod established"
                 break
             fi
         ;;
@@ -172,8 +210,8 @@ while true; do
         ;;
     esac
 done
-oc logs -f $(oc get pod -l job-name=saf-perftest-1-runner -o jsonpath='{.items[0].metadata.name}')
 
+oc logs -f $(oc get pod -l job-name=saf-perftest-1-runner -o jsonpath='{.items[0].metadata.name}') |  grep -E 'total [0-9]+'
 echo "Test complete"
 
 
