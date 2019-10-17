@@ -7,7 +7,13 @@ set -e
 #  Upstream containers: ./quickstart.sh
 #  Downstream containers: ./quickstart.sh --downstream-secret=~/6340056-cloudops-pull-secret.yaml
 oc login -u system:admin
-oc new-project sa-telemetry
+if oc get project sa-telemetry; then 
+    echo "Utilizing existing project 'sa-telemetry'"
+    oc project sa-telemetry
+else
+    echo "Creating new project 'sa-telemetry'"
+    oc new-project sa-telemetry    
+fi
 
 # make sure there is a node that matches ElasticSearch's node selector
 oc patch node $(oc get node | tail -1 | awk '{print $1}') -p '{"metadata":{"labels":{"kubernetes.io/os": "linux"}}}'
@@ -17,7 +23,10 @@ openssl req -new -x509 -batch -nodes -days 11000 \
         -subj "/O=io.interconnectedcloud/CN=qdr-white.sa-telemetry.svc.cluster.local" \
         -out qdr-server-certs/tls.crt \
         -keyout qdr-server-certs/tls.key
-oc create secret tls qdr-white-cert --cert=qdr-server-certs/tls.crt --key=qdr-server-certs/tls.key
+oc create secret tls qdr-white-cert \
+    --cert=qdr-server-certs/tls.crt \
+    --key=qdr-server-certs/tls.key \
+    --dry-run=true -o yaml | oc apply -f -
 
 # generate certificates for ElasticSearch
 WORKING_DIR=./es-certs NAMESPACE="sa-telemetry" ./cert_generation.sh
@@ -31,7 +40,8 @@ oc create secret generic elasticsearch \
     --from-file=logging-es.crt \
     --from-file=admin-key=system.admin.key \
     --from-file=admin-cert=system.admin.crt \
-    --from-file=admin-ca=ca.crt
+    --from-file=admin-ca=ca.crt \
+    --dry-run=true -o yaml | oc apply -f -
 
 cd ..
 
