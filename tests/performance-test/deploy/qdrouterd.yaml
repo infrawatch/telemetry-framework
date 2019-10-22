@@ -1,0 +1,39 @@
+apiVersion: interconnectedcloud.github.io/v1alpha1
+kind: Qdr
+metadata:
+  name: qdr-test
+  namespace: sa-telemetry
+spec:
+  deploymentPlan:
+      image: docker-registry.default.svc:5000/sa-telemetry/amq-interconnect:1.4-7
+      role: edge
+      size: 1
+      placement: Any
+  addresses:
+    - prefix: closest
+      distribution: closest
+    - prefix: multicast
+      distribution: multicast
+    - prefix: unicast
+      distribution: closest
+    - prefix: exclusive
+      distribution: closest
+    - prefix: broadcast
+      distribution: multicast
+    - prefix: collectd/telemetry
+      distribution: multicast
+    - prefix: collectd/notify
+      distribution: multicast
+  edgeListeners:
+    - host: "0.0.0.0"
+      port: 5671
+      expose: true
+  listeners:
+    - port: 5672
+    - port: 8672
+      http: true
+  edgeConnectors:
+    - name: router
+      host: qdr-white.sa-telemetry.svc.cluster.local
+      port: 5671
+      verifyHostname: no
