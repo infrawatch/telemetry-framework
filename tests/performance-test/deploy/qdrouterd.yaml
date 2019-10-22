@@ -20,7 +20,7 @@ spec:
       distribution: closest
     - prefix: broadcast
       distribution: multicast
-    - prefix: collectd
+    - prefix: collectd/telemetry
       distribution: multicast
     - prefix: collectd/notify
       distribution: multicast
