@@ -26,8 +26,8 @@ oc import-image amq-interconnect-operator:latest --from=registry.redhat.io/amq7-
 
 # Currently we don't have a robust release process for the Smart Gateway or
 # corresponding Operator, so we just pull the latest version down for now.
-oc import-image smart-gateway:latest --from=registry-proxy.engineering.redhat.com/rh-osbs/saf1-saf-smart-gateway:rhos-13.0-rhel-7-containers-candidate-21734-20191021134242 --confirm --insecure=true
-oc import-image smart-gateway-operator:latest --from=registry-proxy.engineering.redhat.com/rh-osbs/saf1-saf-smart-gateway-operator:rhos-13.0-rhel-7-containers-candidate-75164-20191021152952 --confirm --insecure=true
+oc import-image smart-gateway:latest --from=registry-proxy.engineering.redhat.com/rh-osbs/saf1-saf-smart-gateway:rhos-13.0-rhel-7-containers-candidate-14427-20191024141604 --confirm --insecure
+oc import-image smart-gateway-operator:latest --from=registry-proxy.engineering.redhat.com/rh-osbs/saf1-saf-smart-gateway-operator:rhos-13.0-rhel-7-containers-candidate-39614-20191024143411 --confirm --insecure
 
 oc import-image ose-elasticsearch-operator --from=registry.redhat.io/openshift4/ose-elasticsearch-operator:v4.2.0 --confirm
 oc import-image ose-oauth-proxy --from=registry.redhat.io/openshift4/ose-oauth-proxy:v4.2.0 --confirm
