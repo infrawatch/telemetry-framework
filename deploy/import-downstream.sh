@@ -1,10 +1,24 @@
 #!/bin/sh
 #
-# See the README.md file for an explanation on why some ImageStreams have tags
-# other than 'latest'
+# [NOTE]
+# When deploying SAF you can choose to use container images from either
+# upstream (public open source), or downstream (published to the Red Hat
+# Container Catalog).
+#
+# Two scripts,`import-downstream.sh` and `import-upstream.sh` are provided to
+# help with this. In the scripts we attempt to hook into specific versions for
+# deployment from the source registry. When importing those into our
+# ImageStream source for delivery of the images from the internal OpenShift
+# registry, we often use `latest` where possible. In certain instances an
+# Operator or container artifact may require a specific version format, and
+# thus is reflected in the container image tag imported into the internal
+# registry.
+#
+# In the future we hope to better align the versions across the various
+# ImageStreams and to build a more consistent view between the deployment
+# methods. It's possible our issues will be resolved with the migration to the
+# Operator Lifecycle Manager as well.
 
-# Version v2.11.0 is here because the Prometheus Operator in use requires a
-# major version of '2' and the version format of vMajor.Minor.Patch
 oc import-image prometheus:latest --from=registry.redhat.io/openshift3/prometheus:v3.11 --confirm
 oc import-image prometheus-operator:latest --from=registry.redhat.io/openshift3/ose-prometheus-operator:v3.11 --confirm
 oc import-image prometheus-configmap-reloader:latest --from=registry.redhat.io/openshift3/ose-configmap-reloader:v3.11 --confirm
