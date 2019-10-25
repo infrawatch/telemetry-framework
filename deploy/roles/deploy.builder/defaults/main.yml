@@ -21,7 +21,7 @@ sg_events_use_tls: "true"
 sg_events_tls_client_cert: /config/certs/admin-cert
 sg_events_tls_client_key: /config/certs/admin-key
 sg_events_tls_ca_cert: /config/certs/admin-ca
-sg_events_tls_server_name: elasticsearch.sa-telemetry.svc
+#sg_events_tls_server_name: elasticsearch.sa-telemetry.svc
 sg_events_reset_index: "true"
 
 # elasticsearch

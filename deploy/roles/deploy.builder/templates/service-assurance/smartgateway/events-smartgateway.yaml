@@ -13,6 +13,6 @@ spec:
   tls_client_cert: {{ sg_events_tls_client_cert }}
   tls_client_key: {{ sg_events_tls_client_key }}
   tls_ca_cert: {{ sg_events_tls_ca_cert }}
-  tls_server_name: {{ sg_events_tls_server_name }}
+{% if sg_events_tls_server_name is defined and sg_events_tls_server_name %}  tls_server_name: {{ sg_events_tls_server_name }}{% endif %}
   reset_index: "{{ sg_events_reset_index }}"
 # vim: set tabstop=2 shiftwidth=2 expandtab smartindent:
