@@ -39,9 +39,9 @@ oc import-image amq-interconnect-operator:latest --from=quay.io/interconnectedcl
 oc import-image smart-gateway:latest --from=quay.io/redhat-service-assurance/smart-gateway:latest --confirm
 oc import-image smart-gateway-operator:latest --from=quay.io/redhat-service-assurance/smart-gateway-operator:latest --confirm
 
-oc import-image ose-elasticsearch-operator:latest --from=quay.io/openshift/origin-elasticsearch-operator:v4.2.0 --confirm
-oc import-image ose-oauth-proxy:latest --from=quay.io/openshift/origin-oauth-proxy:v4.2.0 --confirm
-oc import-image ose-elasticsearch5:latest --from=quay.io/openshift/origin-logging-elasticsearch5:v4.2.0 --confirm
+oc import-image ose-elasticsearch-operator:latest --from=quay.io/openshift/origin-elasticsearch-operator:4.2.0 --confirm
+oc import-image ose-oauth-proxy:latest --from=quay.io/openshift/origin-oauth-proxy:4.2.0 --confirm
+oc import-image ose-elasticsearch5:latest --from=quay.io/openshift/origin-logging-elasticsearch5:4.2.0 --confirm
 
 oc set image-lookup prometheus \
     prometheus-operator \
