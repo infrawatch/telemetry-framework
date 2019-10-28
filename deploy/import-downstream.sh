@@ -1,11 +1,24 @@
 #!/bin/sh
 #
-# See the README.md file for an explanation on why some ImageStreams have tags
-# other than 'latest'
+# [NOTE]
+# When deploying SAF you can choose to use container images from either
+# upstream (public open source), or downstream (published to the Red Hat
+# Container Catalog).
 #
+# Two scripts,`import-downstream.sh` and `import-upstream.sh` are provided to
+# help with this. In the scripts we attempt to hook into specific versions for
+# deployment from the source registry. When importing those into our
+# ImageStream source for delivery of the images from the internal OpenShift
+# registry, we often use `latest` where possible. In certain instances an
+# Operator or container artifact may require a specific version format, and
+# thus is reflected in the container image tag imported into the internal
+# registry.
+#
+# In the future we hope to better align the versions across the various
+# ImageStreams and to build a more consistent view between the deployment
+# methods. It's possible our issues will be resolved with the migration to the
+# Operator Lifecycle Manager as well.
 
-# Version v2.11.0 is here because the Prometheus Operator in use requires a
-# major version of '2' and the version format of vMajor.Minor.Patch
 oc import-image prometheus:latest --from=registry.redhat.io/openshift3/prometheus:v3.11 --confirm
 oc import-image prometheus-operator:latest --from=registry.redhat.io/openshift3/ose-prometheus-operator:v3.11 --confirm
 oc import-image prometheus-configmap-reloader:latest --from=registry.redhat.io/openshift3/ose-configmap-reloader:v3.11 --confirm
@@ -27,7 +40,22 @@ oc import-image amq-interconnect-operator:latest --from=registry.redhat.io/amq7-
 
 # Currently we don't have a robust release process for the Smart Gateway or
 # corresponding Operator, so we just pull the latest version down for now.
-oc import-image smart-gateway:latest --from=registry.redhat.io/saf/smart-gateway:1.0-4 --confirm
-oc import-image smart-gateway-operator:latest --from=registry.redhat.io/saf/smart-gateway-operator:1.0.4-3 --confirm
+oc import-image smart-gateway:latest --from=registry.redhat.io/saf/smart-gateway:1.1.0-2 --confirm
+oc import-image smart-gateway-operator:latest --from=registry.redhat.io/saf/smart-gateway-operator:1.1.0-2 --confirm
 
-oc set image-lookup prometheus prometheus-operator prometheus-configmap-reloader prometheus-config-reloader prometheus-alertmanager amq-interconnect amq-interconnect-operator smart-gateway smart-gateway-operator
+oc import-image ose-elasticsearch-operator --from=registry.redhat.io/openshift4/ose-elasticsearch-operator:v4.2.0 --confirm
+oc import-image ose-oauth-proxy --from=registry.redhat.io/openshift4/ose-oauth-proxy:v4.2.0 --confirm
+oc import-image ose-elasticsearch5:latest --from=registry.redhat.io/openshift4/ose-logging-elasticsearch5:v4.2.0 --confirm
+
+oc set image-lookup prometheus \
+    prometheus-operator \
+    prometheus-configmap-reloader \
+    prometheus-config-reloader \
+    prometheus-alertmanager \
+    amq-interconnect \
+    amq-interconnect-operator \
+    smart-gateway \
+    smart-gateway-operator \
+    ose-elasticsearch-operator \
+    ose-oauth-proxy \
+    ose-elasticsearch5
