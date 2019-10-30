@@ -40,8 +40,8 @@ oc import-image amq-interconnect-operator:latest --from=registry.redhat.io/amq7-
 
 # Currently we don't have a robust release process for the Smart Gateway or
 # corresponding Operator, so we just pull the latest version down for now.
-oc import-image smart-gateway:latest --from=registry.redhat.io/saf/smart-gateway:1.1.0-2 --confirm
-oc import-image smart-gateway-operator:latest --from=registry.redhat.io/saf/smart-gateway-operator:1.1.0-2 --confirm
+oc import-image smart-gateway:latest --from=registry.redhat.io/saf/smart-gateway:1.1.0-4 --confirm
+oc import-image smart-gateway-operator:latest --from=registry.redhat.io/saf/smart-gateway-operator:1.1.0-4 --confirm
 
 oc import-image ose-elasticsearch-operator --from=registry.redhat.io/openshift4/ose-elasticsearch-operator:v4.2.0 --confirm
 oc import-image ose-oauth-proxy --from=registry.redhat.io/openshift4/ose-oauth-proxy:v4.2.0 --confirm
