@@ -77,7 +77,7 @@ make_service_monitors(){
 make_qdr_edge_router(){
     if ! oc get qdr qdr-test; then
         echo "Deploying edge router"
-        oc create -f ./deploy/qdrouterd.yaml
+        oc create -f <(sed -e "s/<<REGISTRY_INFO>>/$(oc registry info)/" ./deploy/qdrouterd.yaml.template)
         return
     fi
     echo "Utilizing existing edge router"
