@@ -93,7 +93,7 @@ get_sources(){
     OCP_PROM_HOST="https:\/\/$(oc get routes --field-selector metadata.name=prometheus-k8s -o jsonpath="{.items[0].spec.host}")"
     OCP_DATASOURCE=$(oc get secret -n openshift-monitoring grafana-datasources -o jsonpath='{.data.prometheus\.yaml}' \
         | base64 -d)
-    OCP_DATASOURCE=$(echo "$OCP_DATASOURCE" | sed 's/.*\[\([^]]*\)\].*/\1/g') #get DS json from between brackets
+    OCP_DATASOURCE=$(echo "${OCP_DATASOURCE//$'\n'/}" | sed 's/.*\[\([^]]*\)\].*/\1/g') #get DS json from between brackets
     OCP_DATASOURCE=$(echo "$OCP_DATASOURCE" | sed 's/"name": "[a-z]*"/"name": "OCPPrometheus"/g')  #Change DS name
     OCP_DATASOURCE=$(echo "$OCP_DATASOURCE" | sed 's/"url": "[^,]*"/"url": "PROMHOST"/g')     #DS placeholder url
     OCP_DATASOURCE=$(echo "$OCP_DATASOURCE" | sed "s/\"url\": \"PROMHOST\"/\"url\": \"${OCP_PROM_HOST}\"/g") #Change DS url
