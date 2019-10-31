@@ -5,7 +5,7 @@ metadata:
   namespace: sa-telemetry
 spec:
   deploymentPlan:
-      image: docker-registry.default.svc:5000/sa-telemetry/amq-interconnect:1.4-7
+      image: <<REGISTRY_INFO>>/sa-telemetry/amq-interconnect:1.4-7
       role: edge
       size: 1
       placement: Any
