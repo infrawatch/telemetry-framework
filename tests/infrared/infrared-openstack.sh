@@ -8,8 +8,9 @@ set -e
 VIRTHOST=${VIRTHOST:-my.big.hypervisor.net}
 AMQP_HOST=${AMQP_HOST:-$(oc get route -l application=qdr-white -o jsonpath='{.items[0].spec.host}')}
 SSH_KEY="${SSH_KEY:-${HOME}/.ssh/id_rsa}"
-VM_IMAGE="${VM_IMAGE:-http://download-node-02.eng.bos.redhat.com/released/RHEL-7/7.6/Server/x86_64/images/rhel-guest-image-7.6-210.x86_64.qcow2}"
-OSP_BUILD="${OSP_BUILD:-7.6-latest}"
+VM_IMAGE="${VM_IMAGE:-http://download-node-02.eng.bos.redhat.com/released/RHEL-7/7.7/Server/x86_64/images/rhel-guest-image-7.7-261.x86_64.qcow2}"
+OSP_BUILD="${OSP_BUILD:-7.7-latest}"
+NTP_SERVER="${NTP_SERVER:-10.35.255.6}"
 
 infrared virsh \
     -vv \
@@ -66,7 +67,7 @@ infrared tripleo-overcloud \
     --deploy yes \
     --public-network yes \
     --public-subnet default_subnet \
-    --ntp-server 10.35.255.6 \
+    --ntp-server "${NTP_SERVER}" \
     --containers yes \
     --registry-mirror docker-registry.engineering.redhat.com \
     --overcloud-templates outputs/metrics-collectd-qdr.yaml \
