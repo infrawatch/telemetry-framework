@@ -19,122 +19,83 @@
   "links": [],
   "panels": [
     {
-      "collapsed": false,
+      "datasource": "SAFElasticsearch",
+      "description": "Describes the ratio of number of events triggered in the cloud to the number of events logged in Elastic Search.  \n\nThis result WILL NOT be accurate until after a performance test has completed. Result reflects the most recent test only - resizing the dashboard time interval over previous tests will not give the correct result for that previous test.",
       "gridPos": {
-        "h": 1,
-        "w": 24,
+        "h": 7,
+        "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 43,
-      "panels": [],
-      "title": "Test Indicators",
-      "type": "row"
-    },
-    {
-      "dashboardFilter": "",
-      "dashboardTags": [],
-      "datasource": "OCPPrometheus",
-      "folderId": null,
-      "gridPos": {
-        "h": 10,
-        "w": 4,
-        "x": 0,
-        "y": 1
+      "id": 72,
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "links": [
+              {
+                "title": "",
+                "url": ""
+              }
+            ],
+            "mappings": [],
+            "max": 1,
+            "min": 0,
+            "thresholds": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0.97
+              }
+            ],
+            "unit": "percentunit"
+          },
+          "override": {},
+          "values": false
+        },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
-      "id": 36,
-      "limit": 10,
-      "nameFilter": "",
-      "onlyAlertsOnDashboard": false,
-      "options": {},
-      "show": "current",
-      "sortOrder": 1,
-      "stateFilter": [],
+      "pluginVersion": "6.4.3",
       "targets": [
         {
-          "expr": "kube_node_status_condition",
-          "hide": false,
-          "refId": "A"
+          "bucketAggs": [
+            {
+              "field": "startsAt",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "events_successful",
+              "id": "1",
+              "meta": {},
+              "settings": {},
+              "type": "avg"
+            }
+          ],
+          "query": "_type:status",
+          "refId": "A",
+          "timeField": "startsAt"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Testing Alerts",
-      "type": "alertlist"
-    },
-    {
-      "columns": [],
-      "datasource": "OCPPrometheus",
-      "description": "Entries will appear here for nodes that report Unready,  Disk/Memory/PID Pressure, or that return \"Unknown\" for any of those statuses.",
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 3,
-        "w": 8,
-        "x": 4,
-        "y": 1
-      },
-      "id": 38,
-      "options": {},
-      "pageSize": 10,
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "date"
-        },
-        {
-          "alias": "",
-          "colorMode": "row",
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [
-            "1",
-            "1"
-          ],
-          "type": "number",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"unknown\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "{{short_node}} | {{condition}} (UNKNOWN)",
-          "refId": "A"
-        },
-        {
-          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"true\", condition!=\"Ready\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "{{short_node}} | {{condition}}",
-          "refId": "B"
-        },
-        {
-          "expr": "label_replace(min(kube_node_status_condition{node=~\".*node-.*\", status=\"false\", condition=\"Ready\"}) by (node) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "{{short_node}} | UnReady",
-          "refId": "C"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Node Status Faults",
-      "transform": "timeseries_to_rows",
-      "type": "table"
+      "title": "Event Success Rate",
+      "transparent": true,
+      "type": "gauge"
     },
     {
       "cacheTimeout": null,
@@ -161,7 +122,7 @@
         "h": 3,
         "w": 3,
         "x": 12,
-        "y": 1
+        "y": 0
       },
       "id": 64,
       "interval": null,
@@ -245,7 +206,7 @@
         "h": 3,
         "w": 3,
         "x": 15,
-        "y": 1
+        "y": 0
       },
       "id": 66,
       "interval": null,
@@ -314,7 +275,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 1
+        "y": 0
       },
       "id": 68,
       "options": {
@@ -351,7 +312,7 @@
         "showThresholdLabels": true,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.3.5",
+      "pluginVersion": "6.4.3",
       "targets": [
         {
           "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range])) / vector(scalar(delta(deliveries_ingress[$__range])))",
@@ -364,29 +325,6 @@
       "timeShift": null,
       "title": "% of msgs QDR -> Prom",
       "type": "gauge"
-    },
-    {
-      "dashboardFilter": "",
-      "dashboardTags": [],
-      "folderId": null,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 4,
-        "y": 4
-      },
-      "id": 54,
-      "limit": "10000",
-      "nameFilter": "",
-      "onlyAlertsOnDashboard": true,
-      "options": {},
-      "show": "changes",
-      "sortOrder": 1,
-      "stateFilter": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Alert History",
-      "type": "alertlist"
     },
     {
       "cacheTimeout": null,
@@ -411,7 +349,7 @@
         "h": 3,
         "w": 3,
         "x": 12,
-        "y": 4
+        "y": 3
       },
       "id": 52,
       "interval": null,
@@ -495,7 +433,7 @@
         "h": 3,
         "w": 3,
         "x": 12,
-        "y": 7
+        "y": 6
       },
       "id": 48,
       "interval": null,
@@ -579,7 +517,7 @@
         "h": 3,
         "w": 3,
         "x": 18,
-        "y": 7
+        "y": 6
       },
       "id": 70,
       "interval": null,
@@ -664,7 +602,7 @@
         "h": 3,
         "w": 3,
         "x": 21,
-        "y": 7
+        "y": 6
       },
       "id": 26,
       "interval": null,
@@ -731,12 +669,156 @@
       "valueName": "min"
     },
     {
+      "dashboardFilter": "",
+      "dashboardTags": [],
+      "datasource": "OCPPrometheus",
+      "folderId": null,
+      "gridPos": {
+        "h": 10,
+        "w": 4,
+        "x": 0,
+        "y": 7
+      },
+      "id": 36,
+      "limit": 10,
+      "nameFilter": "",
+      "onlyAlertsOnDashboard": false,
+      "options": {},
+      "show": "current",
+      "sortOrder": 1,
+      "stateFilter": [],
+      "targets": [
+        {
+          "expr": "kube_node_status_condition",
+          "hide": false,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Testing Alerts",
+      "type": "alertlist"
+    },
+    {
+      "columns": [],
+      "datasource": "OCPPrometheus",
+      "description": "Entries will appear here for nodes that report Unready,  Disk/Memory/PID Pressure, or that return \"Unknown\" for any of those statuses.",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 4,
+        "y": 7
+      },
+      "id": 38,
+      "options": {},
+      "pageSize": 10,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": "row",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [
+            "1",
+            "1"
+          ],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"unknown\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{short_node}} | {{condition}} (UNKNOWN)",
+          "refId": "A"
+        },
+        {
+          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"true\", condition!=\"Ready\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{short_node}} | {{condition}}",
+          "refId": "B"
+        },
+        {
+          "expr": "label_replace(min(kube_node_status_condition{node=~\".*node-.*\", status=\"false\", condition=\"Ready\"}) by (node) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{short_node}} | UnReady",
+          "refId": "C"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Node Status Faults",
+      "transform": "timeseries_to_rows",
+      "type": "table"
+    },
+    {
+      "dashboardFilter": "",
+      "dashboardTags": [],
+      "datasource": null,
+      "folderId": null,
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 4,
+        "y": 10
+      },
+      "id": 54,
+      "limit": "10000",
+      "nameFilter": "",
+      "onlyAlertsOnDashboard": true,
+      "options": {},
+      "show": "changes",
+      "sortOrder": 1,
+      "stateFilter": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Alert History",
+      "type": "alertlist"
+    },
+    {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 17
+      },
+      "id": 43,
+      "panels": [],
+      "title": "Test Indicators",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
       },
       "id": 56,
       "panels": [],
@@ -813,7 +895,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 12
+        "y": 19
       },
       "id": 60,
       "legend": {
@@ -920,7 +1002,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 12
+        "y": 19
       },
       "id": 58,
       "legend": {
@@ -997,11 +1079,12 @@
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 27
       },
       "id": 28,
       "panels": [],
@@ -1079,7 +1162,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 28
       },
       "id": 24,
       "legend": {
@@ -1229,7 +1312,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 21
+        "y": 28
       },
       "id": 32,
       "legend": {
@@ -1322,11 +1405,12 @@
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 35
       },
       "id": 15,
       "panels": [],
@@ -1380,7 +1464,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 29
+        "y": 36
       },
       "id": 13,
       "legend": {
@@ -1519,7 +1603,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 29
+        "y": 36
       },
       "id": 30,
       "legend": {
@@ -1621,7 +1705,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 43
       },
       "id": 11,
       "legend": {
@@ -1759,7 +1843,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 36
+        "y": 43
       },
       "id": 21,
       "legend": {
@@ -1862,7 +1946,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 36
+        "y": 43
       },
       "id": 46,
       "legend": {
@@ -1938,11 +2022,12 @@
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 43
+        "y": 50
       },
       "id": 17,
       "panels": [],
@@ -1962,7 +2047,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 44
+        "y": 51
       },
       "id": 2,
       "legend": {
@@ -2051,7 +2136,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 44
+        "y": 51
       },
       "id": 4,
       "legend": {
@@ -2139,7 +2224,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 51
+        "y": 58
       },
       "id": 6,
       "legend": {
@@ -2297,7 +2382,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 51
+        "y": 58
       },
       "id": 7,
       "legend": {
@@ -2418,7 +2503,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 51
+        "y": 58
       },
       "id": 22,
       "legend": {
@@ -2508,11 +2593,12 @@
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 58
+        "y": 65
       },
       "id": 34,
       "panels": [],
@@ -2531,7 +2617,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 59
+        "y": 66
       },
       "id": 40,
       "legend": {
@@ -2618,7 +2704,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 59
+        "y": 66
       },
       "id": 44,
       "legend": {
@@ -2695,7 +2781,7 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 19,
+  "schemaVersion": 20,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -2722,5 +2808,5 @@
   "timezone": "",
   "title": "SAF Perf Test Dashboard",
   "uid": "J13LKTcZk",
-  "version": 71
+  "version": 2
 }

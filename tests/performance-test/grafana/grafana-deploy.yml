@@ -19,13 +19,36 @@ spec:
          image: grafana/grafana
          ports:
            - containerPort: 3000
+         env:
+           - name: CACERT
+             valueFrom:
+              secretKeyRef:
+                name: elasticsearch
+                key: admin-ca
+           - name: CLIENTCERT
+             valueFrom:
+              secretKeyRef:
+                name: elasticsearch
+                key: admin-cert
+           - name: CLIENTKEY
+             valueFrom:
+              secretKeyRef:
+                name: elasticsearch
+                key: admin-key
          volumeMounts:
            - name: grafana-config
              mountPath: /etc/grafana/grafana.ini
              subPath: grafana.ini
+           - name: datasources
+             mountPath: /etc/grafana/provisioning/datasources/datasource.yaml
+             subPath: datasource.yaml
      volumes:
        - name: grafana-config
          configMap:
            name: grafana-config
+       - name: datasources
+         configMap:
+           name: datasources-config
+
 
       
