@@ -16,7 +16,7 @@ https://github.com/redhat-service-assurance/saf-documentation
 
 The quickest way to start up Service Assurance Framework is to run the
 `quickstart.sh` script located in the `deploy/` directory after starting up a
-[MiniShift](https://github.com/minishift/minishift) environment.
+[Minishift](https://github.com/minishift/minishift) environment.
 
 (A simple script to start MiniShift for you is located in
 `tests/infrared/baremetal-scripts/install-and-run-minishift.sh`)
