@@ -3,7 +3,7 @@ set -e
 
 # Usage:
 #  VIRTHOST=my.big.hypervisor.net
-#  ./infrared-openstach.sh
+#  ./infrared-openstack.sh
 
 VIRTHOST=${VIRTHOST:-my.big.hypervisor.net}
 AMQP_HOST=${AMQP_HOST:-$(oc get route -l application=qdr-white -o jsonpath='{.items[0].spec.host}')}
