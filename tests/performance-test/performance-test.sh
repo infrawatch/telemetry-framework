@@ -304,7 +304,7 @@ while true; do
             get_es_event_count
 
             # calulate success ratio
-            SUCCESS_RATIO=$(echo "scale=2; $ES_EVENT_RECV_COUNT / $NUM_COLLECTD_EVENTS" | bc -l | awk '{printf "%.2f", $0}')
+            SUCCESS_RATIO=$(( ES_EVENT_RECV_COUNT / NUM_COLLECTD_EVENTS)).$(( (ES_EVENT_RECV_COUNT * 100 / NUM_COLLECTD_EVENTS) % 100 ))
 
             # DEBUG and TESTING - DELETE 
             echo "EVENTS generated: $NUM_COLLECTD_EVENTS, recieved by Elastic Search: $ES_EVENT_RECV_COUNT, success rate: $SUCCESS_RATIO"
