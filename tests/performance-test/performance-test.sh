@@ -251,10 +251,11 @@ while true; do
     case $STAGE in
         "TARGET")
             TARGETS=$(curl --silent "http://$(oc get route prometheus -o jsonpath='{.spec.host}')/api/v1/targets")
-            QDR=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-white"')
+            QDRWHITE=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-white"')
+            # QDRTEST=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-test"')
             PROM=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"')
 
-            if [ -z "$QDR" ] && [ -z "$PROM" ]; then
+            if [ -z "$QDRWHITE" ] && [ -z "$PROM" ]; then
                 printf "%s" "Waiting for new targets to be recognized by Prometheus Operator"; ellipse
                 sleep 10
             else

@@ -1,13 +1,28 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: 'qdr'
+  name: 'qdr-white'
   labels:
     app: smart-gateway
 spec:
   selector:
     matchLabels:
       application: qdr-white
+  endpoints:
+  - port: port-8672
+    interval: 10s 
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: 'qdr-test'
+  labels:
+    app: smart-gateway
+spec:
+  selector:
+    matchLabels:
+      application: qdr-test
   endpoints:
   - port: port-8672
     interval: 10s 
