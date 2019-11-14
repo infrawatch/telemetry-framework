@@ -17,6 +17,9 @@ Usage: ./performance-test.sh -t <tg|tb> -c <intervals> -h <#hosts> -p <#plugins>
   -i: The (target) interval over which a message batch is sent
   -n: The number of concurrent batches to run (telemetry-bench only)
 
+Delete: to cleanup all resources created by performance test in openshift, run
+    ./performance-test.sh DELETE
+
 NOTES:
   * The expected message throughput is roughly: <#hosts> * <#plugins> * <#concurrent> per <interval>
   * The tools themselves are known to top out around ~18k/s (tb) and ~28k/s (tg) on modern CPUs
@@ -25,6 +28,7 @@ NOTES:
   * telemetry-bench is recommended since there are problems getting collectd-tg to scale concurrently
   * telemetry-bench somewhat underperforms (runs too slow), but every message does get sent
   * A plugin setting of 1000 reasonably matches the plugins/host we expect to see from OSP
+  * If performance test resources are delete, may need to clear database before running again. Dashboards may not work due to ducplicate data
 
 EXAMPLES:
   Quick minimal test ~1k/s (1 min)
@@ -52,6 +56,14 @@ ellipse(){
     printf "\r"
 }
 
+# cleans up all resources created by performance test
+delete(){
+    oc delete servicemonitor qdr-white qdr-test prometheus || true
+    oc delete qdr qdr-test || true
+    oc delete job -l app=saf-performance-test || true
+}
+
+# create service monitors
 make_service_monitors(){
     oc apply -f ./grafana/prom-servicemonitor.yml 
     oc apply -f ./grafana/qdr-servicemonitor.yml
@@ -59,8 +71,9 @@ make_service_monitors(){
 
 # create edge router for more realistic env setup: telemetry-bench -> qdr -> qdr -> SG
 make_qdr_edge_router(){
+    printf "\n*** Deploying Edge Router ***\n"
     if ! oc get qdr qdr-test; then
-        printf "\n*** Deploying Edge Router ***\n"
+        echo "Existing edge router not found. Creating new one"
         oc create -f <(sed -e "s/<<REGISTRY_INFO>>/$(oc registry info)/g" ./deploy/qdrouterd.yaml.template)
         return
     fi
@@ -126,24 +139,12 @@ delete_es_events(){
     local esPod=$(oc get elasticsearch elasticsearch -o jsonpath='{.status.pods.master.ready[0]}')
     local secretPath="/etc/elasticsearch/secret/"
     local esQuery=$(cat <<EOF
-        {
-            "query" : {
-                "bool": {
-                    "must": {
-                        "match_phrase": {
-                            "labels.instance": {
-                                "query": "saf-perftest-notify-*"
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        { "query" : { "bool": { "must": { "match_phrase": { "labels.instance": { "query": "saf-perftest-notify-*" } } } } } }
 EOF
 )
     printf "\n*** Deleting ES Events ***\n"
 
-    local response=$(oc exec "$esPod" -- curl -k --silent --trace --cacert "${secretPath}admin-ca" --cert \
+    local response=$(oc exec "$esPod" -- curl --silent --cacert "${secretPath}admin-ca" --cert \
         "${secretPath}admin-cert" --key "${secretPath}admin-key" -X POST "https://localhost:9200/collectd_interface_if/_delete_by_query" \
         -d "$esQuery")
 }
@@ -153,22 +154,10 @@ get_es_event_count(){
         local esPod=$(oc get elasticsearch elasticsearch -o jsonpath='{.status.pods.master.ready[0]}')
         local secretPath="/etc/elasticsearch/secret/"
         local esQuery=$(cat <<EOF
-        {
-            "query" : {
-                "bool": {
-                    "must": {
-                        "match_phrase": {
-                            "labels.instance": {
-                                "query": "saf-perftest-notify-*"
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        { "query" : { "bool": { "must": { "match_phrase": { "labels.instance": { "query": "saf-perftest-notify-*" } } } } } }
 EOF
 )
-    ES_EVENT_RECV_COUNT=$(oc exec "$esPod" -- curl -k --silent --trace --cacert "${secretPath}admin-ca" --cert \
+    ES_EVENT_RECV_COUNT=$(oc exec "$esPod" -- curl --silent --cacert "${secretPath}admin-ca" --cert \
          "${secretPath}admin-cert" --key "${secretPath}admin-key" -X GET "https://localhost:9200/collectd_interface_if/_count" \
          -d "$esQuery")
 
@@ -188,30 +177,20 @@ post_ratio_to_es(){
 EOF
 )
     # tell ES to map data to float
-    local response=$(oc exec "$esPod" -- curl -k --silent --trace --cacert "${secretPath}admin-ca" --cert \
+    local response=$(oc exec "$esPod" -- curl --silent --cacert "${secretPath}admin-ca" --cert \
         "${secretPath}admin-cert" --key "${secretPath}admin-key" -X PUT "https://localhost:9200/performance-test" \
-        -d '
-            {
-                "mappings": {
-                    "status": {
-                        "properties": {
-                            "events_successful": { "type": "float" },
-                            "startsAt": { 
-                                "type": "date",
-                                "format": "strict_date_optional_time||epoch_millis"
-                            }
-                        }
-                    }
-                }
-            }
-        '
-        )
-    local response=$(oc exec "$esPod" -- curl -k --silent --trace --cacert "${secretPath}admin-ca" --cert \
+        -d ' { "mappings": { "status": { "properties": { "events_successful": { "type": "float" },"startsAt": { "type": "date", "format": "strict_date_optional_time||epoch_millis" } } } } }')
+    local response=$(oc exec "$esPod" -- curl --silent --cacert "${secretPath}admin-ca" --cert \
         "${secretPath}admin-cert" --key "${secretPath}admin-key" -X PUT "https://localhost:9200/performance-test/status/1" \
         -d "$esPost")
 }
 
 # Main
+if [ "$1" == "DELETE" ]; then
+    echo "*** Deleting performance test resources ***"
+    delete
+    exit 0
+fi
 
 while getopts t:c:h:p:i:n: option
 do
@@ -236,41 +215,46 @@ else
     usage
 fi
 
-# Test groundwork
+# Test groundwork - order matters
 check_resources
-make_service_monitors
 delete_es_events
 post_dashboards
+make_qdr_edge_router
 
 SUCCESS_RATIO=0.00
 post_ratio_to_es
 
 # Test procedure
-STAGE="TARGET"
+STAGE="ROUTER"
 while true; do
     case $STAGE in
-        "TARGET")
-            TARGETS=$(curl --silent "http://$(oc get route prometheus -o jsonpath='{.spec.host}')/api/v1/targets")
-            QDRWHITE=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-white"')
-            # QDRTEST=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-test"')
-            PROM=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"')
+        "ROUTER")
+            printf "%s" "Waiting on qdr edge test pod creation"; ellipse
+            until timeout 300 oc rollout status deploy/qdr-test; do sleep 3; done
+            
+            printf "\nQdr edge test pod established\n"
+            make_service_monitors
 
-            if [ -z "$QDRWHITE" ] && [ -z "$PROM" ]; then
-                printf "%s" "Waiting for new targets to be recognized by Prometheus Operator"; ellipse
-                sleep 10
+            QDR_READY=$(oc logs $(oc get pod -l application=qdr-test -o jsonpath='{.items[0].metadata.name}') | grep -o "Listening" || true)
+
+            if [ -z "$QDR_READY" ]; then 
+                printf "Waiting on router to complete initialization"; ellipse
             else
-                echo "Found new target endpoints"
-                make_qdr_edge_router
-                STAGE="ROUTER"
+                oc logs $(oc get pod -l application=qdr-test -o jsonpath='{.items[0].metadata.name}')
+                STAGE="TARGET"
             fi
         ;;
-        "ROUTER")
-            estab=$(oc get pod -l qdr_cr=qdr-test -o jsonpath='{.items[0].status.conditions[?(@.type=="ContainersReady")].status}') || true
-            if [ "${estab}" != "True" ]; then
-                printf "%s" "Waiting on qdr edge test pod creation"; ellipse
+        "TARGET")
+            TARGETS=$(curl --silent "http://$(oc get route prometheus -o jsonpath='{.spec.host}')/api/v1/targets")
+            QDRWHITE=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-white"' || true)
+            QDRTEST=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-test"' || true)
+            PROM=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"' || true) 
+
+            if [ -z "$QDRWHITE" ] || [ -z "$QDRTEST" ] || [ -z "$PROM" ]; then
+                printf "%s" "Waiting for new targets to be recognized by Prometheus Operator"; ellipse
                 sleep 1
             else
-                echo "Qdr edge test pod established"
+                echo "Found new target endpoints"
                 printf "\n*** Creating performance test job ***\n"
                 export COUNT HOSTS PLUGINS INTERVAL CONCURRENT
                 cd deploy
@@ -284,7 +268,7 @@ while true; do
                 printf '%s' "Waiting on SAF performance test pod creation"; ellipse
                 sleep 1
             else
-                echo "SAF performance test pod established"
+                printf "\nSAF performance test pod established\n"
                 printf "\n*** Listening to job runner ***\n"
 
                 oc logs -f "$(oc get pod -l job-name=saf-perftest-1-runner -o jsonpath='{.items[0].metadata.name}')" |  grep -E 'total [0-9]+'
