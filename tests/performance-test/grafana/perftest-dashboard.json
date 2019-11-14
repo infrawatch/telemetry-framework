@@ -3139,7 +3139,7 @@
       }
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "schemaVersion": 20,
   "style": "dark",
   "tags": [],
@@ -3167,5 +3167,5 @@
   "timezone": "",
   "title": "SAF Perf Test Dashboard",
   "uid": "J13LKTcZk",
-  "version": 8
+  "version": 2
 }
