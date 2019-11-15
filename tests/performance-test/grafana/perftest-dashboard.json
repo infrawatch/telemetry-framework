@@ -19,27 +19,141 @@
   "links": [],
   "panels": [
     {
-      "datasource": "SAFElasticsearch",
-      "description": "Describes the ratio of number of events triggered in the cloud to the number of events logged in Elastic Search.  \n\nThis result WILL NOT be accurate until after a performance test has completed. Result reflects the most recent test only - resizing the dashboard time interval over previous tests will not give the correct result for that previous test.",
+      "collapsed": false,
+      "datasource": null,
       "gridPos": {
-        "h": 7,
-        "w": 12,
+        "h": 1,
+        "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 72,
+      "id": 43,
+      "panels": [],
+      "title": "Test Indicators",
+      "type": "row"
+    },
+    {
+      "dashboardFilter": "",
+      "dashboardTags": [],
+      "datasource": "OCPPrometheus",
+      "folderId": null,
+      "gridPos": {
+        "h": 12,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 36,
+      "limit": 10,
+      "nameFilter": "",
+      "onlyAlertsOnDashboard": false,
+      "options": {},
+      "show": "current",
+      "sortOrder": 1,
+      "stateFilter": [],
+      "targets": [
+        {
+          "expr": "kube_node_status_condition",
+          "hide": false,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Testing Alerts",
+      "type": "alertlist"
+    },
+    {
+      "columns": [],
+      "datasource": "OCPPrometheus",
+      "description": "Entries will appear here for nodes that report Unready,  Disk/Memory/PID Pressure, or that return \"Unknown\" for any of those statuses.",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 4,
+        "y": 1
+      },
+      "id": 38,
+      "options": {},
+      "pageSize": 10,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": "row",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [
+            "1",
+            "1"
+          ],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"unknown\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{short_node}} | {{condition}} (UNKNOWN)",
+          "refId": "A"
+        },
+        {
+          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"true\", condition!=\"Ready\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{short_node}} | {{condition}}",
+          "refId": "B"
+        },
+        {
+          "expr": "label_replace(min(kube_node_status_condition{node=~\".*node-.*\", status=\"false\", condition=\"Ready\"}) by (node) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{short_node}} | UnReady",
+          "refId": "C"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Node Status Faults",
+      "transform": "timeseries_to_rows",
+      "type": "table"
+    },
+    {
+      "datasource": "SAFPrometheus",
+      "description": "Shows the % of messages that made it all the way from the AMQP bus to prometheus.",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "id": 68,
       "options": {
         "fieldOptions": {
           "calcs": [
-            "lastNotNull"
+            "max"
           ],
           "defaults": {
-            "links": [
-              {
-                "title": "",
-                "url": ""
-              }
-            ],
+            "decimals": 2,
             "mappings": [],
             "max": 1,
             "min": 0,
@@ -49,52 +163,36 @@
                 "value": null
               },
               {
+                "color": "#EAB839",
+                "value": 0.8
+              },
+              {
                 "color": "green",
-                "value": 0.97
+                "value": 0.9
               }
             ],
+            "title": "",
             "unit": "percentunit"
           },
           "override": {},
-          "values": false
+          "values": true
         },
         "orientation": "auto",
-        "showThresholdLabels": false,
+        "showThresholdLabels": true,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.4.3",
+      "pluginVersion": "6.4.4",
       "targets": [
         {
-          "bucketAggs": [
-            {
-              "field": "startsAt",
-              "id": "2",
-              "settings": {
-                "interval": "auto",
-                "min_doc_count": 0,
-                "trimEdges": 0
-              },
-              "type": "date_histogram"
-            }
-          ],
-          "metrics": [
-            {
-              "field": "events_successful",
-              "id": "1",
-              "meta": {},
-              "settings": {},
-              "type": "avg"
-            }
-          ],
-          "query": "_type:status",
-          "refId": "A",
-          "timeField": "startsAt"
+          "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range])) / vector(scalar(delta(deliveries_ingress{service=\"qdr-white\"}[$__range])))",
+          "hide": false,
+          "instant": true,
+          "refId": "A"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Event Success Rate",
-      "transparent": true,
+      "title": "% of msgs QDR -> Prom",
       "type": "gauge"
     },
     {
@@ -109,7 +207,7 @@
         "#d44a3a"
       ],
       "datasource": "SAFPrometheus",
-      "description": "The number of presettled messages received by the QDR for routing.\n\nNOTE: The QDR outputs metrics slowly so we can only poll every 10s. That means this number can be up to 9 seconds behind the other counters on this part of the dashboard.",
+      "description": "The number of presettled messages received by the QDR test for routing.\n\nNOTE: The QDR outputs metrics slowly so we can only poll every 10s. That means this number can be up to 9 seconds behind the other counters on this part of the dashboard.",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -121,8 +219,179 @@
       "gridPos": {
         "h": 3,
         "w": 3,
-        "x": 12,
-        "y": 0
+        "x": 18,
+        "y": 1
+      },
+      "id": 73,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "deliveries_ingress{job=\"qdr-test\"}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Received by QDR Test",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "delta"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": true,
+      "colors": [
+        "#299c46",
+        "#73BF69",
+        "#F2495C"
+      ],
+      "datasource": "SAFPrometheus",
+      "description": "Shows the dropped deliveries for the time period. \n\nNOTE: Despite the name \"dropped_presettled_deliveries\" this metric appears to include messages that are not \"presettled\"",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 1
+      },
+      "id": 74,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "dropped_presettled_deliveries{job=\"qdr-test\"}",
+          "hide": false,
+          "refId": "A"
+        }
+      ],
+      "thresholds": "1,1",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Dropped by QDR Test",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "delta"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorPostfix": false,
+      "colorPrefix": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "SAFPrometheus",
+      "description": "The number of presettled messages received by the QDR white for routing.\n\nNOTE: The QDR outputs metrics slowly so we can only poll every 10s. That means this number can be up to 9 seconds behind the other counters on this part of the dashboard.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 4
       },
       "id": 64,
       "interval": null,
@@ -164,14 +433,14 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "deliveries_ingress",
+          "expr": "deliveries_ingress{job=\"qdr-white\"}",
           "refId": "A"
         }
       ],
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Received by QDR",
+      "title": "Received by QDR White",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -205,8 +474,8 @@
       "gridPos": {
         "h": 3,
         "w": 3,
-        "x": 15,
-        "y": 0
+        "x": 21,
+        "y": 4
       },
       "id": 66,
       "interval": null,
@@ -248,7 +517,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "dropped_presettled_deliveries",
+          "expr": "dropped_presettled_deliveries{job=\"qdr-white\"}",
           "hide": false,
           "refId": "A"
         }
@@ -256,7 +525,7 @@
       "thresholds": "1,1",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Dropped by QDR",
+      "title": "Dropped by QDR White",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -269,22 +538,51 @@
       "valueName": "delta"
     },
     {
-      "datasource": "SAFPrometheus",
-      "description": "Shows the % of messages that made it all the way from the AMQP bus to prometheus.",
+      "dashboardFilter": "",
+      "dashboardTags": [],
+      "datasource": null,
+      "folderId": null,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 4,
+        "y": 5
+      },
+      "id": 54,
+      "limit": "10000",
+      "nameFilter": "",
+      "onlyAlertsOnDashboard": true,
+      "options": {},
+      "show": "changes",
+      "sortOrder": 1,
+      "stateFilter": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Alert History",
+      "type": "alertlist"
+    },
+    {
+      "datasource": "SAFElasticsearch",
+      "description": "Describes the ratio of number of events triggered in the cloud to the number of events logged in Elastic Search.  \n\nThis result WILL NOT be accurate until after a performance test has completed. Result reflects the most recent test only - resizing the dashboard time interval over previous tests will not give the correct result for that previous test.",
       "gridPos": {
         "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 0
+        "w": 3,
+        "x": 12,
+        "y": 7
       },
-      "id": 68,
+      "id": 72,
       "options": {
         "fieldOptions": {
           "calcs": [
-            "max"
+            "lastNotNull"
           ],
           "defaults": {
-            "decimals": 2,
+            "links": [
+              {
+                "title": "",
+                "url": ""
+              }
+            ],
             "mappings": [],
             "max": 1,
             "min": 0,
@@ -294,37 +592,414 @@
                 "value": null
               },
               {
-                "color": "#EAB839",
-                "value": 0.8
-              },
-              {
                 "color": "green",
-                "value": 0.9
+                "value": 0.97
               }
             ],
-            "title": "",
             "unit": "percentunit"
           },
           "override": {},
-          "values": true
+          "values": false
         },
         "orientation": "auto",
-        "showThresholdLabels": true,
+        "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.4.3",
+      "pluginVersion": "6.4.4",
       "targets": [
         {
-          "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range])) / vector(scalar(delta(deliveries_ingress[$__range])))",
-          "hide": false,
-          "instant": true,
-          "refId": "A"
+          "bucketAggs": [
+            {
+              "field": "startsAt",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "events_successful",
+              "id": "1",
+              "meta": {},
+              "settings": {},
+              "type": "avg"
+            }
+          ],
+          "query": "_type:status",
+          "refId": "A",
+          "timeField": "startsAt"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "% of msgs QDR -> Prom",
+      "title": "Event Success Rate",
       "type": "gauge"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorPrefix": true,
+      "colorValue": true,
+      "colors": [
+        "#d44a3a",
+        "#F2495C",
+        "#299c46"
+      ],
+      "datasource": "SAFPrometheus",
+      "description": "Detects if the smartgateway has ever reported that it was disconnected from the qdr. This is based on metric polling, not events so may not be 100% reliable.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 7
+      },
+      "id": 26,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "sa_collectd_qpid_router_status",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0,1",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "QPID Router Disconnect",
+      "type": "singlestat",
+      "valueFontSize": "110%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "Never",
+          "value": "1"
+        },
+        {
+          "op": "=",
+          "text": "At Least Once",
+          "value": "0"
+        }
+      ],
+      "valueName": "min"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "SAFPrometheus",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 7
+      },
+      "id": 76,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "postfix": "/s",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "irate(deliveries_ingress{job=\"qdr-test\"}[1m])",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Peak Input Rate -> QDR Test",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "max"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "SAFPrometheus",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 7
+      },
+      "id": 70,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "postfix": "/s",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "irate(deliveries_ingress{job=\"qdr-white\"}[1m])",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Peak Input Rate -> QDR White",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "max"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "SAFElasticsearch",
+      "description": "",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 10
+      },
+      "id": 77,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "field": "startsAt",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "events_successful",
+              "id": "1",
+              "meta": {},
+              "settings": {},
+              "type": "sum"
+            }
+          ],
+          "query": "",
+          "refId": "A",
+          "timeField": "startsAt"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Avg Event Latency",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
     },
     {
       "cacheTimeout": null,
@@ -348,8 +1023,8 @@
       "gridPos": {
         "h": 3,
         "w": 3,
-        "x": 12,
-        "y": 3
+        "x": 18,
+        "y": 10
       },
       "id": 52,
       "interval": null,
@@ -432,8 +1107,8 @@
       "gridPos": {
         "h": 3,
         "w": 3,
-        "x": 12,
-        "y": 6
+        "x": 21,
+        "y": 10
       },
       "id": 48,
       "interval": null,
@@ -496,329 +1171,13 @@
       "valueName": "current"
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "SAFPrometheus",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 18,
-        "y": 6
-      },
-      "id": 70,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "/s",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "irate(deliveries_ingress[1m])",
-          "refId": "A"
-        }
-      ],
-      "thresholds": "",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Peak Msg Input Rate",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "max"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorPrefix": true,
-      "colorValue": true,
-      "colors": [
-        "#d44a3a",
-        "#F2495C",
-        "#299c46"
-      ],
-      "datasource": "SAFPrometheus",
-      "description": "Detects if the smartgateway has ever reported that it was disconnected from the qdr. This is based on metric polling, not events so may not be 100% reliable.",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 21,
-        "y": 6
-      },
-      "id": 26,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true,
-        "ymax": null,
-        "ymin": null
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "sa_collectd_qpid_router_status",
-          "refId": "A"
-        }
-      ],
-      "thresholds": "0,1",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "QPID Router Disconnect",
-      "type": "singlestat",
-      "valueFontSize": "110%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "Never",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "At Least Once",
-          "value": "0"
-        }
-      ],
-      "valueName": "min"
-    },
-    {
-      "dashboardFilter": "",
-      "dashboardTags": [],
-      "datasource": "OCPPrometheus",
-      "folderId": null,
-      "gridPos": {
-        "h": 10,
-        "w": 4,
-        "x": 0,
-        "y": 7
-      },
-      "id": 36,
-      "limit": 10,
-      "nameFilter": "",
-      "onlyAlertsOnDashboard": false,
-      "options": {},
-      "show": "current",
-      "sortOrder": 1,
-      "stateFilter": [],
-      "targets": [
-        {
-          "expr": "kube_node_status_condition",
-          "hide": false,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Testing Alerts",
-      "type": "alertlist"
-    },
-    {
-      "columns": [],
-      "datasource": "OCPPrometheus",
-      "description": "Entries will appear here for nodes that report Unready,  Disk/Memory/PID Pressure, or that return \"Unknown\" for any of those statuses.",
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 3,
-        "w": 8,
-        "x": 4,
-        "y": 7
-      },
-      "id": 38,
-      "options": {},
-      "pageSize": 10,
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "date"
-        },
-        {
-          "alias": "",
-          "colorMode": "row",
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [
-            "1",
-            "1"
-          ],
-          "type": "number",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"unknown\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "{{short_node}} | {{condition}} (UNKNOWN)",
-          "refId": "A"
-        },
-        {
-          "expr": "label_replace(max(kube_node_status_condition{node=~\".*node-.*\", status=\"true\", condition!=\"Ready\"}) by (node, condition) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "{{short_node}} | {{condition}}",
-          "refId": "B"
-        },
-        {
-          "expr": "label_replace(min(kube_node_status_condition{node=~\".*node-.*\", status=\"false\", condition=\"Ready\"}) by (node) > 0, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "{{short_node}} | UnReady",
-          "refId": "C"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Node Status Faults",
-      "transform": "timeseries_to_rows",
-      "type": "table"
-    },
-    {
-      "dashboardFilter": "",
-      "dashboardTags": [],
-      "datasource": null,
-      "folderId": null,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 4,
-        "y": 10
-      },
-      "id": 54,
-      "limit": "10000",
-      "nameFilter": "",
-      "onlyAlertsOnDashboard": true,
-      "options": {},
-      "show": "changes",
-      "sortOrder": 1,
-      "stateFilter": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Alert History",
-      "type": "alertlist"
-    },
-    {
       "collapsed": false,
       "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
-      },
-      "id": 43,
-      "panels": [],
-      "title": "Test Indicators",
-      "type": "row"
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 18
+        "y": 13
       },
       "id": 56,
       "panels": [],
@@ -895,7 +1254,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 14
       },
       "id": 60,
       "legend": {
@@ -1002,7 +1361,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 19
+        "y": 14
       },
       "id": 58,
       "legend": {
@@ -1084,7 +1443,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 22
       },
       "id": 28,
       "panels": [],
@@ -1162,7 +1521,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 23
       },
       "id": 24,
       "legend": {
@@ -1312,7 +1671,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 23
       },
       "id": 32,
       "legend": {
@@ -1410,7 +1769,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 30
       },
       "id": 15,
       "panels": [],
@@ -1464,7 +1823,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 31
       },
       "id": 13,
       "legend": {
@@ -1603,7 +1962,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 36
+        "y": 31
       },
       "id": 30,
       "legend": {
@@ -1705,7 +2064,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 43
+        "y": 38
       },
       "id": 11,
       "legend": {
@@ -1843,7 +2202,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 43
+        "y": 38
       },
       "id": 21,
       "legend": {
@@ -1946,7 +2305,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 43
+        "y": 38
       },
       "id": 46,
       "legend": {
@@ -2027,7 +2386,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 50
+        "y": 45
       },
       "id": 17,
       "panels": [],
@@ -2047,7 +2406,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 51
+        "y": 46
       },
       "id": 2,
       "legend": {
@@ -2136,7 +2495,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 51
+        "y": 46
       },
       "id": 4,
       "legend": {
@@ -2224,7 +2583,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 58
+        "y": 53
       },
       "id": 6,
       "legend": {
@@ -2382,7 +2741,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 58
+        "y": 53
       },
       "id": 7,
       "legend": {
@@ -2503,7 +2862,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 58
+        "y": 53
       },
       "id": 22,
       "legend": {
@@ -2598,7 +2957,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 65
+        "y": 60
       },
       "id": 34,
       "panels": [],
@@ -2617,7 +2976,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 66
+        "y": 61
       },
       "id": 40,
       "legend": {
@@ -2704,7 +3063,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 66
+        "y": 61
       },
       "id": 44,
       "legend": {
