@@ -16,8 +16,6 @@ custom_templates:
             - ipmi
             - load
             - memory
-            - ovs_events
-            - ovs_stats
             - processes
             - unixsock
             - uptime
