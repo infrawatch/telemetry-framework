@@ -5,7 +5,7 @@ datasources:
   type: elasticsearch
   access: proxy
   orgId: 1
-  url: "https://elasticsearch.sa-telemetry.svc:9200"
+  url: "https://elasticsearch:9200"
   database: "performance-test"
   basicAuth: false
   withCredentials: true
@@ -28,7 +28,7 @@ datasources:
   type: prometheus
   access: proxy
   orgId: 1
-  url: "http://prometheus-operated.sa-telemetry.svc:9090"
+  url: "http://prometheus-operated:9090"
   database: ""
   basicAuth: false
   withCredentials: false
