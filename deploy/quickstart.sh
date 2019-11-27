@@ -56,7 +56,7 @@ spec:
   sourceNamespace: openshift-marketplace
   startingCSV: service-assurance-operator.v0.1.0
 EOF
-while ! oc get csv | grep service-assurance-operator | grep Succeeded; do echo waiting; done
+while ! oc get csv | grep service-assurance-operator | grep Succeeded; do echo "waiting for SAO..."; sleep 3; done
 oc create -f - <<EOF
 apiVersion: infra.watch/v1alpha1
 kind: ServiceAssurance
