@@ -235,9 +235,9 @@ while true; do
         ;;
         "TARGET")
             TARGETS=$(oc exec prometheus-saf-default-0 -c prometheus -- wget -qO - http://localhost:9090/api/v1/targets)
-            QDRWHITE=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"saf-default-interconnect"')
-            QDRTEST=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-test"')
-            PROM=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"')
+            QDRWHITE=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"saf-default-interconnect"' || true)
+            QDRTEST=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-test"' || true)
+            PROM=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"' || true)
 
             if [ -z "$QDRWHITE" ] || [ -z "$QDRTEST" ] || [ -z "$PROM" ]; then
                 printf "%s" "Waiting for new targets to be recognized by Prometheus Operator"; ellipse
