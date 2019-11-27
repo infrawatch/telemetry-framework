@@ -15,4 +15,4 @@ See the [official
 documentation](https://redhat-service-assurance.github.io/saf-documentation)
 for more information about installing for production-style use cases on OCP3.
 
-Please use the `saf-ocp3` branchf for all such installations. 
+Please use the `saf-ocp3` branch for all such installations. 
