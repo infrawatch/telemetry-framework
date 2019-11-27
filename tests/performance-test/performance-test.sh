@@ -58,23 +58,23 @@ ellipse(){
 
 # cleans up all resources created by performance test
 delete(){
-    oc delete servicemonitor qdr-white qdr-test prometheus || true
+    oc delete servicemonitor saf-default-interconnect qdr-test prometheus || true
     oc delete qdr qdr-test || true
     oc delete job -l app=saf-performance-test || true
 }
 
 # create service monitors
 make_service_monitors(){
-    oc apply -f ./grafana/prom-servicemonitor.yml 
-    oc apply -f ./grafana/qdr-servicemonitor.yml
+    oc apply -f ./deploy/prom-servicemonitor.yml
+    oc apply -f ./deploy/qdr-servicemonitor.yml
 }
 
 # create edge router for more realistic env setup: telemetry-bench -> qdr -> qdr -> SG
 make_qdr_edge_router(){
     printf "\n*** Deploying Edge Router ***\n"
-    if ! oc get qdr qdr-test; then
+    if ! oc get interconnect qdr-test; then
         echo "Existing edge router not found. Creating new one"
-        oc create -f <(sed -e "s/<<REGISTRY_INFO>>/$(oc registry info)/g" ./deploy/qdrouterd.yaml.template)
+        oc create -f ./deploy/qdrouterd.yaml
         return
     fi
     echo "Utilizing existing edge router"
@@ -83,8 +83,8 @@ make_qdr_edge_router(){
 # basic check if necessary resources exist. DOES NOT verify they work correctly
 check_resources(){
     printf "\n*** Performing Resource Checks ***\n"
-    if ! oc get project sa-telemetry; then 
-        echo "Error: SAF does not exist on cluster. Deploy SAF before running performance test" 1>&2
+    if ! oc get ServiceAssurance; then 
+        echo "No SAF found deployed in this namespace. Deploy SAF before running performance test" 1>&2
         exit 1
     fi
 
@@ -122,16 +122,6 @@ check_resources(){
         echo "Error: unable to find Grafana datasource SAFElasticsearch"
         exit 1
     fi
-}
-
-# Post dashboards to grafana - overwrites if they already exist
-post_dashboards(){
-    printf "\n*** Creating new dashboards in Grafana ***\n"
-    curl --silent --output /dev/null -d "{\"overwrite\": true, \"dashboard\": $(cat ./grafana/perftest-dashboard.json)}" \
-        -H 'Content-Type: application/json' "$GRAF_HOST/api/dashboards/db"
-        
-    curl --silent --output /dev/null -d "{\"overwrite\": true, \"dashboard\": $(cat ./grafana/prom2-dashboard.json)}" \
-        -H 'Content-Type: application/json' "$GRAF_HOST/api/dashboards/db"
 }
 
 # Delete recorded events in Elastic Search
@@ -217,12 +207,11 @@ fi
 
 # Test groundwork - order matters
 check_resources
-delete_es_events
-post_dashboards
+#delete_es_events
 make_qdr_edge_router
 
 SUCCESS_RATIO=0.00
-post_ratio_to_es
+#post_ratio_to_es
 
 # Test procedure
 STAGE="ROUTER"
@@ -235,20 +224,20 @@ while true; do
             printf "\nQdr edge test pod established\n"
             make_service_monitors
 
-            QDR_READY=$(oc logs $(oc get pod -l application=qdr-test -o jsonpath='{.items[0].metadata.name}') | grep -o "Listening" || true)
+            QDR_READY=$(oc logs $(oc get pod -l application=qdr-test -o jsonpath='{.items[0].metadata.name}') | grep -o "Listening")
 
             if [ -z "$QDR_READY" ]; then 
                 printf "Waiting on router to complete initialization"; ellipse
             else
-                oc logs $(oc get pod -l application=qdr-test -o jsonpath='{.items[0].metadata.name}')
+                #oc logs $(oc get pod -l application=qdr-test -o jsonpath='{.items[0].metadata.name}')
                 STAGE="TARGET"
             fi
         ;;
         "TARGET")
-            TARGETS=$(curl --silent "http://$(oc get route prometheus -o jsonpath='{.spec.host}')/api/v1/targets")
-            QDRWHITE=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-white"' || true)
+            TARGETS=$(oc exec prometheus-saf-default-0 -c prometheus -- wget -qO - http://localhost:9090/api/v1/targets)
+            QDRWHITE=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"saf-default-interconnect"' || true)
             QDRTEST=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"qdr-test"' || true)
-            PROM=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"' || true) 
+            PROM=$(echo "$TARGETS" | grep -o '"__meta_kubernetes_service_name":"prometheus-operated"' || true)
 
             if [ -z "$QDRWHITE" ] || [ -z "$QDRTEST" ] || [ -z "$PROM" ]; then
                 printf "%s" "Waiting for new targets to be recognized by Prometheus Operator"; ellipse
@@ -263,7 +252,7 @@ while true; do
             fi
         ;;
         "TEST")
-            estab=$(oc get pod -l job-name=saf-perftest-1-runner -o jsonpath='{.items[0].status.conditions[?(@.type=="ContainersReady")].status}') || true
+            estab=$(oc get pod -l job-name=saf-perftest-1-runner -o jsonpath='{.items[0].status.conditions[?(@.type=="ContainersReady")].status}')
             if [ "${estab}" != "True" ]; then
                 printf '%s' "Waiting on SAF performance test pod creation"; ellipse
                 sleep 1
@@ -277,25 +266,25 @@ while true; do
         ;;
         "RESULTS")
             printf "\n*** Collecting test results ***\n"
-            PODNAME=$(oc get pod -l job-name=saf-perftest-notify -o jsonpath='{.items[0].metadata.name}')
-            oc exec "$PODNAME" -- pkill collectd > /dev/null
-            sleep 3
-            oc cp "sa-telemetry/${PODNAME}:/tmp/events.json" /tmp/events.json
+            # PODNAME=$(oc get pod -l job-name=saf-perftest-notify -o jsonpath='{.items[0].metadata.name}')
+            # oc exec "$PODNAME" -- pkill collectd > /dev/null
+            # sleep 3
+            # oc cp "${PODNAME}:/tmp/events.json" /tmp/events.json
 
-            # get total number of events generated by collectd
-            NUM_COLLECTD_EVENTS=$(wc -l /tmp/events.json | awk '{ print $1 }')
+            # # get total number of events generated by collectd
+            # NUM_COLLECTD_EVENTS=$(wc -l /tmp/events.json | awk '{ print $1 }')
 
-            # get number of events seen by elasticsearch
-            get_es_event_count
+            # # get number of events seen by elasticsearch
+            # get_es_event_count
 
-            # calulate success ratio
-            SUCCESS_RATIO=$(( ES_EVENT_RECV_COUNT / NUM_COLLECTD_EVENTS)).$(( (ES_EVENT_RECV_COUNT * 100 / NUM_COLLECTD_EVENTS) % 100 ))
+            # # calulate success ratio
+            # SUCCESS_RATIO=$(( ES_EVENT_RECV_COUNT / NUM_COLLECTD_EVENTS)).$(( (ES_EVENT_RECV_COUNT * 100 / NUM_COLLECTD_EVENTS) % 100 ))
 
-            # DEBUG and TESTING - DELETE 
-            echo "EVENTS generated: $NUM_COLLECTD_EVENTS, recieved by Elastic Search: $ES_EVENT_RECV_COUNT, success rate: $SUCCESS_RATIO"
+            # # DEBUG and TESTING - DELETE 
+            # echo "EVENTS generated: $NUM_COLLECTD_EVENTS, recieved by Elastic Search: $ES_EVENT_RECV_COUNT, success rate: $SUCCESS_RATIO"
 
-            printf "\n*** Posting events results to Elastic Search ***\n"
-            post_ratio_to_es
+            # printf "\n*** Posting events results to Elastic Search ***\n"
+            # post_ratio_to_es
 
             break
         ;;

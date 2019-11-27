@@ -16,6 +16,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
+  "iteration": 1574392990927,
   "links": [],
   "panels": [
     {
@@ -184,7 +185,7 @@
       "pluginVersion": "6.4.4",
       "targets": [
         {
-          "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range])) / vector(scalar(delta(deliveries_ingress{service=\"qdr-white\"}[$__range])))",
+          "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range])) / sum(delta(deliveries_ingress{service=\"saf-default-interconnect\"}[$__range]))",
           "hide": false,
           "instant": true,
           "refId": "A"
@@ -378,7 +379,7 @@
         "#d44a3a"
       ],
       "datasource": "SAFPrometheus",
-      "description": "The number of presettled messages received by the QDR white for routing.\n\nNOTE: The QDR outputs metrics slowly so we can only poll every 10s. That means this number can be up to 9 seconds behind the other counters on this part of the dashboard.",
+      "description": "The total number of messages received by the server side QDR mesh for routing.\n\nNOTE: The QDR outputs metrics slowly so we can only poll every 10s. That means this number can be up to 9 seconds behind the other counters on this part of the dashboard.",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -433,14 +434,15 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "deliveries_ingress{job=\"qdr-white\"}",
+          "expr": "sum(deliveries_ingress{job=\"saf-default-interconnect\"})",
+          "hide": false,
           "refId": "A"
         }
       ],
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Received by QDR White",
+      "title": "Received by SAF QDRs",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -517,7 +519,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "dropped_presettled_deliveries{job=\"qdr-white\"}",
+          "expr": "sum(dropped_presettled_deliveries{job=\"saf-default-interconnect\"})",
           "hide": false,
           "refId": "A"
         }
@@ -525,7 +527,7 @@
       "thresholds": "1,1",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Dropped by QDR White",
+      "title": "Dropped by SAF QDRs",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -876,14 +878,14 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "irate(deliveries_ingress{job=\"qdr-white\"}[1m])",
+          "expr": "max(irate(deliveries_ingress{job=\"saf-default-interconnect\"}[1m]))",
           "refId": "A"
         }
       ],
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Peak Input Rate -> QDR White",
+      "title": "Peak Input Rate -> SAF QDRs",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -989,7 +991,7 @@
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Avg Event Latency",
+      "title": "Avg Event Latency (WIP)",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -1151,8 +1153,15 @@
       "targets": [
         {
           "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range]))",
+          "hide": false,
           "instant": true,
           "refId": "A"
+        },
+        {
+          "expr": "",
+          "hide": false,
+          "instant": true,
+          "refId": "B"
         }
       ],
       "thresholds": "",
@@ -1258,13 +1267,15 @@
       },
       "id": 60,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1525,13 +1536,14 @@
       },
       "id": 24,
       "legend": {
-        "avg": false,
+        "alignAsTable": false,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1568,7 +1580,7 @@
         {
           "expr": "sa_collectd_total_amqp_message_recv_count - sa_collectd_total_amqp_processed_message_count",
           "hide": false,
-          "legendFormat": "{{service}} Unproc (Total Ever)",
+          "legendFormat": "{{service}} Unproc",
           "refId": "C"
         }
       ],
@@ -1578,7 +1590,8 @@
           "fill": true,
           "line": true,
           "op": "gt",
-          "value": 999999999
+          "value": 999999999,
+          "yaxis": "left"
         }
       ],
       "timeFrom": null,
@@ -1827,13 +1840,14 @@
       },
       "id": 13,
       "legend": {
-        "avg": false,
+        "alignAsTable": false,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1851,7 +1865,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max_over_time(scrape_duration_seconds{job !~ \"qdr.*\"}[10s])",
+          "expr": "max_over_time(scrape_duration_seconds{job =~ \".*smartgateway\"}[10s])",
           "hide": false,
           "instant": false,
           "intervalFactor": 1,
@@ -1859,7 +1873,8 @@
           "refId": "A"
         },
         {
-          "expr": "avg_over_time(scrape_duration_seconds{job !~ \"qdr.*\"}[10s])",
+          "expr": "avg_over_time(scrape_duration_seconds{job =~ \".*smartgateway\"}[10s])",
+          "hide": false,
           "legendFormat": "{{pod}} (10s avg)",
           "refId": "B"
         }
@@ -1870,7 +1885,8 @@
           "fill": true,
           "line": true,
           "op": "gt",
-          "value": 0.8
+          "value": 0.8,
+          "yaxis": "left"
         }
       ],
       "timeFrom": null,
@@ -2068,13 +2084,14 @@
       },
       "id": 11,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2097,7 +2114,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "scrape_samples_scraped",
+          "expr": "scrape_samples_scraped{job=~\".*smartgateway\"}",
           "hide": false,
           "interval": "1s",
           "intervalFactor": 1,
@@ -2196,6 +2213,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "SAFPrometheus",
+      "description": "This panel will appear  blank until the first sync occurs",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2206,13 +2224,13 @@
       },
       "id": 21,
       "legend": {
-        "avg": false,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2248,7 +2266,8 @@
           "fill": true,
           "line": true,
           "op": "gt",
-          "value": 8
+          "value": 8,
+          "yaxis": "left"
         }
       ],
       "timeFrom": null,
@@ -2410,13 +2429,14 @@
       },
       "id": 2,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2434,7 +2454,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "pod_name:container_cpu_usage:sum{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}",
+          "expr": "pod_name:container_cpu_usage:sum{$all_saf_pods}",
           "hide": false,
           "legendFormat": "{{pod_name}}",
           "refId": "A"
@@ -2499,13 +2519,14 @@
       },
       "id": 4,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2523,7 +2544,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(container_memory_working_set_bytes{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\", name!~\".*POD.*\"}) by (pod_name)",
+          "expr": "sum(container_memory_working_set_bytes{$all_saf_pods}) by (pod_name)",
           "hide": false,
           "instant": false,
           "legendFormat": "{{pod_name}}",
@@ -2587,15 +2608,17 @@
       },
       "id": 6,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
         "rightSide": false,
         "show": true,
+        "sort": "max",
+        "sortDesc": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2618,13 +2641,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(container_network_transmit_bytes_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m])*8",
+          "expr": "rate(container_network_transmit_bytes_total{$all_saf_pods}[1m])*8",
           "hide": false,
           "legendFormat": "{{pod_name}} tx",
           "refId": "A"
         },
         {
-          "expr": "rate(container_network_receive_bytes_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m])*8",
+          "expr": "rate(container_network_receive_bytes_total{$all_saf_pods}[1m])*8",
           "hide": false,
           "legendFormat": "{{pod_name}} rx",
           "refId": "B"
@@ -2672,64 +2695,6 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                999999999999
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "D",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          },
-          {
-            "evaluator": {
-              "params": [
-                0
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "or"
-            },
-            "query": {
-              "params": [
-                "D",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "10s",
-        "handler": 1,
-        "name": "Network Packets Dropped alert",
-        "noDataState": "no_data",
-        "notifications": []
-      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -2745,15 +2710,17 @@
       },
       "id": 7,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
         "rightSide": false,
         "show": true,
+        "sort": "avg",
+        "sortDesc": false,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2776,39 +2743,31 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(container_network_transmit_packets_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m])*8",
+          "expr": "rate(container_network_transmit_packets_total{$all_saf_pods}[1m])*8",
           "hide": false,
           "legendFormat": "{{pod_name}} tx",
           "refId": "A"
         },
         {
-          "expr": "rate(container_network_receive_packets_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m])*8",
+          "expr": "rate(container_network_receive_packets_total{$all_saf_pods}[1m])*8",
           "hide": false,
           "legendFormat": "{{pod_name}} rx",
           "refId": "B"
         },
         {
-          "expr": "container_network_transmit_packets_dropped_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}",
+          "expr": "container_network_transmit_packets_dropped_total{$all_saf_pods}",
           "hide": false,
           "legendFormat": "{{pod_name}} tx dropped",
           "refId": "C"
         },
         {
-          "expr": "container_network_receive_packets_dropped_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}",
+          "expr": "container_network_receive_packets_dropped_total{$all_saf_pods}",
           "hide": false,
           "legendFormat": "{{pod_name}} rx dropped",
           "refId": "D"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 999999999999
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -2866,15 +2825,15 @@
       },
       "id": 22,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
         "rightSide": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2897,13 +2856,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(container_network_transmit_bytes_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m]) / irate(container_network_transmit_packets_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m])",
+          "expr": "irate(container_network_transmit_bytes_total{$all_saf_pods}[1m]) / irate(container_network_transmit_packets_total{$all_saf_pods}[1m])",
           "hide": false,
           "legendFormat": "{{pod_name}} tx",
           "refId": "A"
         },
         {
-          "expr": "irate(container_network_receive_bytes_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m]) / irate(container_network_receive_packets_total{pod_name=~\".*-smartgateway-.*|.*qdr-white-.*|prometheus-white-0|saf-performance-test-.*\"}[1m])",
+          "expr": "irate(container_network_receive_bytes_total{$all_saf_pods}[1m]) / irate(container_network_receive_packets_total{$all_saf_pods}[1m])",
           "hide": false,
           "legendFormat": "{{pod_name}} rx",
           "refId": "B"
@@ -2980,13 +2939,14 @@
       },
       "id": 40,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -3004,7 +2964,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "label_replace(node:node_cpu_utilisation:avg1m{node=~\"node-.*\"}, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "expr": "label_replace(instance:node_cpu_utilisation:rate1m{instance=~\"worker-.*\"}, \"short_node\", \"$1\", \"instance\", '([^.]+).*')",
           "hide": false,
           "legendFormat": "{{short_node}}",
           "refId": "A"
@@ -3067,13 +3027,14 @@
       },
       "id": 44,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -3091,7 +3052,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "label_replace(node:node_memory_utilisation:{node=~\"node-.*\"}, \"short_node\", \"$1\", \"node\", '([^.]+).*')",
+          "expr": "label_replace(instance:node_memory_utilisation:ratio{instance=~\"worker-.*\"}, \"short_node\", \"$1\", \"instance\", '([^.]+).*')",
           "hide": false,
           "legendFormat": "{{short_node}}",
           "refId": "A"
@@ -3139,12 +3100,32 @@
       }
     }
   ],
-  "refresh": "5s",
+  "refresh": "",
   "schemaVersion": 20,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\"",
+          "value": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\""
+        },
+        "hide": 2,
+        "label": "",
+        "name": "all_saf_pods",
+        "options": [
+          {
+            "selected": true,
+            "text": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\"",
+            "value": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\""
+          }
+        ],
+        "query": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\"",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
   },
   "time": {
     "from": "now-5m",
