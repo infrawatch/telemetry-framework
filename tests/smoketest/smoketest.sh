@@ -35,12 +35,12 @@ for NAME in "${CLOUDNAMES[@]}"; do
     oc create -f <(
       sed -e "s/name: cloud1/name: ${NAME}/"\
           -e "s/\(amqp_url: .*\)telemetry/\\1${NAME}-telemetry/"\
-          ../../deploy/service-assurance/smartgateway/metrics-smartgateway.yaml
+          ./metrics-smartgateway.yaml
     )
     oc create -f <(
       sed -e "s/name: cloud1/name: ${NAME}/"\
           -e "s/\(amqp_url: .*\)notify/\\1${NAME}-notify/"\
-          ../../deploy/service-assurance/smartgateway/events-smartgateway.yaml
+          ./events-smartgateway.yaml
     )
 done
 

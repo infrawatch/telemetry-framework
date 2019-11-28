@@ -1,0 +1,11 @@
+---
+apiVersion: smartgateway.infra.watch/v2alpha1
+kind: SmartGateway
+metadata:
+  name: cloud1-telemetry
+spec:
+  size: 1
+  amqp_url: saf-default-interconnect.sa-telemetry.svc.cluster.local:5672/collectd/telemetry
+  debug: "false"
+  container_image_path: "quay.io/redhat-service-assurance/smart-gateway:latest"
+  service_type: "metrics"
