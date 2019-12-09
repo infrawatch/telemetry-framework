@@ -82,7 +82,7 @@ done
 echo
 
 echo "*** [INFO] Logs from qdr..."
-oc logs "$(oc get pod -l application=qdr-white -o jsonpath='{.items[0].metadata.name}')"
+oc logs "$(oc get pod -l application=saf-default-interconnect -o jsonpath='{.items[0].metadata.name}')"
 echo
 
 echo "*** [INFO] Logs from smart gateways..."
@@ -96,7 +96,7 @@ oc logs "$(oc get pod -l app=smart-gateway-operator -o jsonpath='{.items[0].meta
 echo
 
 echo "*** [INFO] Logs from prometheus..."
-oc logs "$(oc get pod -l prometheus=white -o jsonpath='{.items[0].metadata.name}')" -c prometheus
+oc logs "$(oc get pod -l prometheus=saf-default -o jsonpath='{.items[0].metadata.name}')" -c prometheus
 echo
 
 echo "*** [INFO] Logs from elasticsearch..."

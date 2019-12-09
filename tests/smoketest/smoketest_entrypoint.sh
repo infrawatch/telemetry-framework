@@ -2,8 +2,8 @@
 set -e
 
 # Executes inside the test harness container to start collectd and look for resulting metrics in prometheus
-PROMETHEUS=${PROMETHEUS:-"prometheus-operated.sa-telemetry.svc.cluster.local:9090"}
-ELASTICSEARCH=${ELASTICSEARCH:-"elasticsearch.sa-telemetry.svc.cluster.local:9200"}
+PROMETHEUS=${PROMETHEUS:-"prometheus-operated:9090"}
+ELASTICSEARCH=${ELASTICSEARCH:-"elasticsearch:9200"}
 CLOUDNAME=${CLOUDNAME:-"smoke1"}
 POD=$(hostname)
 
