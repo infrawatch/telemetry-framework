@@ -14,11 +14,11 @@ LoadPlugin amqp1
     Host "saf-default-interconnect.sa-telemetry.svc.cluster.local"
     Port "5672"
     Address "collectd"
-    <Instance "<<CLOUDNAME>>-telemetry">
+    <Instance "telemetry">
         Format JSON
         PreSettle true
     </Instance>
-    <Instance "<<CLOUDNAME>>-notify">
+    <Instance "notify">
         Format JSON
         PreSettle false
         Notify true
