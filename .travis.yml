@@ -1,6 +1,13 @@
 language: minimal
 sudo: required
 
+# 2019/12/12 - leifmadsen
+# until there is an `oc cluster up` equivalent for OKD 4, we're stuck needing
+# to disable CI until a work around is available
+branches:
+  only:
+    - saf-ocp3
+
 before_install:
 - tests/install-and-run-ocp.sh
 
