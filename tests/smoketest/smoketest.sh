@@ -24,35 +24,6 @@ oc delete configmap/saf-smoketest-collectd-config configmap/saf-smoketest-entryp
 oc create configmap saf-smoketest-collectd-config --from-file ./minimal-collectd.conf.template
 oc create configmap saf-smoketest-entrypoint-script --from-file ./smoketest_entrypoint.sh
 
-echo "*** [INFO] Creating smart gateways..."
-for NAME in "${CLOUDNAMES[@]}"; do
-    # NOTE: Using this as our source file requires that we have actually run a
-    # deploy from this same directory, which may not be ideal for a smoke test.
-    # Carrying around a second copy of this resource manifest is also not ideal,
-    # though.
-    oc delete smartgateway "${NAME}-telemetry"
-    oc delete smartgateway "${NAME}-notify"
-    oc create -f <(
-      sed -e "s/name: cloud1/name: ${NAME}/"\
-          -e "s/\(amqp_url: .*\)telemetry/\\1${NAME}-telemetry/"\
-          ./metrics-smartgateway.yaml
-    )
-    oc create -f <(
-      sed -e "s/name: cloud1/name: ${NAME}/"\
-          -e "s/\(amqp_url: .*\)notify/\\1${NAME}-notify/"\
-          ./events-smartgateway.yaml
-    )
-done
-
-
-echo "*** [INFO] Waiting for smart gateways to appear before starting jobs..."
-# NOTE: For a 100-cloud test, this is over 8hrs max if no SGs ever spin up
-SG_TIMEOUT=300
-for NAME in "${CLOUDNAMES[@]}"; do
-    timeout ${SG_TIMEOUT} bash -c "until oc rollout status deploymentconfig.apps.openshift.io/${NAME}-telemetry-smartgateway; do sleep 3; done"
-    timeout ${SG_TIMEOUT} bash -c "until oc rollout status deploymentconfig.apps.openshift.io/${NAME}-notify-smartgateway; do sleep 3; done"
-done
-
 echo "*** [INFO] Creating smoketest jobs..."
 oc delete job -l app=saf-smoketest
 for NAME in "${CLOUDNAMES[@]}"; do
