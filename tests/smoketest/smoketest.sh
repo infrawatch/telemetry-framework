@@ -61,7 +61,7 @@ oc logs "$(oc get pod -l "deploymentconfig=saf-default-telemetry-smartgateway" -
 echo
 
 echo "*** [INFO] Logs from smart gateway operator..."
-oc logs "$(oc get pod -l app=smart-gateway -o jsonpath='{.items[0].metadata.name}')" -c operator
+oc logs "$(oc get pod -l app=smart-gateway -o jsonpath='{.items[0].metadata.name}')" -c ansible
 echo
 
 echo "*** [INFO] Logs from prometheus..."
