@@ -46,12 +46,12 @@ spec:
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: service-assurance-operator
+  name: serviceassurance-operator-alpha-redhat-service-assurance-operators-openshift-marketplace
   namespace: ${SAF_PROJECT}
 spec:
   channel: alpha
   installPlanApproval: Automatic
-  name: service-assurance-operator
+  name: serviceassurance-operator
   source: redhat-service-assurance-operators
   sourceNamespace: openshift-marketplace
   startingCSV: service-assurance-operator.v0.1.0
