@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SAF_PROJECT=${SAF_PROJECT:-sa-telemetry}
+SAF_PROJECT=sa-telemetry
 oc new-project "${SAF_PROJECT}"
 oc create -f - <<EOF
 apiVersion: operators.coreos.com/v1
