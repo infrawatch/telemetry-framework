@@ -7,9 +7,7 @@
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
-        "limit": 100,
         "name": "Annotations & Alerts",
-        "showIn": 0,
         "type": "dashboard"
       }
     ]
@@ -17,247 +15,29 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 3,
-  "iteration": 1576092849470,
+  "id": 10,
+  "iteration": 1578591300764,
   "links": [],
   "panels": [
     {
-      "collapsed": false,
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "description": "Average non-idle CPU activity of all cores on node",
+      "fill": 1,
       "gridPos": {
-        "h": 1,
-        "w": 24,
+        "h": 8,
+        "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 4,
-      "panels": [],
-      "title": "Cluster Level",
-      "type": "row"
-    },
-    {
-      "cacheTimeout": null,
-      "columns": [
-        {
-          "text": "Current",
-          "value": "current"
-        }
-      ],
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 1
-      },
-      "id": 19,
-      "interval": "",
-      "links": [],
-      "options": {},
-      "pageSize": null,
-      "pluginVersion": "6.2.4",
-      "repeatDirection": "v",
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time Up",
-          "colorMode": null,
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 4,
-          "link": false,
-          "mappingType": 1,
-          "pattern": "Current",
-          "rangeMaps": [
-            {
-              "from": "",
-              "text": "",
-              "to": ""
-            }
-          ],
-          "sanitize": false,
-          "thresholds": [
-            ""
-          ],
-          "type": "number",
-          "unit": "dtdurations"
-        },
-        {
-          "alias": "Nodes",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "Metric",
-          "sanitize": false,
-          "thresholds": [],
-          "type": "string",
-          "unit": "short",
-          "valueMaps": [
-            {
-              "text": "",
-              "value": ""
-            }
-          ]
-        }
-      ],
-      "targets": [
-        {
-          "expr": "max_over_time(sa_collectd_uptime[$__interval])",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Node Uptimes",
-      "transform": "timeseries_aggregations",
-      "type": "table"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "SAFPrometheus",
-      "description": "",
-      "gridPos": {
-        "h": 2,
-        "w": 12,
-        "x": 0,
-        "y": 6
-      },
       "id": 2,
-      "links": [],
-      "options": {
-        "displayMode": "lcd",
-        "fieldOptions": {
-          "calcs": [
-            "last"
-          ],
-          "defaults": {
-            "max": 100,
-            "min": 0,
-            "unit": "percent"
-          },
-          "mappings": [],
-          "override": {},
-          "thresholds": [
-            {
-              "color": "green",
-              "index": 0,
-              "value": null
-            },
-            {
-              "color": "red",
-              "index": 1,
-              "value": 95
-            }
-          ],
-          "values": false
-        },
-        "orientation": "horizontal"
-      },
-      "pluginVersion": "6.2.4",
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\"}) / count(sa_collectd_cpu_percent{type!=\"idle\"})",
-          "format": "time_series",
-          "instant": true,
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Cluster Av. CPU Usage",
-      "type": "bargauge"
-    },
-    {
-      "datasource": "SAFPrometheus",
-      "gridPos": {
-        "h": 2,
-        "w": 12,
-        "x": 12,
-        "y": 6
-      },
-      "id": 12,
-      "links": [],
-      "options": {
-        "displayMode": "lcd",
-        "fieldOptions": {
-          "calcs": [
-            "last"
-          ],
-          "defaults": {
-            "max": 1,
-            "min": 0,
-            "unit": "percentunit"
-          },
-          "mappings": [],
-          "override": {},
-          "thresholds": [
-            {
-              "color": "green",
-              "index": 0,
-              "value": null
-            },
-            {
-              "color": "red",
-              "index": 1,
-              "value": 0.95
-            }
-          ],
-          "values": false
-        },
-        "orientation": "auto"
-      },
-      "pluginVersion": "6.2.4",
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_memory{memory=\"used\"}) / sum(sa_collectd_memory)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Cluster % Memory Used",
-      "type": "bargauge"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "decimals": null,
-      "fill": 2,
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 8
-      },
-      "id": 18,
-      "interval": "",
       "legend": {
-        "alignAsTable": false,
         "avg": false,
         "current": false,
-        "hideEmpty": false,
-        "hideZero": false,
         "max": false,
         "min": false,
-        "rightSide": false,
         "show": true,
         "total": false,
         "values": false
@@ -277,29 +57,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\"})/count(sa_collectd_cpu_percent{type!=\"idle\"})",
+          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\", exported_instance=\"$exported_instances\"}) / count(sum by (type) (sa_collectd_cpu_percent{exported_instance=\"$exported_instances\"}))",
           "format": "time_series",
-          "instant": false,
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "Total",
           "refId": "A"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [
-        {
-          "colorMode": "background6",
-          "fill": true,
-          "fillColor": "rgba(234, 112, 112, 0.12)",
-          "line": false,
-          "lineColor": "rgba(237, 46, 24, 0.60)",
-          "op": "time"
-        }
-      ],
+      "timeRegions": [],
       "timeShift": null,
-      "title": "Cluster CPU Usage ",
+      "title": "Aggr. Total CPU Usage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -316,19 +85,19 @@
       "yaxes": [
         {
           "format": "percent",
-          "label": "CPUs",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
         },
         {
-          "format": "decgbytes",
-          "label": "",
+          "format": "short",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": false
+          "show": true
         }
       ],
       "yaxis": {
@@ -339,28 +108,22 @@
     {
       "aliasColors": {},
       "bars": false,
-      "cacheTimeout": null,
       "dashLength": 10,
       "dashes": false,
-      "decimals": null,
-      "fill": 2,
+      "description": "Shows average time spent for each activity across all cores",
+      "fill": 1,
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 0
       },
-      "id": 6,
-      "interval": "",
+      "id": 15,
       "legend": {
-        "alignAsTable": false,
         "avg": false,
         "current": false,
-        "hideEmpty": false,
-        "hideZero": false,
         "max": false,
         "min": false,
-        "rightSide": false,
         "show": true,
         "total": false,
         "values": false
@@ -380,29 +143,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(sa_collectd_memory{memory=\"used\"})",
+          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\", exported_instance=\"$exported_instances\"}) by (type) / count(sa_collectd_cpu_percent{exported_instance=\"controller-0.localdomain\"}) by (type)",
           "format": "time_series",
-          "instant": false,
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "{{type}}",
           "refId": "A"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [
-        {
-          "colorMode": "background6",
-          "fill": true,
-          "fillColor": "rgba(234, 112, 112, 0.12)",
-          "line": false,
-          "lineColor": "rgba(237, 46, 24, 0.60)",
-          "op": "time"
-        }
-      ],
+      "timeRegions": [],
       "timeShift": null,
-      "title": "Cluster Memory Usage",
+      "title": "Aggr. CPU Usage by Type",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -418,20 +170,408 @@
       },
       "yaxes": [
         {
-          "format": "decbytes",
-          "label": "Memory",
+          "format": "percent",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
         },
         {
-          "format": "decgbytes",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Storage/filesystem",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 13,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(sa_collectd_disk_disk_octets_read_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Read",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(rate(sa_collectd_disk_disk_octets_write_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Write",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(rate(sa_collectd_disk_disk_octets_read_total{exported_instance=\"$exported_instances\"}[1h])) + sum(rate(sa_collectd_disk_disk_octets_write_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Total",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Disk Traffic",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "description": "Weighted I/O time refers to measure of both I/O completion time and the backlog that may be accumulating.\n\nMore info: https://collectd.org/wiki/index.php/Plugin:Disk",
+      "fill": 1,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(sa_collectd_disk_disk_io_time_io_time_total{exported_instance=\"$exported_instances\"}[10m]))/1000",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "I/O Time",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(sa_collectd_disk_disk_io_time_weighted_io_time_total{exported_instance=\"$exported_instances\"}[10m]))/1000",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Weighted I/O Time",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Disk Load",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "percentunit",
           "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": false
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "description": "Disk usage expressed as percent of total capacity",
+      "fill": 1,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 6,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(sa_collectd_df_df_complex{type!=\"free\", exported_instance=\"$exported_instances\"})/sum(sa_collectd_df_df_complex{exported_instance=\"$exported_instances\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used/Reserved",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Aggr. Disk Usage (df)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 2,
+          "format": "percentunit",
+          "label": "% Disk Space",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "description": "Average time each I/O operation took to complete. Per the collectd disk plugin docs (https://collectd.org/wiki/index.php/Plugin:Disk), this average is not necessarily very accurate.",
+      "fill": 1,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 16,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(sa_collectd_disk_disk_time_read_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "Read",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(sa_collectd_disk_disk_time_write_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "Write",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average I/O Operation Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
         }
       ],
       "yaxis": {
@@ -449,9 +589,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 15
+        "y": 24
       },
-      "id": 22,
+      "id": 9,
       "legend": {
         "avg": false,
         "current": false,
@@ -463,6 +603,7 @@
       },
       "lines": true,
       "linewidth": 1,
+      "links": [],
       "nullPointMode": "null",
       "options": {},
       "percentage": false,
@@ -475,9 +616,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "",
+          "expr": "sum(sa_collectd_df_df_complex{type!=\"free\", exported_instance=\"$exported_instances\"})",
           "format": "time_series",
           "intervalFactor": 1,
+          "legendFormat": "Size",
           "refId": "A"
         }
       ],
@@ -485,440 +627,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 23
-      },
-      "id": 10,
-      "panels": [],
-      "title": "Node Level",
-      "type": "row"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorPostfix": false,
-      "colorPrefix": false,
-      "colorValue": false,
-      "colors": [
-        "#F2495C",
-        "#F2495C",
-        "#73BF69"
-      ],
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 24,
-        "x": 0,
-        "y": 24
-      },
-      "id": 17,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "pluginVersion": "6.2.4",
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": "exported_instances",
-      "repeatDirection": "v",
-      "scopedVars": {
-        "exported_instances": {
-          "selected": true,
-          "text": "controller-0.localdomain",
-          "value": "controller-0.localdomain"
-        }
-      },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "sa_collectd_last_metric_for_host_status{exported_instance=\"$exported_instances\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "thresholds": "0,1",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Node Status",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "Node Down",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Node Down",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "Node Active",
-          "value": "1"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "SAFPrometheus",
-      "description": "",
-      "gridPos": {
-        "h": 2,
-        "w": 12,
-        "x": 0,
-        "y": 27
-      },
-      "id": 13,
-      "links": [],
-      "options": {
-        "displayMode": "lcd",
-        "fieldOptions": {
-          "calcs": [
-            "last"
-          ],
-          "defaults": {
-            "max": 100,
-            "min": 0,
-            "unit": "percent"
-          },
-          "mappings": [],
-          "override": {},
-          "thresholds": [
-            {
-              "color": "green",
-              "index": 0,
-              "value": null
-            },
-            {
-              "color": "red",
-              "index": 1,
-              "value": 95
-            }
-          ],
-          "values": false
-        },
-        "orientation": "horizontal"
-      },
-      "pluginVersion": "6.2.4",
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\",exported_instance=\"$exported_instances\"}) / count(sa_collectd_cpu_percent{type!=\"idle\",exported_instance=\"$exported_instances\"})",
-          "format": "time_series",
-          "instant": true,
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Node Av. CPU Usage",
-      "type": "bargauge"
-    },
-    {
-      "datasource": "SAFPrometheus",
-      "gridPos": {
-        "h": 2,
-        "w": 12,
-        "x": 12,
-        "y": 27
-      },
-      "id": 15,
-      "links": [],
-      "options": {
-        "displayMode": "lcd",
-        "fieldOptions": {
-          "calcs": [
-            "last"
-          ],
-          "defaults": {
-            "max": 1,
-            "min": 0,
-            "unit": "percentunit"
-          },
-          "mappings": [],
-          "override": {},
-          "thresholds": [
-            {
-              "color": "green",
-              "index": 0,
-              "value": null
-            },
-            {
-              "color": "red",
-              "index": 1,
-              "value": 0.95
-            }
-          ],
-          "values": false
-        },
-        "orientation": "auto"
-      },
-      "pluginVersion": "6.2.4",
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_memory{memory=\"used\",exported_instance=\"$exported_instances\"}) / sum(sa_collectd_memory{exported_instance=\"$exported_instances\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Percent Node Memory Used",
-      "type": "bargauge"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "decimals": null,
-      "fill": 2,
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 0,
-        "y": 29
-      },
-      "id": 20,
-      "interval": "",
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "hideEmpty": false,
-        "hideZero": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {},
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\",exported_instance=\"$exported_instances\"})/count(sa_collectd_cpu_percent{type!=\"idle\",exported_instance=\"$exported_instances\"})",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [
-        {
-          "colorMode": "background6",
-          "fill": true,
-          "fillColor": "rgba(234, 112, 112, 0.12)",
-          "line": false,
-          "lineColor": "rgba(237, 46, 24, 0.60)",
-          "op": "time"
-        }
-      ],
-      "timeShift": null,
-      "title": "Node CPU Usage ",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "percent",
-          "label": "CPUs",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "decgbytes",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "decimals": null,
-      "fill": 2,
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 12,
-        "y": 29
-      },
-      "id": 14,
-      "interval": "",
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "hideEmpty": false,
-        "hideZero": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {},
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_memory{memory=\"used\",exported_instance=\"$exported_instances\"})",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [
-        {
-          "colorMode": "background6",
-          "fill": true,
-          "fillColor": "rgba(234, 112, 112, 0.12)",
-          "line": false,
-          "lineColor": "rgba(237, 46, 24, 0.60)",
-          "op": "time"
-        }
-      ],
-      "timeShift": null,
-      "title": "Node Total Memory Usage",
+      "title": "Total Aggr. Disk Usage (df)",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -935,19 +644,120 @@
       "yaxes": [
         {
           "format": "decbytes",
-          "label": "Memory",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
         },
         {
-          "format": "decgbytes",
-          "label": "",
+          "format": "short",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": false
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "description": "Inode usage refers to the number of file system objects reserved or used out of the maximum number of file system objects available across all disks",
+      "fill": 1,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "id": 7,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(sa_collectd_df_df_inodes{type=\"reserved\", exported_instance=\"$exported_instances\"}) / sum(sa_collectd_df_df_inodes{exported_instance=\"$exported_instances\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Reserved",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(sa_collectd_df_df_inodes{type=\"used\", exported_instance=\"$exported_instances\"}) / sum(sa_collectd_df_df_inodes{exported_instance=\"$exported_instances\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(sa_collectd_df_df_inodes{type!=\"free\", exported_instance=\"$exported_instances\"}) / sum(sa_collectd_df_df_inodes{exported_instance=\"$exported_instances\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Total",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Inode Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 2,
+          "format": "percentunit",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
         }
       ],
       "yaxis": {
@@ -956,7 +766,7 @@
       }
     }
   ],
-  "refresh": "30s",
+  "refresh": false,
   "schemaVersion": 18,
   "style": "dark",
   "tags": [],
@@ -966,7 +776,6 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "tags": [],
           "text": "controller-0.localdomain",
           "value": "controller-0.localdomain"
         },
@@ -1018,8 +827,8 @@
     ]
   },
   "time": {
-    "from": "now-3h",
-    "to": "now"
+    "from": "2020-01-09T02:52:21.742Z",
+    "to": "2020-01-09T02:52:26.928Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1047,7 +856,7 @@
     ]
   },
   "timezone": "",
-  "title": "Paul Dashboard Edits",
-  "uid": "5uqnGu-Wk",
-  "version": 22
+  "title": "Infrastructure Skeleton",
+  "uid": "1F1OJZEWz",
+  "version": 13
 }
