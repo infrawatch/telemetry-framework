@@ -65,5 +65,5 @@ metadata:
   namespace: ${SAF_PROJECT}
 spec:
   metricsEnabled: true
-  eventsEnabled: true
+  eventsEnabled: false
 EOF
