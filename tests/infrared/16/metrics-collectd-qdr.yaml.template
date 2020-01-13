@@ -1,6 +1,6 @@
 ---
 tripleo_heat_templates:
-    - /usr/share/openstack-tripleo-heat-templates/environments/metrics-collectd-qdr.yaml
+    - /usr/share/openstack-tripleo-heat-templates/environments/metrics/collectd-write-qdr.yaml
 
 custom_templates:
     parameter_defaults:
@@ -48,7 +48,7 @@ custom_templates:
               distribution: multicast
         MetricsQdrConnectors:
             - host: <<AMQP_HOST>>
-              port: 443
+              port: <<AMQP_PORT>>
               role: edge
               verifyHostname: false
               sslProfile: sslProfile
