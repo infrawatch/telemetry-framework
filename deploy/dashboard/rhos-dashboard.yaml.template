@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1579037439910,
+  "iteration": 1579206243483,
   "links": [],
   "panels": [
     {
@@ -26,11 +26,12 @@
       "colorPrefix": false,
       "colorValue": false,
       "colors": [
-        "#C4162A",
+        "#FA6400",
         "#37872D",
-        "#FA6400"
+        "#C4162A"
       ],
       "datasource": null,
+      "description": "",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -85,6 +86,7 @@
         {
           "expr": "sum(sa_collectd_last_metric_for_host_status{exported_instance=\"$exported_instances\"} or on() vector(3))",
           "format": "time_series",
+          "hide": false,
           "intervalFactor": 1,
           "refId": "A"
         },
@@ -104,7 +106,7 @@
       "valueMaps": [
         {
           "op": "=",
-          "text": "Node Down",
+          "text": "Unavailable",
           "value": "0"
         },
         {
@@ -114,7 +116,7 @@
         },
         {
           "op": "=",
-          "text": "Unavailable",
+          "text": "Node Down",
           "value": "3"
         }
       ],
@@ -385,7 +387,7 @@
       ],
       "datasource": "SAFPrometheus",
       "decimals": 1,
-      "description": "Total disk space available on to the root device on this node.\n\nNote: for this query to be more accurate, we may want to set collect df ReportByDevice parameter to true so that the query can see tmpfs just in case not all persistent files systems are included in root.",
+      "description": "Aproxement total disk space available on to the root device on this node.\n\nDisclaimer: this query excludes the temporary filesystems (tmpfs,devtmpfs,overlay). Thus, if swap storage is used, these file systems may use disk space, causing this result to appear smaller than it should. ",
       "format": "bytes",
       "gauge": {
         "maxValue": 100,
@@ -438,11 +440,11 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(sa_collectd_df_df_complex{df=\"root\",exported_instance=\"$exported_instances\"})",
+          "expr": "sum(sa_collectd_df_df_complex{df!~\"devtmpfs|overlay|shm|tmpfs\",exported_instance=\"$exported_instances\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "root partition",
+          "legendFormat": "{{df}}",
           "refId": "A"
         }
       ],
@@ -666,6 +668,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "description": "Disclaimer: query contains a set of typical hardware interfaces seen on Linux systems. Some unrecognized interfaces may not be included in the query.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -702,7 +705,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(sa_collectd_interface_if_octets_tx_total{interface=~\"eth.*|wlan.*|wlp.*|ens.*\",exported_instance=\"$exported_instances\"}[1h])",
+          "expr": "rate(sa_collectd_interface_if_octets_tx_total{interface=~\"eth.*|wlan.*|wlp.*|ens.*|enp.*\",exported_instance=\"$exported_instances\"}[10m])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{interface}}",
@@ -756,6 +759,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "SAFPrometheus",
+      "description": "Disclaimer: query contains a set of typical hardware interfaces seen on Linux systems. Some unrecognized interfaces may not be included in the query.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -792,7 +796,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(sa_collectd_interface_if_octets_rx_total{interface=~\"eth.*|wlan.*|wlp.*|ens.*\",exported_instance=\"$exported_instances\"}[1h])",
+          "expr": "rate(sa_collectd_interface_if_octets_rx_total{interface=~\"eth.*|wlan.*|wlp.*|ens.*|enp.*\",exported_instance=\"$exported_instances\"}[10m])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{interface}}",
@@ -945,7 +949,7 @@
         "current": false,
         "max": false,
         "min": false,
-        "show": true,
+        "show": false,
         "total": false,
         "values": false
       },
@@ -1032,13 +1036,15 @@
       "hiddenSeries": false,
       "id": 15,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "current": true,
+        "max": true,
+        "min": true,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1106,7 +1112,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": null,
       "gridPos": {
         "h": 1,
@@ -1115,8 +1121,273 @@
         "y": 37
       },
       "id": 25,
-      "panels": [],
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "datasource": "SAFPrometheus",
+          "description": "",
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 0,
+            "y": 38
+          },
+          "id": 44,
+          "links": [],
+          "options": {
+            "fieldOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "defaults": {
+                "decimals": 1,
+                "mappings": [
+                  {
+                    "id": 0,
+                    "op": "=",
+                    "text": "N/A",
+                    "type": 1,
+                    "value": "null"
+                  }
+                ],
+                "max": 1,
+                "min": 0,
+                "nullValueMode": "connected",
+                "thresholds": [
+                  {
+                    "color": "#299c46",
+                    "value": null
+                  },
+                  {
+                    "color": "rgba(237, 129, 40, 0.89)",
+                    "value": 0.9
+                  },
+                  {
+                    "color": "#d44a3a",
+                    "value": 0.95
+                  }
+                ],
+                "unit": "percentunit"
+              },
+              "override": {},
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "6.5.2",
+          "targets": [
+            {
+              "expr": "sum(sa_collectd_memory{memory=\"used\",exported_instance=\"$exported_instances\"})/ sum(sa_collectd_memory{exported_instance=\"$exported_instances\"})",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{memory}}",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Memory Used",
+          "type": "gauge"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "SAFPrometheus",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 3,
+            "y": 38
+          },
+          "id": 23,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "pluginVersion": "6.5.2",
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false,
+            "ymax": null,
+            "ymin": null
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(sa_collectd_hugepages_vmpage_number{type=\"used\",exported_instance=\"$exported_instances\"})",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{hugepages}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Huge Pages Used",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "avg"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "SAFPrometheus",
+          "decimals": null,
+          "description": "Memory used on node",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 5,
+            "w": 24,
+            "x": 0,
+            "y": 44
+          },
+          "hiddenSeries": false,
+          "id": 27,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(sa_collectd_memory{memory=\"used\",exported_instance=\"$exported_instances\"})",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{memory}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Memory",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "decbytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        }
+      ],
       "title": "Memory",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Disk/File System",
       "type": "row"
     },
     {
@@ -1127,9 +1398,9 @@
         "h": 6,
         "w": 3,
         "x": 0,
-        "y": 38
+        "y": 39
       },
-      "id": 44,
+      "id": 50,
       "links": [],
       "options": {
         "fieldOptions": {
@@ -1176,28 +1447,29 @@
       "pluginVersion": "6.5.2",
       "targets": [
         {
-          "expr": "(sum(sa_collectd_memory{memory=\"used\",exported_instance=\"$exported_instances\"}) - sum(sa_collectd_memory{memory=~\"cached|buffered\",exported_instance=\"$exported_instances\"}))/ sum(sa_collectd_memory{exported_instance=\"$exported_instances\"})",
+          "expr": "sum(sa_collectd_df_df_complex{df!~\"devtmpfs|overlay|shm|tmpfs\",type!=\"free\",exported_instance=\"$exported_instances\"})/sum(sa_collectd_df_df_complex{df!~\"devtmpfs|overlay|shm|tmpfs\",exported_instance=\"$exported_instances\"})",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{memory}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Memory Used",
+      "title": "Disk Space Usage",
       "type": "gauge"
     },
     {
       "cacheTimeout": null,
       "datasource": "SAFPrometheus",
+      "description": "",
       "gridPos": {
         "h": 6,
         "w": 3,
         "x": 3,
-        "y": 38
+        "y": 39
       },
-      "id": 23,
+      "id": 51,
       "links": [],
       "options": {
         "fieldOptions": {
@@ -1205,16 +1477,17 @@
             "lastNotNull"
           ],
           "defaults": {
+            "decimals": 1,
             "mappings": [
               {
                 "id": 0,
                 "op": "=",
-                "text": "0.0%",
+                "text": "N/A",
                 "type": 1,
                 "value": "null"
               }
             ],
-            "max": 100,
+            "max": 1,
             "min": 0,
             "nullValueMode": "connected",
             "thresholds": [
@@ -1224,11 +1497,11 @@
               },
               {
                 "color": "rgba(237, 129, 40, 0.89)",
-                "value": 90
+                "value": 0.9
               },
               {
                 "color": "#d44a3a",
-                "value": 95
+                "value": 0.95
               }
             ],
             "unit": "percentunit"
@@ -1243,16 +1516,16 @@
       "pluginVersion": "6.5.2",
       "targets": [
         {
-          "expr": "sum(sa_collectd_hugepages_vmpage_number{type=\"used\",exported_instance=\"$exported_instances\"})  / sum(sa_collectd_hugepages_vmpage_number{exported_instance=\"$exported_instances\"})",
+          "expr": "sum(sa_collectd_df_df_inodes{type=\"used\", exported_instance=\"$exported_instances\"}) / sum(sa_collectd_df_df_inodes{exported_instance=\"$exported_instances\"})",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{hugepages}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Huge Pages Used",
+      "title": "Inode Usage",
       "type": "gauge"
     },
     {
@@ -1261,17 +1534,16 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "SAFPrometheus",
-      "description": "Memory used on node",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 45
       },
       "hiddenSeries": false,
-      "id": 27,
+      "id": 9,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -1300,10 +1572,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(sa_collectd_memory{memory=\"used\",exported_instance=\"$exported_instances\"}) - sum(sa_collectd_memory{memory=~\"cached|buffered\",exported_instance=\"$exported_instances\"})",
+          "expr": "sum by (type) (sa_collectd_df_df_complex{df!~\"devtmpfs|overlay|shm|tmpfs\",type!~\"free\",exported_instance=\"$exported_instances\"})",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{memory}}",
+          "legendFormat": "{{type}}",
           "refId": "A"
         }
       ],
@@ -1311,7 +1583,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Memory",
+      "title": "Aggregate Disk Space Usage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1327,248 +1599,7 @@
       },
       "yaxes": [
         {
-          "format": "decbytes",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 49
-      },
-      "id": 11,
-      "panels": [],
-      "title": "Disk/File System",
-      "type": "row"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "SAFPrometheus",
-      "description": "Disk usage expressed as percent of total capacity",
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 0,
-        "y": 50
-      },
-      "id": 6,
-      "links": [],
-      "options": {
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "defaults": {
-            "mappings": [
-              {
-                "id": 0,
-                "op": "=",
-                "text": "N/A",
-                "type": 1,
-                "value": "null"
-              }
-            ],
-            "max": 100,
-            "min": 0,
-            "nullValueMode": "connected",
-            "thresholds": [
-              {
-                "color": "#299c46",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": 90
-              },
-              {
-                "color": "#d44a3a",
-                "value": 95
-              }
-            ],
-            "unit": "percentunit"
-          },
-          "override": {},
-          "values": false
-        },
-        "orientation": "horizontal",
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "6.5.2",
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_df_df_complex{df=\"root\",type!=\"free\", exported_instance=\"$exported_instances\"})/sum(sa_collectd_df_df_complex{df=\"root\",exported_instance=\"$exported_instances\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Used",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Disk Usage",
-      "type": "gauge"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "SAFPrometheus",
-      "description": "Inode usage refers to the number of file system objects reserved or used out of the maximum number of file system objects available across all disks. ",
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 3,
-        "y": 50
-      },
-      "id": 7,
-      "links": [],
-      "options": {
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "defaults": {
-            "decimals": 2,
-            "mappings": [
-              {
-                "id": 0,
-                "op": "=",
-                "text": "N/A",
-                "type": 1,
-                "value": "null"
-              }
-            ],
-            "max": 100,
-            "min": 0,
-            "nullValueMode": "connected",
-            "thresholds": [
-              {
-                "color": "#299c46",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": 90
-              },
-              {
-                "color": "#d44a3a",
-                "value": 95
-              }
-            ],
-            "unit": "percentunit"
-          },
-          "override": {},
-          "values": false
-        },
-        "orientation": "horizontal",
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "6.5.2",
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_df_df_inodes{type=\"used\", exported_instance=\"$exported_instances\"}) / sum(sa_collectd_df_df_inodes{exported_instance=\"$exported_instances\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "used",
-          "refId": "C"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Inode Usage",
-      "type": "gauge"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "SAFPrometheus",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 55
-      },
-      "hiddenSeries": false,
-      "id": 9,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(sa_collectd_df_df_complex{df=\"root\",type!=\"free\", exported_instance=\"$exported_instances\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "size",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Aggregate Disk Usage",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "decbytes",
+          "format": "bytes",
           "label": "",
           "logBase": 1,
           "max": null,
@@ -1595,14 +1626,15 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "SAFPrometheus",
-      "decimals": 0,
+      "decimals": 2,
+      "description": "10m rolling average",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 60
+        "y": 50
       },
       "hiddenSeries": false,
       "id": 13,
@@ -1635,17 +1667,17 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(sa_collectd_disk_disk_octets_read_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "expr": "sum(rate(sa_collectd_disk_disk_octets_read_total{exported_instance=\"$exported_instances\"}[10m]))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "Read",
+          "legendFormat": "read",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(sa_collectd_disk_disk_octets_write_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "expr": "sum(rate(sa_collectd_disk_disk_octets_write_total{exported_instance=\"$exported_instances\"}[10m]))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "Write",
+          "legendFormat": "write",
           "refId": "C"
         }
       ],
@@ -1669,8 +1701,9 @@
       },
       "yaxes": [
         {
+          "decimals": null,
           "format": "Bps",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -1696,25 +1729,28 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "SAFPrometheus",
-      "description": "Weighted I/O time refers to measure of both I/O completion time and the backlog that may be accumulating.\n\nMore info: https://collectd.org/wiki/index.php/Plugin:Disk",
+      "decimals": 2,
+      "description": "Approximate percentage of total disk bandwidth being used.\n\nWeighted I/O includes the backlog that may be accumulating.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 65
+        "y": 55
       },
       "hiddenSeries": false,
       "id": 4,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "current": true,
+        "max": true,
+        "min": true,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1737,14 +1773,12 @@
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "I/O",
+          "legendFormat": "i/o",
           "refId": "A"
         },
         {
           "expr": "sum(rate(sa_collectd_disk_disk_io_time_weighted_io_time_total{exported_instance=\"$exported_instances\"}[1h]))/1000",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Weighted I/O",
+          "legendFormat": "weighted i/o",
           "refId": "B"
         }
       ],
@@ -1768,6 +1802,7 @@
       },
       "yaxes": [
         {
+          "decimals": null,
           "format": "percentunit",
           "label": "",
           "logBase": 1,
@@ -1803,7 +1838,7 @@
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 70
+        "y": 60
       },
       "hiddenSeries": false,
       "id": 17,
@@ -1835,19 +1870,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(sa_collectd_disk_disk_ops_read_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "expr": "sum(rate(sa_collectd_disk_disk_ops_read_total{exported_instance=\"$exported_instances\"}[10m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "Read",
+          "legendFormat": "read",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(sa_collectd_disk_disk_ops_write_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "expr": "sum(rate(sa_collectd_disk_disk_ops_write_total{exported_instance=\"$exported_instances\"}[10m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "Write",
+          "legendFormat": "write",
           "refId": "B"
         }
       ],
@@ -1898,25 +1933,27 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "SAFPrometheus",
-      "description": "Average time each I/O operation took to complete. Per the collectd disk plugin docs (https://collectd.org/wiki/index.php/Plugin:Disk), this average is not necessarily very accurate.",
+      "description": "Average time each I/O operation took to complete. Per the collectd disk plugin docs (https://collectd.org/wiki/index.php/Plugin:Disk), this average is not very accurate.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 75
+        "y": 65
       },
       "hiddenSeries": false,
       "id": 16,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "current": true,
+        "max": true,
+        "min": true,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1935,19 +1972,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(sa_collectd_disk_disk_time_read_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "expr": "sum(rate(sa_collectd_disk_disk_time_read_total{exported_instance=\"$exported_instances\"}[10m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "Read",
+          "legendFormat": "read",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(sa_collectd_disk_disk_time_write_total{exported_instance=\"$exported_instances\"}[1h]))",
+          "expr": "sum(rate(sa_collectd_disk_disk_time_write_total{exported_instance=\"$exported_instances\"}[10m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "Write",
+          "legendFormat": "write",
           "refId": "B"
         }
       ],
@@ -2002,10 +2039,9 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
           "tags": [],
-          "text": "controller-0.localdomain",
-          "value": "controller-0.localdomain"
+          "text": "localhost",
+          "value": "localhost"
         },
         "datasource": "SAFPrometheus",
         "definition": "label_values(exported_instance)",
@@ -2036,9 +2072,14 @@
             "value": "compute-0.localdomain:879507e0-ad7e-4585-ae96-167727bfc6be"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "controller-0.localdomain",
             "value": "controller-0.localdomain"
+          },
+          {
+            "selected": true,
+            "text": "localhost",
+            "value": "localhost"
           }
         ],
         "query": "label_values(exported_instance)",
@@ -2055,7 +2096,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -2086,5 +2127,5 @@
   "timezone": "",
   "title": "Infrastructure Skeleton",
   "uid": "1F1OJZEWz",
-  "version": 7
+  "version": 28
 }
