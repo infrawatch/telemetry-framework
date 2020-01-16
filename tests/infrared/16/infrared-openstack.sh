@@ -5,13 +5,13 @@ set -e
 #  VIRTHOST=my.big.hypervisor.net
 #  ./infrared-openstack.sh
 
-VIRTHOST=${VIRTHOST:-my.big.hypervisor.net}
+VIRTHOST=${VIRTHOST:-localhost}
 AMQP_HOST=${AMQP_HOST:-saf-default-interconnect-5671-sa-telemetry.apps-crc.testing}
 AMQP_PORT=${AMQP_PORT:-443}
 SSH_KEY="${SSH_KEY:-${HOME}/.ssh/id_rsa}"
 VM_IMAGE="${VM_IMAGE:-http://download.devel.redhat.com/brewroot/packages/rhel-guest-image/8.1/333/images/rhel-guest-image-8.1-333.x86_64.qcow2}"
 OSP_BUILD="${OSP_BUILD:-latest-RHOS_TRUNK-16-RHEL-8.1}"
-NTP_SERVER="${NTP_SERVER:-8.8.8.8}"
+NTP_SERVER="${NTP_SERVER:-clock.redhat.com,10.5.27.10,10.11.160.238}"
 
 infrared virsh \
     -vv \
@@ -23,13 +23,14 @@ infrared virsh \
 infrared virsh \
     -vvv \
     -o outputs/provision.yml \
-    --topology-nodes undercloud:1,controller:1,compute:1 \
+    --topology-nodes undercloud:1,controller:1,compute:1,ceph:1 \
     --host-address "${VIRTHOST}" \
     --host-key "${SSH_KEY}" \
     --image-url "${VM_IMAGE}" \
     --host-memory-overcommit True \
     -e override.controller.cpu=8 \
-    -e override.controller.memory=16384
+    -e override.controller.memory=32768 \
+    --serial-files True
 
 infrared tripleo-undercloud \
     -vv \
@@ -37,14 +38,10 @@ infrared tripleo-undercloud \
     --mirror rdu2 \
     --version 16 \
     --build "${OSP_BUILD}" \
-    --registry-mirror docker-registry.engineering.redhat.com \
-    --registry-undercloud-skip no
-
-infrared tripleo-undercloud -vv \
-   -o outputs/images_settings.yml \
-   --images-task rpm \
-   --build "${OSP_BUILD}" \
-   --images-update no
+    --images-task rpm \
+    --images-update no \
+    --tls-ca https://password.corp.redhat.com/RH-IT-Root-CA.crt \
+    --config-options DEFAULT.undercloud_timezone=UTC
 
 sed -e "s/<<AMQP_HOST>>/${AMQP_HOST}/;s/<<AMQP_PORT>>/${AMQP_PORT}/" metrics-collectd-qdr.yaml.template > outputs/metrics-collectd-qdr.yaml
 
@@ -53,22 +50,16 @@ infrared tripleo-overcloud \
     -o outputs/overcloud-install.yml \
     --version 16 \
     --deployment-files virt \
+    --overcloud-templates="" \
     --overcloud-debug yes \
-    --network-backend vxlan \
+    --network-backend geneve \
     --network-protocol ipv4 \
-    --storage-backend lvm \
+    --network-dvr yes \
+    --storage-backend ceph \
     --storage-external no \
     --overcloud-ssl no \
-    --tls-everywhere no \
-    --network-dvr false \
-    --network-lbaas false \
-    --vbmc-force true \
     --introspect yes \
     --tagging yes \
     --deploy yes \
-    --public-network yes \
-    --public-subnet default_subnet \
+    --ntp-server ${NTP_SERVER}
     --containers yes \
-    --registry-mirror docker-registry.engineering.redhat.com \
-    --overcloud-templates outputs/metrics-collectd-qdr.yaml \
-    --registry-undercloud-skip no
