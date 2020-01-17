@@ -50,7 +50,7 @@ infrared tripleo-overcloud \
     -o outputs/overcloud-install.yml \
     --version 16 \
     --deployment-files virt \
-    --overcloud-templates="" \
+    --overcloud-templates="none" \
     --overcloud-debug yes \
     --network-backend geneve \
     --network-protocol ipv4 \
@@ -61,5 +61,5 @@ infrared tripleo-overcloud \
     --introspect yes \
     --tagging yes \
     --deploy yes \
-    --ntp-server ${NTP_SERVER}
-    --containers yes \
+    --ntp-server ${NTP_SERVER} \
+    --containers yes
