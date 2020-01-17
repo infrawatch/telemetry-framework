@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1579268140928,
+  "iteration": 1579301328139,
   "links": [],
   "panels": [
     {
@@ -1647,7 +1647,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.5.2",
+      "pluginVersion": "6.5.3",
       "targets": [
         {
           "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\", exported_instance=\"$exported_instances\"}) / count(sum by (type) (sa_collectd_cpu_percent{exported_instance=\"$exported_instances\"}))",
@@ -1917,7 +1917,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.5.2",
+      "pluginVersion": "6.5.3",
       "targets": [
         {
           "expr": "sum(sa_collectd_memory{memory=\"used\",exported_instance=\"$exported_instances\"})/ sum(sa_collectd_memory{exported_instance=\"$exported_instances\"})",
@@ -2181,7 +2181,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.5.2",
+      "pluginVersion": "6.5.3",
       "targets": [
         {
           "expr": "sum(sa_collectd_df_df_complex{df!~\"devtmpfs|overlay|shm|tmpfs\",type!=\"free\",exported_instance=\"$exported_instances\"})/sum(sa_collectd_df_df_complex{df!~\"devtmpfs|overlay|shm|tmpfs\",exported_instance=\"$exported_instances\"})",
@@ -2250,7 +2250,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.5.2",
+      "pluginVersion": "6.5.3",
       "targets": [
         {
           "expr": "sum(sa_collectd_df_df_inodes{type=\"used\", exported_instance=\"$exported_instances\"}) / sum(sa_collectd_df_df_inodes{exported_instance=\"$exported_instances\"})",
@@ -2794,7 +2794,7 @@
             "value": "172.17.1.16"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "compute-0.localdomain",
             "value": "compute-0.localdomain"
           },
@@ -2814,7 +2814,7 @@
             "value": "controller-0.localdomain"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "localhost",
             "value": "localhost"
           }
@@ -2864,5 +2864,5 @@
   "timezone": "",
   "title": "Infrastructure Skeleton",
   "uid": "1F1OJZEWz",
-  "version": 38
+  "version": 3
 }
