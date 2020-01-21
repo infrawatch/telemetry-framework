@@ -16,8 +16,18 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1579301328139,
-  "links": [],
+  "iteration": 1579552128224,
+  "links": [
+    {
+      "icon": "external link",
+      "tags": [
+        "CloudView"
+      ],
+      "targetBlank": false,
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
   "panels": [
     {
       "cacheTimeout": null,
@@ -1650,7 +1660,7 @@
       "pluginVersion": "6.5.3",
       "targets": [
         {
-          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\", exported_instance=\"$exported_instances\"}) / count(sum by (type) (sa_collectd_cpu_percent{exported_instance=\"$exported_instances\"}))",
+          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\", exported_instance=\"$exported_instances\"}) / count(sum by (type) (sa_collectd_cpu_percent{type!=\"idle\",exported_instance=\"$exported_instances\"}))",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
@@ -1708,7 +1718,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\", exported_instance=\"$exported_instances\"}) / count(sum by (type) (sa_collectd_cpu_percent{exported_instance=\"$exported_instances\"}))",
+          "expr": "sum(sa_collectd_cpu_percent{type!=\"idle\", exported_instance=\"$exported_instances\"}) / count(sum by (type) (sa_collectd_cpu_percent{type!=\"idle\",exported_instance=\"$exported_instances\"}))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Total",
@@ -2776,9 +2786,9 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
-          "text": "localhost",
-          "value": "localhost"
+          "selected": false,
+          "text": "controller-0.localdomain",
+          "value": "controller-0.localdomain"
         },
         "datasource": "SAFPrometheus",
         "definition": "label_values(exported_instance)",
@@ -2794,7 +2804,7 @@
             "value": "172.17.1.16"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "compute-0.localdomain",
             "value": "compute-0.localdomain"
           },
@@ -2809,7 +2819,7 @@
             "value": "compute-0.localdomain:879507e0-ad7e-4585-ae96-167727bfc6be"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "controller-0.localdomain",
             "value": "controller-0.localdomain"
           },
@@ -2864,5 +2874,5 @@
   "timezone": "",
   "title": "Infrastructure Skeleton",
   "uid": "1F1OJZEWz",
-  "version": 3
+  "version": 7
 }
