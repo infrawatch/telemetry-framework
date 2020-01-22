@@ -67,6 +67,7 @@ infrared tripleo-overcloud \
     --deploy yes \
     --public-network yes \
     --public-subnet default_subnet \
+    --ntp-server "${NTP_SERVER}" \
     --containers yes \
     --registry-mirror docker-registry.engineering.redhat.com \
     --overcloud-templates outputs/metrics-collectd-qdr.yaml \
