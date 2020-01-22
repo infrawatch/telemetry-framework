@@ -1,6 +1,8 @@
 #!/bin/bash
-
 SAF_PROJECT=${SAF_PROJECT:-sa-telemetry}
+SAF_CONFIG=${SAF_CONFIG:-configs/default.bash}
+source ${SAF_CONFIG}
+
 oc new-project "${SAF_PROJECT}"
 oc create -f - <<EOF
 apiVersion: operators.coreos.com/v1
@@ -46,24 +48,17 @@ spec:
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: service-assurance-operator
+  name: serviceassurance-operator-alpha-redhat-service-assurance-operators-openshift-marketplace
   namespace: ${SAF_PROJECT}
 spec:
   channel: alpha
   installPlanApproval: Automatic
-  name: service-assurance-operator
+  name: serviceassurance-operator
   source: redhat-service-assurance-operators
   sourceNamespace: openshift-marketplace
   startingCSV: service-assurance-operator.v0.1.0
 EOF
 while ! oc get csv | grep service-assurance-operator | grep Succeeded; do echo "waiting for SAO..."; sleep 3; done
 oc create -f - <<EOF
-apiVersion: infra.watch/v1alpha1
-kind: ServiceAssurance
-metadata:
-  name: saf-default
-  namespace: ${SAF_PROJECT}
-spec:
-  metricsEnabled: true
-  eventsEnabled: true
+${KIND_SERVICEASSURANCE}
 EOF

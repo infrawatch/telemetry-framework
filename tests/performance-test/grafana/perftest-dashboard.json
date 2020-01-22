@@ -185,7 +185,7 @@
       "pluginVersion": "6.4.4",
       "targets": [
         {
-          "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range])) / sum(delta(deliveries_ingress{service=\"saf-default-interconnect\"}[$__range]))",
+          "expr": "sum(count_over_time({exported_instance !~ \"saf-perftest-.*-runner.*\", type =~ \".+\"}[$__range])) / sum(delta(deliveries_ingress{service=\"saf-default-interconnect\"}[$__range]))",
           "hide": false,
           "instant": true,
           "refId": "A"
@@ -1152,7 +1152,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(count_over_time({exported_instance !~ \"saf-performance-test.*\", type =~ \".+\"}[$__range]))",
+          "expr": "sum(count_over_time({exported_instance !~ \"saf-perftest-.*-runner.*\", type =~ \".+\"}[$__range]))",
           "hide": false,
           "instant": true,
           "refId": "A"
@@ -3108,8 +3108,8 @@
     "list": [
       {
         "current": {
-          "text": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\"",
-          "value": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\""
+          "text": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-perftest-.*|elasticsearch-cdm.*\"",
+          "value": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-perftest-.*|elasticsearch-cdm.*\""
         },
         "hide": 2,
         "label": "",
@@ -3117,11 +3117,11 @@
         "options": [
           {
             "selected": true,
-            "text": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\"",
-            "value": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\""
+            "text": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-perftest-.*|elasticsearch-cdm.*\"",
+            "value": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-perftest-.*|elasticsearch-cdm.*\""
           }
         ],
-        "query": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-performance-test-.*|elasticsearch-cdm.*\"",
+        "query": "pod_name=~\".*-smartgateway-.*|.*saf-default-interconnect-.*|qdr-test.*|prometheus-saf-default-0|saf-perftest-.*|elasticsearch-cdm.*\"",
         "skipUrlSync": false,
         "type": "constant"
       }
