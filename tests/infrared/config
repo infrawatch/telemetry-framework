@@ -1,7 +1,0 @@
-VIRTHOST=${VIRTHOST:-my.big.hypervisor.net}
-AMQP_HOST=${AMQP_HOST:-$(oc get route -l application=qdr-white -o jsonpath='{.items[0].spec.host}')}
-SSH_KEY="${SSH_KEY:-${HOME}/.ssh/id_rsa}"
-VM_IMAGE="${VM_IMAGE:-http://download.devel.redhat.com/brewroot/packages/rhel-guest-image/8.1/333/images/rhel-guest-image-8.1-333.x86_64.qcow2}"
-OSP_BUILD="${OSP_BUILD:-latest-RHOS_TRUNK-16-RHEL-8.1}"
-NTP_SERVER="${NTP_SERVER:-8.8.8.8}"
-# vim: set ft=sh:
