@@ -45,7 +45,7 @@ infrared tripleo-undercloud -vv \
    --build "${OSP_BUILD}" \
    --images-update no
 
-sed -e "s/<<AMQP_HOST>>/${AMQP_HOST}/" metrics-collectd-qdr.yaml.template > outputs/metrics-collectd-qdr.yaml
+sed -e "s/<<AMQP_HOST>>/${AMQP_HOST}/;s/<<AMQP_PORT>>/${AMQP_PORT}/" metrics-collectd-qdr.yaml.template > outputs/metrics-collectd-qdr.yaml
 
 infrared tripleo-overcloud \
     -vv \

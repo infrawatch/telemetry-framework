@@ -48,7 +48,7 @@ custom_templates:
               distribution: multicast
         MetricsQdrConnectors:
             - host: <<AMQP_HOST>>
-              port: 443
+              port: <<AMQP_PORT>>
               role: edge
               verifyHostname: false
               sslProfile: sslProfile
