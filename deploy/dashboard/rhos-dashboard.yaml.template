@@ -2785,11 +2785,7 @@
     "list": [
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "controller-0.localdomain",
-          "value": "controller-0.localdomain"
-        },
+        "current": {},
         "datasource": "SAFPrometheus",
         "definition": "label_values(exported_instance)",
         "hide": 0,
@@ -2797,43 +2793,12 @@
         "label": "nodes",
         "multi": false,
         "name": "exported_instances",
-        "options": [
-          {
-            "selected": false,
-            "text": "172.17.1.16",
-            "value": "172.17.1.16"
-          },
-          {
-            "selected": false,
-            "text": "compute-0.localdomain",
-            "value": "compute-0.localdomain"
-          },
-          {
-            "selected": false,
-            "text": "compute-0.localdomain:2066b66a-70c0-47d7-911a-7e8de613614d",
-            "value": "compute-0.localdomain:2066b66a-70c0-47d7-911a-7e8de613614d"
-          },
-          {
-            "selected": false,
-            "text": "compute-0.localdomain:879507e0-ad7e-4585-ae96-167727bfc6be",
-            "value": "compute-0.localdomain:879507e0-ad7e-4585-ae96-167727bfc6be"
-          },
-          {
-            "selected": true,
-            "text": "controller-0.localdomain",
-            "value": "controller-0.localdomain"
-          },
-          {
-            "selected": false,
-            "text": "localhost",
-            "value": "localhost"
-          }
-        ],
+        "options": [],
         "query": "label_values(exported_instance)",
-        "refresh": 0,
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 0,
+        "sort": 1,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
